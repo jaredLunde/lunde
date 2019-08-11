@@ -1,6 +1,6 @@
 {
-  "name": "@lunde/create-pkg",
-  "version": "1.0.5",
+  "name": "@lunde/create-react-pkg",
+  "version": "1.0.4",
   "main": "index.js",
   "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
   "license": "MIT",
@@ -8,6 +8,6 @@
   "dependencies": {
     "@inst-pkg/template-utils": "^1.0.5"
   },
-  "repository": "https://github.com/jaredLunde/lunde/tree/master/packages/create-pkg",
-  "homepage": "https://github.com/jaredLunde/lunde/tree/master/packages/create-pkg#readme"
+  "repository": "https://github.com/jaredLunde/lunde/tree/master/packages/create-react-pkg",
+  "homepage": "https://github.com/jaredLunde/lunde/tree/master/packages/create-react-pkg#readme"
 }

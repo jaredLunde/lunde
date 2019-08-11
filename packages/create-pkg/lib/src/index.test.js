@@ -1,3 +1,5 @@
+const hello = world => `hello ${world}`
+
 test('passes', () => {
-  expect(1).toEqual(1)
+  expect(hello('world')).toMatchSnapshot()
 })
