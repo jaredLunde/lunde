@@ -1,6 +1,6 @@
 # @lunde/create-react-pkg
-This is an [`inst`](https://github.com/jaredLunde/inst-pkg) template for creating
-TypeScript React packages.
+This is an [`inst`](https://github.com/jaredLunde/inst-pkg) template for creating 
+React packages with TypeScript.
 
 ## Installation
 ### Installing `inst`
