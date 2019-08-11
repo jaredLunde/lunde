@@ -1,0 +1,20 @@
+{
+  "name": "@lunde/create-babel-preset",
+  "version": "1.0.2",
+  "description": "Utility for creating babel presets",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "repository": "https://github.com/jaredLunde/lunde/tree/master/packages/create-babel-preset",
+  "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "prettier": "^1.18.2",
+    "semver": "^6.3.0"
+  },
+  "devDependencies": {
+    "rimraf": "^2.6.3"
+  }
+}
