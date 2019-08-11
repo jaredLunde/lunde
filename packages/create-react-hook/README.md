@@ -1,6 +1,5 @@
-# @lunde/create-react-pkg
-This is an [`inst`](https://github.com/jaredLunde/inst-pkg) template for creating
-TypeScript React packages.
+# @lunde/create-react-hook
+This is an [`inst`](https://github.com/jaredLunde/inst-pkg) template for creating React hooks with TypeScript.
 
 ## Installation
 ### Installing `inst`
@@ -9,10 +8,10 @@ npm i -g @inst-pkg/cli
 # or `yarn global add @inst-pkg/cli`
 ```
 
-### Creating a new React package
+### Creating a new React hook
 ```bash
 # creates a new React package named [Name] in the [Name] directory
-inst add @lunde/create-react-pkg [Name]
+inst add @lunde/create-react-hook [Name]
 
 # validates the new package was successfully created
 cd [Name]

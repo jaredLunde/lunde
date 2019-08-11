@@ -17,3 +17,7 @@ TypeScript packages
 #### [@lunde/create-react-pkg](./packages/create-react-pkg)
 This is an [`inst`](https://github.com/jaredLunde/inst-pkg) template for creating
 TypeScript React packages
+
+#### [@lunde/create-react-hook](./packages/create-react-hook)
+This is an [`inst`](https://github.com/jaredLunde/inst-pkg) template for creating 
+React hooks with TypeScript.

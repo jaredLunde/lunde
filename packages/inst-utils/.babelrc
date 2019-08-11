@@ -1,0 +1,29 @@
+{
+  "presets": [
+    [
+      "@lunde/es",
+      {
+        "env": {
+          "useBuiltIns": false,
+          "targets": {"node": "8"}
+        }
+      }
+    ]
+  ],
+  "env": {
+    "es": {
+      "presets": [
+        [
+          "@lunde/es",
+          {
+            "env": {
+              "modules": false,
+              "targets": {"node": "8"}
+            },
+            "runtime": {"useESModules": true}
+          }
+        ]
+      ]
+    }
+  }
+}
