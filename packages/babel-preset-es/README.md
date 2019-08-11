@@ -1,5 +1,5 @@
 # @lunde/babel-preset-es
-A babel preset for configuring ECMAScript features to apps and packages
+A babel preset for adding TypeScript and ECMAScript features to apps and packages
 
 ## Installation
 `yarn add --dev @lunde/babel-preset-es`
