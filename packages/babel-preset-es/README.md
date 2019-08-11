@@ -65,7 +65,12 @@ Defaults
 - Define `"runtime": {...}` to turn on `@babel/transform-runtime`
 
 ### `classProps`
-- *default* `{loose: true}`
+Defaults
+```json
+{
+  "loose": true
+}
+```
 
 ### `macros`
 - Define `"macros": false` to turn off `@babel/macros`
