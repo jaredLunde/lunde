@@ -1,0 +1,11 @@
+{
+  "name": "@lunde/create-pkg",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
+  "license": "MIT",
+  "description": "An @inst-pkg template for creating new TypeScript packages",
+  "dependencies": {
+    "@inst-pkg/template-utils": "^1.0.5"
+  }
+}
