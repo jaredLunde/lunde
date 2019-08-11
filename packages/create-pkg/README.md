@@ -11,7 +11,7 @@ npm i -g @inst-pkg/cli
 
 ### Creating a new TypeScript package
 ```bash
-# creates a new TypeScript package in the [Name] directory
+# creates a new TypeScript package named [Name] in the [Name] directory
 inst add @lunde/create-pkg [Name]
 
 # validates the new package was successfully created
@@ -20,8 +20,8 @@ npm run validate
 ```
 
 ## Installation options
-- `Name`
-    - The name of the package you're creating
+#### `Name`
+The name of the package you're creating
 
 ## Package scripts
 ### `build`

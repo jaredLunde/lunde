@@ -63,7 +63,7 @@ module.exports.editPackageJson = function editPackageJson (
     "main": 'dist/cjs/index.js',
     "module": 'dist/es/index.js',
     "types": 'types/index.d.ts',
-    "files": ["/dist", "/types", "/src"],
+    "files": ["/dist", "/types"],
     "description": "",
     "keywords": [variables.PKG_NAME.replace('-', ' ')],
     "sideEffects": false,
