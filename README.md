@@ -20,7 +20,7 @@ React packages with TypeScript
 
 #### [@lunde/create-react-hook](./packages/create-react-hook)
 This is an [`inst`](https://github.com/jaredLunde/inst-pkg) template for creating 
-React hooks with TypeScript.
+React hooks with TypeScript
 
 ### Git
 #### [@lunde/git.md](./packages/git.md)
