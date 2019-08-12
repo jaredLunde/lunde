@@ -95,7 +95,7 @@ module.exports.editPackageJson = function editPackageJson (
       "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
       "prepublishOnly": "npm run lint && npm run test && npm run build && npm run format",
       "test": "jest",
-      "validate": "npm run check-types && npm run lint && npm run test && npm run format:src"
+      "validate": "npm run check-types && npm run lint && npm run test -- --coverage && npm run format:src"
     },
     "husky": {
       "hooks": {
