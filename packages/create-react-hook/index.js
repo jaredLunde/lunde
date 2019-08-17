@@ -32,6 +32,7 @@ module.exports.dependencies = {}
 module.exports.devDependencies = reactPkg.devDependencies
 // package.json peer dependencies
 module.exports.peerDependencies = {}
+module.exports.include = reactPkg.include
 module.exports.rename = reactPkg.rename
 
 // runs after the package.json is created and deps are installed,

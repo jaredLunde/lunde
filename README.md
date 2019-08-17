@@ -2,7 +2,7 @@
 Utilities Jared uses for maintaining his FOSS projects
 
 ## Table of contents
-### Babel
+## Babel
 #### [@lunde/create-babel-preset](./packages/create-babel-preset)
 A package for creating/maintaining babel presets
 

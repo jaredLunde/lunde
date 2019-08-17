@@ -3,3 +3,6 @@
 ## Installation
 #### `npm i <:PKG_NAME:>`
 #### `yarn add <:PKG_NAME:>`
+
+## LICENSE
+MIT

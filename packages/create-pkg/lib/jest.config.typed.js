@@ -7,10 +7,13 @@ module.exports = {
     path.join(__dirname, 'src'),
     path.join(__dirname, 'test')
   ],
+  transform: {
+    "^.+\\.tsx?$": "ts-jest"
+  },
   // moduleNameMapper: {},
   setupFilesAfterEnv: [require.resolve('./test/setup.js')],
   snapshotResolver: require.resolve('./test/resolve-snapshot.js'),
-  collectCoverageFrom: ['**/src/**/*.{js,ts}'],
+  collectCoverageFrom: ['**/src/**/*.ts'],
   // coverageThreshold: {
   //   global: {
   //     statements:17,
