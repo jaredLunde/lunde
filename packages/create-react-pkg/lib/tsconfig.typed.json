@@ -1,6 +1,11 @@
 {
   "include": ["src"],
-  "exclude": ["src/**/*.test.{ts,tsx}", "src/**/test.{ts,tsx}"],
+  "exclude": [
+    "src/**/*.test.ts",
+    "src/**/test.ts",
+    "src/**/*.test.tsx",
+    "src/**/test.tsx"
+  ],
   "compilerOptions": {
     "target": "es5",
     "lib": [

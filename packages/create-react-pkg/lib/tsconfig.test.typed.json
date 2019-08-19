@@ -1,5 +1,10 @@
 {
-  "include": ["src/**/*.test.{ts,tsx}", "src/**/test.{ts,tsx}"],
+  "include": [
+    "src/**/*.test.ts",
+    "src/**/test.ts",
+    "src/**/*.test.tsx",
+    "src/**/test.tsx"
+  ],
   "compilerOptions": {
     "target": "es5",
     "lib": [
