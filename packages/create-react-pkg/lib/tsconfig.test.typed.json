@@ -1,21 +1,21 @@
 {
-  "include": ["src"],
-  "exclude": ["src/**/*.test.{ts,tsx}", "src/**/test.{ts,tsx}"],
+  "include": ["src/**/*.test.{ts,tsx}", "src/**/test.{ts,tsx}"],
   "compilerOptions": {
     "target": "es5",
     "lib": [
-      "esnext"
-      // "dom",
-      // "dom.iterable"
+      "esnext",
+      "dom",
+      "dom.iterable"
     ],
+    "jsx": "react",
     "moduleResolution": "node",
-    "strictNullChecks": true,
+    "strictNullChecks": false,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noFallthroughCasesInSwitch": true,
-    "noEmitOnError": true
+    "noEmit": true
   }
 }

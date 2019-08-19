@@ -1,6 +1,4 @@
-// const {flag, required, trim, getPkgJson} = require('@inst-pkg/template-utils')
-// const os = require('os')
-// const path = require('path')
+const {trim} = require('@inst-pkg/template-utils')
 
 
 module.exports = {}
@@ -31,6 +29,7 @@ module.exports.devDependencies = (variables, args) => {
   let deps = {
     '@babel/preset-react': 'latest',
     '@lunde/babel-preset-es': 'latest',
+    '@testing-library/jest-dom': 'latest',
     '@testing-library/react': 'latest',
     '@testing-library/react-hooks': 'latest',
     'jest': 'latest',
@@ -96,6 +95,7 @@ module.exports.rename = (filename, variables, args) => {
 module.exports.editPackageJson = function editPackageJson (
   {main, ...packageJson},
   variables, /*from prompts() above*/
+  args
 ) {
   let pkg = {
     'name': packageJson.name,

@@ -23,6 +23,9 @@ module.exports = {
   //   }
   // },
   globals: {
-    __DEV__: true
+    __DEV__: true,
+    'ts-jest': {
+      tsConfig: 'tsconfig.test.json',
+    },
   }
 }
