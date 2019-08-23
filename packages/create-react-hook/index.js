@@ -17,12 +17,16 @@ module.exports.prompts = (
   return []
 }
 
-module.exports.copy = async function ({PKG_DIR}) {
+module.exports.copy = async function ({PKG_DIR}, args) {
+  const exclude = !args.ts ? fn => fn.includes('.typed') : fn => fn.includes('untyped')
   // copies lib from router app
   await instUtils.copy(
     await instUtils.getPkgLib('@lunde/create-react-pkg'),
     PKG_DIR,
-    {exclude: fn => fn.endsWith('index.tsx')}
+    {
+      exclude: fn =>
+        fn.endsWith('index.tsx') || fn.endsWith('index.js') || exclude(fn)
+    }
   )
 }
 
@@ -41,10 +45,11 @@ module.exports.rename = reactPkg.rename
 // this function must return a valid package.json object
 module.exports.editPackageJson = function editPackageJson (
   {main, ...packageJson},
-  variables /*from prompts() above*/
+  variables, /*from prompts() above*/
+  args
 ) {
   return {
-    ...reactPkg.editPackageJson(packageJson, variables),
+    ...reactPkg.editPackageJson(packageJson, variables, args),
     "keywords": [
       "react",
       "react hook",

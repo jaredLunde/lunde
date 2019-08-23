@@ -7,6 +7,9 @@
       "experimentalObjectRestSpread": true
     }
   },
+  "plugins": [
+    "jest"
+  ],
   "extends": [
     "eslint:recommended",
     "plugin:jest/recommended"

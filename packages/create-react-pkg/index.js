@@ -38,6 +38,7 @@ module.exports.devDependencies = (variables, args) => {
     'eslint': 'latest',
     'eslint-import-resolver-jest': 'latest',
     'eslint-plugin-react': 'latest',
+    'eslint-plugin-react-hooks': 'latest',
     'eslint-plugin-jest': 'latest',
     'husky': 'latest',
     'lint-staged': 'latest',
