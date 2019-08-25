@@ -1,0 +1,1 @@
+const {configureReactClient, configureReactServer} = require('@lunde/configure-react-app')
