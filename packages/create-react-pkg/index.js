@@ -47,7 +47,7 @@ module.exports.devDependencies = (variables, args) => {
     "react-dom": "latest",
     "react-test-renderer": "latest",
     rimraf: "latest"
-  };
+  }
 
   if (args.ts) {
     delete deps["babel-eslint"];
