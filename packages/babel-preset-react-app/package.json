@@ -1,0 +1,32 @@
+{
+  "name": "@lunde/babel-preset-react-app",
+  "version": "1.0.1",
+  "description": "Default Babel packages and configs for Jared's React apps",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "repository": "https://github.com/jaredLunde/lunde/tree/master/packages/babel-preset-es",
+  "homepage": "https://github.com/jaredLunde/lunde/tree/master/packages/babel-preset-es",
+  "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "@lunde/create-babel-preset": "^1.0.2",
+    "rimraf": "^2.6.3"
+  },
+  "dependencies": {
+    "core-js": "latest",
+    "@babel/runtime-corejs3": "latest",
+    "@babel/preset-react": "latest",
+    "@lunde/babel-preset-es": "latest",
+    "@emotion/babel-preset-css-prop": "latest",
+    "babel-plugin-transform-react-remove-prop-types": "latest",
+    "babel-plugin-transform-react-pure-class-to-function": "latest",
+    "babel-plugin-polished": "latest"
+  },
+  "scripts": {
+    "build": "node ./create-package.js",
+    "clean": "rimraf yarn.lock && rimraf ./node_modules"
+  }
+}

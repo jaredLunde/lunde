@@ -1,0 +1,18 @@
+{
+  "name": "create-docs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
+  "license": "MIT",
+  "dependencies": {
+    "@inst-cli/template-utils": "^1.0.0"
+  },
+  "bin": {
+    "create-docs": "bin/index.js"
+  },
+  "files": [
+    "index.js",
+    "/lib",
+    "/bin"
+  ]
+}

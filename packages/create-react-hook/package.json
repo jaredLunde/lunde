@@ -1,15 +1,23 @@
 {
   "name": "@lunde/create-react-hook",
-  "version": "1.0.2",
+  "version": "1.0.7",
   "main": "index.js",
   "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
   "license": "MIT",
   "description": "An @inst-pkg template for creating new TypeScript packages",
   "dependencies": {
-    "@inst-pkg/template-utils": "latest",
+    "@inst-cli/template-utils": "^1.0.0",
     "@lunde/create-react-pkg": "latest",
     "@lunde/inst-utils": "latest"
   },
   "repository": "https://github.com/jaredLunde/lunde/tree/master/packages/create-react-pkg",
-  "homepage": "https://github.com/jaredLunde/lunde/tree/master/packages/create-react-pkg#readme"
+  "homepage": "https://github.com/jaredLunde/lunde/tree/master/packages/create-react-pkg#readme",
+  "bin": {
+    "create-react-hook": "bin/index.js"
+  },
+  "files": [
+    "index.js",
+    "/lib",
+    "/bin"
+  ]
 }

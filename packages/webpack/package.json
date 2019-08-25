@@ -1,0 +1,63 @@
+{
+  "name": "@lunde/webpack",
+  "version": "1.0.0",
+  "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "files": [
+    "/dist"
+  ],
+  "description": "Configures Webpack in a manner consistent with tools like CRA",
+  "sideEffects": false,
+  "devDependencies": {
+    "@lunde/babel-preset-es": "^1.0.1",
+    "babel-eslint": "^10.0.2",
+    "cross-env": "^5.2.0",
+    "eslint": "^6.2.2",
+    "eslint-import-resolver-jest": "^3.0.0",
+    "eslint-plugin-jest": "^22.15.2",
+    "husky": "^3.0.4",
+    "jest": "^24.9.0",
+    "lint-staged": "^9.2.3",
+    "prettier": "^1.18.2",
+    "pretty-quick": "^1.11.1",
+    "rimraf": "^3.0.0",
+    "webpack": "^4.39.2"
+  },
+  "dependencies": {
+    "babel-merge": "^3.0.0",
+    "webpack-merge": "^4.2.1"
+  },
+  "peerDependencies": {
+    "webpack": "^4.39.2"
+  },
+  "scripts": {
+    "build": "babel src -d dist -x .js --ignore \"**/*.test.js\",\"**/test.js\" --delete-dir-on-start",
+    "format": "npm run format:cjs && npm run format:src",
+    "format:cjs": "prettier --write \"dist/**/*.js\"",
+    "format:src": "prettier --write \"src/**/*.js\"",
+    "lint": "eslint src",
+    "prepublishOnly": "npm run lint && npm run test && npm run build && npm run format",
+    "test": "jest",
+    "validate": "npm run lint && npm run test -- --coverage"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.js": [
+      "eslint",
+      "pretty-quick --staged"
+    ]
+  },
+  "homepage": "https://github.com/jaredLunde/lunde/packages/tree/master/webpack#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaredLunde/lunde.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jaredLunde/lunde/issues"
+  }
+}
