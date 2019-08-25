@@ -1,11 +1,7 @@
-import merge from 'webpack-merge'
-import babelMerge from 'babel-merge'
+import mergeWebpack from 'webpack-merge'
 import webpack from 'webpack'
-import path from 'path'
 
-const defaultAbsoluteRuntime = path.dirname(
-  require.resolve('@babel/runtime-corejs3/package.json')
-)
+export const isProd = () => process.env.NODE_ENV === 'production'
 
 export const createBabelLoader = ({
   test,
@@ -14,151 +10,29 @@ export const createBabelLoader = ({
   include,
   exclude,
   options,
-}) => {
-  const isProd = process.env.NODE_ENV === 'production'
-
-  return {
-    test: test || /(\.[mtj]sx?)$$/,
-    use: {
-      loader: 'babel',
-      options: {
-        presets,
-        plugins,
-        // only caches compressed files in prod
-        cacheCompression: isProd,
-        // only minifies in prod
-        compact: isProd,
-        // caches for better rebuild performance
-        cacheDirectory: true,
-        // ignores .babelrc in directories
-        babelrc: false,
-        // ignores config files in directories
-        configFile: false,
-        ...options,
-      },
-    },
-    include,
-    exclude,
-  }
-}
-
-// Internal dependencies
-export const createInternalBabelLoader = (
-  defaultPresets,
-  babelOverride = {}
-) => {
-  const {test, presets, plugins, include, exclude, options} = babelOverride
-
-  return createBabelLoader({
-    test,
-    ...babelMerge({presets: defaultPresets}, {presets, plugins}),
-    include,
-    exclude: include ? void 0 : exclude || /node_modules|bower_components/,
-    options,
-  })
-}
-
-// External dependencies
-export const createExternalBabelLoader = (
-  defaultPresets,
-  babelOverride = {}
-) => {
-  const {test, presets, plugins, include, exclude, options} = babelOverride
-
-  return createBabelLoader({
-    test,
-    ...babelMerge({presets: defaultPresets}, {presets, plugins}),
-    include,
-    exclude: include
-      ? void 0
-      : exclude || /@babel(?:\/|\\{1,2})runtime|core-js|warning/,
+}) => ({
+  test: test || /(\.[mtj]sx?)$$/,
+  use: {
+    loader: 'babel',
     options: {
+      presets,
+      plugins,
+      // only caches compressed files in prod
+      cacheCompression: isProd(),
+      // only minifies in prod
+      compact: isProd(),
+      // caches for better rebuild performance
+      cacheDirectory: true,
+      // ignores .babelrc in directories
+      babelrc: false,
+      // ignores config files in directories
+      configFile: false,
       ...options,
-      // considers the file a "module" if import/export statements are present, or else
-      // considers it a "script"
-      sourceType: 'unambiguous',
-      // doesn't generate source maps for perf reasons
-      sourceMaps: false,
-      // doesn't minify for perf reasons
-      compact: false,
     },
-  })
-}
-
-const createBabelLoadersForWeb = (target, babelOverride) => {
-  const defaultPresets = [
-    [
-      '@lunde/react-app',
-      {
-        es: {
-          runtime: {absoluteRuntime: defaultAbsoluteRuntime},
-        },
-      },
-    ],
-  ]
-
-  return [
-    createInternalBabelLoader(defaultPresets, babelOverride.internal),
-    createExternalBabelLoader(defaultPresets, babelOverride.external),
-  ]
-}
-
-const createBabelLoadersForNode = (target, babelOverride) => {
-  const defaultPresets = [
-    [
-      '@lunde/react-app',
-      {
-        es: {
-          env: {
-            targets:
-              target === 'lambda'
-                ? {node: '10', browsers: void 0}
-                : {node: 'current', browsers: void 0},
-          },
-          runtime: {absoluteRuntime: defaultAbsoluteRuntime},
-        },
-      },
-    ],
-  ]
-
-  return [
-    {
-      test: /\.mjs$/,
-      include: /node_modules/,
-      type: 'javascript/auto',
-    },
-    createInternalBabelLoader(defaultPresets, babelOverride.internal),
-    createExternalBabelLoader(defaultPresets, babelOverride.external),
-  ]
-}
-
-const getBabelLoaders = (target, babelOverride) =>
-  target === 'node' || target === 'lambda'
-    ? createBabelLoadersForNode(target, babelOverride)
-    : createBabelLoadersForWeb(target, babelOverride)
-
-// sets up loader public files in /public/ directories
-const getPublicLoader = publicLoader => {
-  if (publicLoader === false) return {}
-
-  const {
-    // We expect these image types to be handled specially
-    test = /public\/.*\.(?!(jpe?g|png|webm)$)([^.]+$)$/,
-    use = [
-      {
-        loader: 'file',
-        options: {
-          regExp: /public\/(.*)\.([^.]+)$/,
-          name: '[1]/[md4:hash:base62:12].[ext]',
-        },
-      },
-    ],
-    include,
-    exclude = /node_modules|bower_components/,
-  } = publicLoader || {}
-
-  return {test, use, include, exclude: include ? void 0 : exclude}
-}
+  },
+  include,
+  exclude,
+})
 
 const devConfig = {
   devtool: 'eval',
@@ -200,25 +74,20 @@ const productionConfig = {
   },
 }
 
+export const merge = mergeWebpack.smartStrategy({'module.rules': 'prepend'})
 export const createConfig = (...configs) => {
-  let {
-    target = 'web',
-    babelOverride = {},
-    publicLoader,
-    ...config
-  } = merge.smartStrategy({'module.rules': 'prepend'})(...configs)
+  let {target = 'web', ...config} = merge({}, ...configs)
 
   const mainFields =
     target === 'web'
-      ? ['browser', 'module', 'jsnext', 'esnext', 'jsnext:main', 'main']
-      : ['module', 'jsnext', 'esnext', 'jsnext:main', 'main']
+      ? // web main fields
+        ['browser', 'module', 'jsnext', 'esnext', 'jsnext:main', 'main']
+      : // node main fields
+        ['module', 'jsnext', 'esnext', 'jsnext:main', 'main']
 
-  return merge.smartStrategy({
-    'module.rules': 'append',
-    'resolve.mainFields': 'replace',
-  })(
-    process.env.NODE_ENV === 'production' ? productionConfig : devConfig,
+  return merge(
     {
+      // Defines the output target
       target: target === 'lambda' ? 'node' : target,
 
       // The base directory for resolving the entry option
@@ -233,24 +102,14 @@ export const createConfig = (...configs) => {
         moduleExtensions: ['-loader'],
       },
 
+      // Resolves modules
       resolve: {
-        // Directories that contain our modules
         symlinks: false,
         modules: ['node_modules'],
         mainFields,
         descriptionFiles: ['package.json'],
         // Extensions used to resolve modules
         extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx'],
-        alias: {
-          'node-fetch$': 'node-fetch/lib/index.js',
-        },
-      },
-
-      module: {
-        rules: [
-          getPublicLoader(publicLoader),
-          ...getBabelLoaders(target, babelOverride),
-        ],
       },
 
       // Include mocks for when node.js specific modules may be required
@@ -265,6 +124,7 @@ export const createConfig = (...configs) => {
         process: true,
       },
     },
+    isProd() ? productionConfig : devConfig,
     config
   )
 }

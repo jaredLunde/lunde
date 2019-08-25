@@ -1,13 +1,13 @@
 {
-  "name": "@lunde/webpack",
-  "version": "1.0.1",
+  "name": "@lunde/configure-react-app",
+  "version": "1.0.0",
   "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
   "license": "MIT",
   "main": "dist/index.js",
   "files": [
     "/dist"
   ],
-  "description": "Configures Webpack in a manner consistent with tools like CRA",
+  "description": "Utilities for creating and maintaining React applications",
   "sideEffects": false,
   "devDependencies": {
     "@lunde/babel-preset-es": "^1.0.1",
@@ -18,18 +18,31 @@
     "eslint-plugin-jest": "^22.15.2",
     "husky": "^3.0.4",
     "jest": "^24.9.0",
-    "lint-staged": "^9.2.3",
+    "jest-serializer-path": "^0.1.15",
+    "lint-staged": "^9.2.4",
     "prettier": "^1.18.2",
     "pretty-quick": "^1.11.1",
     "rimraf": "^3.0.0",
     "webpack": "^4.39.2"
   },
   "dependencies": {
-    "webpack-merge": "^4.2.1"
+    "@lunde/babel-preset-react-app": "latest",
+    "@lunde/webpack": "^1.0.1",
+    "@stellar-apps/static-site-generator-plugin": "latest",
+    "babel-merge": "latest",
+    "compression-webpack-plugin": "^3.0.0",
+    "dotenv-webpack": "^1.7.0",
+    "ignore-emit-webpack-plugin": "^2.0.2",
+    "imagemin-mozjpeg": "^8.0.0",
+    "imagemin-optipng": "^7.0.0",
+    "imagemin-webpack": "^5.1.0",
+    "responsive-loader": "^1.2.0",
+    "sharp": "^0.23.0",
+    "terser-webpack-plugin": "latest",
+    "webpack-bundle-analyzer": "latest",
+    "webpack-stats-plugin": "^0.3.0"
   },
-  "peerDependencies": {
-    "webpack": "^4.39.2"
-  },
+  "peerDependencies": {},
   "scripts": {
     "build": "babel src -d dist -x .js --ignore \"**/*.test.js\",\"**/test.js\" --delete-dir-on-start",
     "format": "npm run format:cjs && npm run format:src",
@@ -51,7 +64,7 @@
       "pretty-quick --staged"
     ]
   },
-  "homepage": "https://github.com/jaredLunde/lunde/tree/master/packages/webpack#readme",
+  "homepage": "https://github.com/jaredLunde/lunde/tree/master/packages/configure-react-app#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/jaredLunde/lunde.git"

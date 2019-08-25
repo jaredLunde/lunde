@@ -1,5 +1,5 @@
-const hello = world => `hello ${world}`
+import {createConfig} from './index'
 
 test('passes', () => {
-  expect(hello('world')).toMatchSnapshot()
+  expect(createConfig()).toMatchSnapshot()
 })
