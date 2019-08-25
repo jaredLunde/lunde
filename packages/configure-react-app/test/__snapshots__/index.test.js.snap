@@ -803,14 +803,6 @@ Object {
           "minChunks": 2,
           "reuseExistingChunk": true,
         },
-        "polyfill": Object {
-          "chunks": "all",
-          "enforce": true,
-          "name": "polyfill",
-          "priority": 15,
-          "reuseExistingChunk": true,
-          "test": /node_modules\\\\/\\(core-js\\|@babel\\\\/runtime\\)/,
-        },
         "vendor": Object {
           "chunks": "initial",
           "enforce": true,
