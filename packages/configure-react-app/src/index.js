@@ -13,8 +13,6 @@ import StaticSiteGeneratorPlugin from '@stellar-apps/static-site-generator-plugi
 import CompressionPlugin from 'compression-webpack-plugin'
 import {createBabelLoader, createConfig, merge, isProd} from '@lunde/webpack'
 
-const ANALYZE = process.env.ANALYZE
-
 const defaultAbsoluteRuntime = path.dirname(
   require.resolve('@babel/runtime-corejs3/package.json')
 )
@@ -182,8 +180,8 @@ export const configureReactClient = (...configs) => {
       },
 
       plugins: [
-        ANALYZE === true && new BundleAnalyzerPlugin(),
-        !ANALYZE &&
+        process.env.ANALYZE === true && new BundleAnalyzerPlugin(),
+        !process.env.ANALYZE &&
           new CompressionPlugin(
             compressionOptions || {
               test: /\.(js|txt|html|json|md|svg|xml|yml)(\?.*)?$/i,
