@@ -40,9 +40,9 @@ Default Babel packages and configs for my React apps
 
 ## Included plugins
 
-- babel-plugin-transform-react-remove-prop-types
-- babel-plugin-transform-react-pure-class-to-function
-- babel-plugin-polished
+- `babel-plugin-transform-react-remove-prop-types`
+- `babel-plugin-transform-react-pure-class-to-function`
+- `babel-plugin-polished`
 
 ## Options
 
