@@ -29,8 +29,8 @@ Default Babel packages and configs for my React apps
 
 ## Included packages
 
-- `@babel/cli`
-- `@babel/core`
+- `core-js@3`
+- `@babel/runtime-corejs3`
 
 ## Included presets
 
