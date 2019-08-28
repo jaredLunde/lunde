@@ -1,4 +1,4 @@
-[![bundlephobia](https://img.shields.io/bundlephobia/minzip/<:PKG_NAME:>?style=plastic)](https://bundlephobia.com/result?p=masonic)
+[![bundlephobia](https://img.shields.io/bundlephobia/minzip/<:PKG_NAME:>?style=plastic)](https://bundlephobia.com/result?p=<:PKG_NAME:>)
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://jaredlunde.mit-license.org/)
 
 ---
