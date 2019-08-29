@@ -1099,10 +1099,10 @@
     babel-plugin-dev-expression latest
     babel-plugin-macros latest
 
-"@lunde/babel-preset-react-app@latest":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@lunde/babel-preset-react-app/-/babel-preset-react-app-1.0.1.tgz#8100bf3190f90411e8f493ce9e3a9ad99ed4758d"
-  integrity sha512-Ua3V17tgb0pdrGh4dTPXNzE20Fnr4oXvH7RIaDiPMJDys88589b5fH+jXSPP7QDQ4+XQwTrSxKyAr6EvzVPJSQ==
+"@lunde/babel-preset-react-app@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@lunde/babel-preset-react-app/-/babel-preset-react-app-1.0.3.tgz#c1c05c7d3083e7f863029dae174f300731ae1446"
+  integrity sha512-kGe8M2Bd68NEJwX+XZ6hADglFczCieEOIDQQaIh0caahNfuBPP/A0WyA0wZF7rK5iTsCHehuL3/JfC+sbhNvIg==
   dependencies:
     "@babel/preset-react" latest
     "@babel/runtime-corejs3" latest

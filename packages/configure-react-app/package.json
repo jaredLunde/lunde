@@ -1,6 +1,6 @@
 {
   "name": "@lunde/configure-react-app",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
   "license": "MIT",
   "main": "dist/index.js",
@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@lunde/babel-preset-react-app": "latest",
-    "@lunde/webpack": "^1.0.1",
+    "@lunde/webpack": "latest",
     "@stellar-apps/static-site-generator-plugin": "latest",
     "babel-merge": "latest",
     "compression-webpack-plugin": "^3.0.0",

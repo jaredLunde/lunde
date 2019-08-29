@@ -31,7 +31,7 @@ dependencies.development = {
       {
         env: {
           ...envDefaults,
-          targets: { browsers: ">2% in US" }
+          targets: { browsers: "last 2 Chrome versions" }
         },
         closureElimination: false,
         devExpression: false,

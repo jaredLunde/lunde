@@ -406,23 +406,6 @@ Object {
   "mode": "development",
   "module": Object {
     "rules": Array [
-      Object {
-        "test": /robots\\(\\\\\\.disallow\\)\\?\\.txt\\$/,
-        "use": Array [
-          Object {
-            "loader": "file",
-            "options": Object {
-              "name": "robots.txt",
-            },
-          },
-        ],
-      },
-      Object {
-        "loaders": Array [
-          "raw",
-        ],
-        "test": /\\\\\\.html/,
-      },
       Array [
         Object {
           "exclude": /node_modules\\|bower_components/,
@@ -528,6 +511,23 @@ Object {
         ],
         "test": /\\\\\\.html\\|\\\\\\.txt\\|\\\\\\.tpl/,
       },
+      Object {
+        "test": /robots\\(\\\\\\.disallow\\)\\?\\.txt\\$/,
+        "use": Array [
+          Object {
+            "loader": "file",
+            "options": Object {
+              "name": "robots.txt",
+            },
+          },
+        ],
+      },
+      Object {
+        "loaders": Array [
+          "raw",
+        ],
+        "test": /\\\\\\.html/,
+      },
     ],
   },
   "name": "server",
@@ -557,6 +557,21 @@ Object {
     "hints": false,
   },
   "plugins": Array [
+    DefinePlugin {
+      "definitions": Object {
+        "__CLIENT__": "false",
+        "__DEV__": "true",
+        "__SERVER__": "true",
+        "__STAGE__": undefined,
+        "process": Object {
+          "cwd": [Function],
+          "env": Object {
+            "NODE_ENV": "\\"development\\"",
+            "STAGE": undefined,
+          },
+        },
+      },
+    },
     LoaderOptionsPlugin {
       "options": Object {
         "debug": true,
@@ -584,21 +599,6 @@ Object {
         "__DEV__": "true",
         "__SERVER__": "true",
         "__STAGE__": undefined,
-      },
-    },
-    DefinePlugin {
-      "definitions": Object {
-        "__CLIENT__": "false",
-        "__DEV__": "true",
-        "__SERVER__": "true",
-        "__STAGE__": undefined,
-        "process": Object {
-          "cwd": [Function],
-          "env": Object {
-            "NODE_ENV": "\\"development\\"",
-            "STAGE": undefined,
-          },
-        },
       },
     },
   ],
@@ -1163,23 +1163,6 @@ Object {
   "mode": "production",
   "module": Object {
     "rules": Array [
-      Object {
-        "test": /robots\\(\\\\\\.disallow\\)\\?\\.txt\\$/,
-        "use": Array [
-          Object {
-            "loader": "file",
-            "options": Object {
-              "name": "robots.txt",
-            },
-          },
-        ],
-      },
-      Object {
-        "loaders": Array [
-          "raw",
-        ],
-        "test": /\\\\\\.html/,
-      },
       Array [
         Object {
           "exclude": /node_modules\\|bower_components/,
@@ -1309,6 +1292,23 @@ Object {
         ],
         "test": /\\\\\\.html\\|\\\\\\.txt\\|\\\\\\.tpl/,
       },
+      Object {
+        "test": /robots\\(\\\\\\.disallow\\)\\?\\.txt\\$/,
+        "use": Array [
+          Object {
+            "loader": "file",
+            "options": Object {
+              "name": "robots.txt",
+            },
+          },
+        ],
+      },
+      Object {
+        "loaders": Array [
+          "raw",
+        ],
+        "test": /\\\\\\.html/,
+      },
     ],
   },
   "name": "server",
@@ -1337,34 +1337,6 @@ Object {
     "hints": false,
   },
   "plugins": Array [
-    HashedModuleIdsPlugin {
-      "options": Object {
-        "context": null,
-        "hashDigest": "base64",
-        "hashDigestLength": 4,
-        "hashFunction": "md4",
-      },
-    },
-    IgnoreEmitPlugin {
-      "DEBUG": false,
-      "ignorePatterns": Array [
-        /\\\\\\.\\(\\?!txt\\|\\[tj\\]sx\\?\\|json\\)\\\\w\\+\\$/,
-      ],
-      "options": Object {},
-    },
-    LimitChunkCountPlugin {
-      "options": Object {
-        "maxChunks": 1,
-      },
-    },
-    DefinePlugin {
-      "definitions": Object {
-        "__CLIENT__": "false",
-        "__DEV__": "false",
-        "__SERVER__": "true",
-        "__STAGE__": undefined,
-      },
-    },
     StaticSiteGeneratorPlugin {
       "crawl": true,
       "entry": undefined,
@@ -1404,6 +1376,34 @@ Object {
             "STAGE": undefined,
           },
         },
+      },
+    },
+    HashedModuleIdsPlugin {
+      "options": Object {
+        "context": null,
+        "hashDigest": "base64",
+        "hashDigestLength": 4,
+        "hashFunction": "md4",
+      },
+    },
+    IgnoreEmitPlugin {
+      "DEBUG": false,
+      "ignorePatterns": Array [
+        /\\\\\\.\\(\\?!txt\\|\\[tj\\]sx\\?\\|json\\)\\\\w\\+\\$/,
+      ],
+      "options": Object {},
+    },
+    LimitChunkCountPlugin {
+      "options": Object {
+        "maxChunks": 1,
+      },
+    },
+    DefinePlugin {
+      "definitions": Object {
+        "__CLIENT__": "false",
+        "__DEV__": "false",
+        "__SERVER__": "true",
+        "__STAGE__": undefined,
       },
     },
   ],

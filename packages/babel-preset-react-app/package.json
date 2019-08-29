@@ -1,6 +1,6 @@
 {
   "name": "@lunde/babel-preset-react-app",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Default Babel packages and configs for Jared's React apps",
   "main": "index.js",
   "files": [

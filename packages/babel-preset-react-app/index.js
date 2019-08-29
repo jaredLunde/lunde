@@ -1,4 +1,4 @@
-// v1.0.1 // 8/25/2019 //
+// v1.0.3 // 8/29/2019 //
 
 function req(plugin) {
   var module = require(plugin);
@@ -104,7 +104,7 @@ module.exports = function(api, opt) {
                 modules: false,
                 ignoreBrowserslistConfig: true,
                 exclude: ["transform-typeof-symbol"],
-                targets: { browsers: ">2% in US" }
+                targets: { browsers: "last 2 Chrome versions" }
               },
               closureElimination: false,
               devExpression: false,

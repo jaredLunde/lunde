@@ -155,9 +155,12 @@ export const createPublicLoader = publicLoader => {
 }
 
 export const configureReactClient = (...configs) => {
-  const {babelOverride = {}, publicLoader, compressionOptions} = merge(
-    ...configs
-  )
+  const {
+    babelOverride = {},
+    publicLoader,
+    compressionOptions,
+    ...config
+  } = merge(...configs)
   let envConfig
 
   if (!isProd()) {
@@ -265,113 +268,122 @@ export const configureReactClient = (...configs) => {
         }),
       ],
     },
-    envConfig
+    envConfig,
+    config
   )
 }
 
 export const configureReactServer = (...configs) => {
-  let {target = 'lambda', babelOverride = {}, publicLoader} = merge(...configs)
+  let {target = 'lambda', babelOverride = {}, publicLoader, ...config} = merge(
+    ...configs
+  )
   target = !isProd() ? 'node' : target
 
-  return createConfig({
-    name: 'server',
-    target,
+  return createConfig(
+    {
+      name: 'server',
+      target,
 
-    alias: {
-      'node-fetch$': 'node-fetch/lib/index.js',
-    },
+      alias: {
+        'node-fetch$': 'node-fetch/lib/index.js',
+      },
 
-    module: {
-      rules: [
-        createPublicLoader(publicLoader),
-        ...createBabelLoadersForNode(babelOverride),
-        {
-          test: /\.html|\.txt|\.tpl/,
-          loaders: ['raw'],
-        },
+      module: {
+        rules: [
+          createPublicLoader(publicLoader),
+          ...createBabelLoadersForNode(babelOverride),
+          {
+            test: /\.html|\.txt|\.tpl/,
+            loaders: ['raw'],
+          },
+        ],
+      },
+
+      output: {
+        filename: 'render.js',
+        libraryTarget: 'commonjs2',
+      },
+
+      externals: ['js-beautify', 'encoding'],
+
+      plugins: [
+        // prevents emitting anything that isn't text, javascript, or json
+        new IgnoreEmitPlugin(/\.(?!txt|[tj]sx?|json)\w+$/),
+        new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
+        new webpack.DefinePlugin({
+          __DEV__: JSON.stringify(!isProd()),
+          __SERVER__: JSON.stringify(true),
+          __CLIENT__: JSON.stringify(false),
+          __STAGE__: JSON.stringify(process.env.STAGE),
+        }),
       ],
     },
-
-    output: {
-      filename: 'render.js',
-      libraryTarget: 'commonjs2',
-    },
-
-    externals: ['js-beautify', 'encoding'],
-
-    plugins: [
-      // prevents emitting anything that isn't text, javascript, or json
-      new IgnoreEmitPlugin(/\.(?!txt|[tj]sx?|json)\w+$/),
-      new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
-      new webpack.DefinePlugin({
-        __DEV__: JSON.stringify(!isProd()),
-        __SERVER__: JSON.stringify(true),
-        __CLIENT__: JSON.stringify(false),
-        __STAGE__: JSON.stringify(process.env.STAGE),
-      }),
-    ],
-  })
+    config
+  )
 }
 
 export const configureStaticReactServer = (...configs) => {
-  const {staticSiteOptions = {}, ...config} = configureReactServer(configs)
-  return merge(config, {
-    module: {
-      rules: [
-        {
-          test: /robots(\.disallow)?.txt$/,
-          use: [
-            {
-              loader: 'file',
-              options: {
-                name: 'robots.txt',
+  const {staticSiteOptions = {}, ...config} = configureReactServer(...configs)
+  return merge(
+    {
+      module: {
+        rules: [
+          {
+            test: /robots(\.disallow)?.txt$/,
+            use: [
+              {
+                loader: 'file',
+                options: {
+                  name: 'robots.txt',
+                },
               },
-            },
-          ],
-        },
-        {
-          test: /\.html/,
-          loaders: ['raw'],
-        },
-      ],
-    },
+            ],
+          },
+          {
+            test: /\.html/,
+            loaders: ['raw'],
+          },
+        ],
+      },
 
-    plugins: [
-      isProd() &&
-        new StaticSiteGeneratorPlugin({
-          crawl: true,
-          locals: {
-            // Properties here are merged into `locals`
-            // passed to the exported render function
+      plugins: [
+        isProd() &&
+          new StaticSiteGeneratorPlugin({
+            crawl: true,
+            locals: {
+              // Properties here are merged into `locals`
+              // passed to the exported render function
+            },
+            paths: ['/', ...(staticSiteOptions?.paths || [])],
+            ...staticSiteOptions,
+          }),
+        isProd() &&
+          new CompressionPlugin({
+            test: /\.(txt|html|json|md|xml|yml)(\?.*)?$/i,
+            cache: true,
+            algorithm: 'gzip',
+            threshold: 1024,
+            filename: '[path]',
+            compressionOptions: {
+              level: zlib.Z_BEST_COMPRESSION,
+              memLevel: zlib.Z_BEST_COMPRESSION,
+            },
+          }),
+        new webpack.DefinePlugin({
+          process: {
+            cwd: function() {},
+            env: {
+              NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+              STAGE: JSON.stringify(process.env.STAGE),
+            },
           },
-          paths: ['/', ...(staticSiteOptions?.paths || [])],
-          ...staticSiteOptions,
+          __DEV__: JSON.stringify(!isProd()),
+          __SERVER__: JSON.stringify(true),
+          __CLIENT__: JSON.stringify(false),
+          __STAGE__: JSON.stringify(process.env.STAGE),
         }),
-      isProd() &&
-        new CompressionPlugin({
-          test: /\.(txt|html|json|md|xml|yml)(\?.*)?$/i,
-          cache: true,
-          algorithm: 'gzip',
-          threshold: 1024,
-          filename: '[path]',
-          compressionOptions: {
-            level: zlib.Z_BEST_COMPRESSION,
-            memLevel: zlib.Z_BEST_COMPRESSION,
-          },
-        }),
-      new webpack.DefinePlugin({
-        process: {
-          cwd: function() {},
-          env: {
-            NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-            STAGE: JSON.stringify(process.env.STAGE),
-          },
-        },
-        __DEV__: JSON.stringify(!isProd()),
-        __SERVER__: JSON.stringify(true),
-        __CLIENT__: JSON.stringify(false),
-        __STAGE__: JSON.stringify(process.env.STAGE),
-      }),
-    ].filter(Boolean),
-  })
+      ].filter(Boolean),
+    },
+    config
+  )
 }
