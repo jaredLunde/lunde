@@ -5,30 +5,27 @@ module.exports = {}
 // creates template variables using Inquirer.js
 // see https://github.com/SBoudrias/Inquirer.js#objects for prompt object examples
 module.exports.prompts = (
-  {ROOT_NAME, ROOT_DIR, PKG_NAME, PKG_DIR}, // default template variables 
-  packageJson,                              // contents of the package.json file as a plain object
-  args,                                     // the arguments passed to the CLI
-  inquirer                                  // the inquirer prompt object
-) => ([
+  {ROOT_NAME, ROOT_DIR, PKG_NAME, PKG_DIR}, // default template variables
+  packageJson, // contents of the package.json file as a plain object
+  args, // the arguments passed to the CLI
+  inquirer // the inquirer prompt object
+) => [
   // See https://github.com/SBoudrias/Inquirer.js#objects
   // for valid prompts
-])
+]
 
 // package.json dependencies
-module.exports.dependencies = {
-}
+module.exports.dependencies = {}
 
 // package.json dev dependencies
-module.exports.devDependencies = {
-}
+module.exports.devDependencies = {}
 
 // package.json peer dependencies
-module.exports.peerDependencies = {
-}
+module.exports.peerDependencies = {}
 
 // filter for only including template files that return `true` here
 // NOTE: this function is never called if `exclude` is defined
-module.exports.include = function include (filename, variables, args) {
+module.exports.include = function include(filename, variables, args) {
   return true
 }
 
@@ -39,7 +36,7 @@ module.exports.include = function include (filename, variables, args) {
 // }
 
 // filter for renaming files
-module.exports.rename = function rename (filename, variables, args) {
+module.exports.rename = function rename(filename, variables, args) {
   return filename
 }
 
@@ -47,13 +44,13 @@ module.exports.rename = function rename (filename, variables, args) {
 // used for adding scripts and whatnot
 //
 // this function must return a valid package.json object
-module.exports.editPackageJson = function editPackageJson (
-  packageJson, 
-  variables, /*from prompts() above*/
+module.exports.editPackageJson = function editPackageJson(
+  packageJson,
+  variables /*from prompts() above*/,
   args
 ) {
   packageJson.scripts = {}
-  
+
   // this function must return a valid package.json object
   return packageJson
 }

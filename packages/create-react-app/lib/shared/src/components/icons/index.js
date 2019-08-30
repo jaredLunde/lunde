@@ -1,0 +1,1 @@
+// export someIcon from './someIcon

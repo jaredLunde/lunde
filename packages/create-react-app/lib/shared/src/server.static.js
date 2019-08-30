@@ -2,26 +2,17 @@ import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import {StaticRouter} from 'react-router-dom'
 import * as Broker from 'react-broker'
-import createStaticRenderer from '@lunde/ssr/createStaticRenderer'
+import createStaticRenderer from '@lunde/render-react-app/createStaticRenderer'
 import App from './index'
 
-if (process.env.STAGE === 'production') {
-  require('./robots.txt')
-} else {
-  require('./robots.disallow.txt')
-}
-
-async function render(locals) {
-  if (process.env.STAGE !== 'development') {
-    locals.clientStats = require(`../dist/${process.env.STAGE}/client/stats.json`)
-  }
+const render = clientStats => async locals => {
   // keeps track of lazy chunks used by the current page
   const chunkCache = Broker.createChunkCache()
   // provided to react-helmet-async
   const helmetContext = {}
   // creates the App in React
   const app = (
-    <StaticRouter location={locals.path} context={{}}>
+    <StaticRouter location={locals.url || locals.path} context={{}}>
       <App helmetContext={helmetContext} chunkCache={chunkCache} {...locals} />
     </StaticRouter>
   )
@@ -29,18 +20,14 @@ async function render(locals) {
   const page = await Broker.loadAll(app, ReactDOMServer.renderToString)
   // renders the Helmet attributes
   const {helmet} = helmetContext
-  const chunks = chunkCache.getChunkScripts(locals.clientStats, {preload: true})
+  const chunks = chunkCache.getChunkScripts(clientStats, {preload: true})
   // returns the document
   return `
     <!DOCTYPE html>
     <html ${helmet.htmlAttributes}>
       <head>
         <!-- Preloads bundle scripts -->
-        ${
-          __STAGE__ === 'development' && !__DEV__
-            ? chunks.preload.replace(/\.js/g, '.js.br')
-            : chunks.preload
-        }
+        ${chunks.preload}
         <!-- Page Title -->
         ${helmet.title}
         <!-- Helmet meta -->
@@ -60,18 +47,13 @@ async function render(locals) {
         </noscript>
         <div id="⚛️">${page}</div>
         <!-- Bundle scripts -->
-        ${
-          __STAGE__ === 'development' && !__DEV__
-            ? chunks.scripts.replace(/\\.js/g, '.js.br')
-            : chunks.scripts
-        }
+        ${chunks.scripts}
       </body>
     </html>
   `.trim()
 }
 
-const staticRenderer = createStaticRenderer(render, void 0, {minify: false})
+const staticRenderer = createStaticRenderer(render)
 export default process.env.STAGE === 'development'
-  ? ({clientStats}) => (req, res, next) =>
-      staticRenderer({clientStats, path: req.url})
-  : staticRenderer
+  ? staticRenderer
+  : locals => staticRenderer(require(`../dist/${process.env.STAGE}/client/stats.json`))(locals)

@@ -5,29 +5,11 @@
       {
         "env": {
           "targets": {
-            "node": "8"
+            "node": "10"
           }
         },
         "typescript": false
       }
     ]
-  ],
-  "env": {
-    "es": {
-      "presets": [
-        [
-          "@lunde/es",
-          {
-            "env": {
-              "modules": false,
-              "targets": {
-                "browsers": "> 2%"
-              }
-            },
-            "typescript": false
-          }
-        ]
-      ]
-    }
-  }
+  ]
 }

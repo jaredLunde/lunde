@@ -1,7 +1,4 @@
-const {
-  configureReactClient,
-  configureReactServer,
-} = require('@lunde/configure-react-app')
+const {configureReactClient, configureReactServer} = require('@lunde/configure-react-app')
 
 configureReactClient({
   entry: [path.join(__dirname, 'src/index.js')],

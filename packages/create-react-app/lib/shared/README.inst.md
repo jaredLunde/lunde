@@ -1,0 +1,4 @@
+# <:PKG_NAME:>
+
+## LICENSE
+MIT
