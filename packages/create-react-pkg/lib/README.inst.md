@@ -4,7 +4,6 @@
 ---
 
 # <:PKG_NAME:>
-<:DESCRIPTION:>
 
 <:DESCRIPTION:>
 
