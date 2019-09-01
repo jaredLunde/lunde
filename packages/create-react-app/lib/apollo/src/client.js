@@ -6,7 +6,11 @@ import {loadInitial} from 'react-broker'
 import {createBrowserHistory} from 'history'
 import {ApolloProvider} from 'react-apollo'
 import {createHttpLink} from 'apollo-link-http'
-import {createApolloClient, createRequestHeadersLink, getCsrfHeaders} from './apollo'
+import {
+  createApolloClient,
+  createRequestHeadersLink,
+  getCsrfHeaders,
+} from './apollo'
 import App from './index'
 
 const root = document.getElementById('⚛️')
@@ -41,5 +45,6 @@ const hydrate = App =>
 loadInitial().then(() => hydrate(App))
 
 if (__DEV__) {
-  module.hot && module.hot.accept('./index', () => hydrate(require('./index').default))
+  module.hot &&
+    module.hot.accept('./index', () => hydrate(require('./index').default))
 }

@@ -6,34 +6,32 @@ Object {
   "mode": "development",
   "module": Object {
     "rules": Array [
-      Array [
-        Object {
-          "exclude": /node_modules\\|bower_components/,
-          "test": /public\\\\/\\.\\*\\\\\\.\\(\\?!\\(jpe\\?g\\|png\\|webm\\)\\$\\)\\(\\[\\^\\.\\]\\+\\$\\)\\$/,
-          "use": Array [
-            Object {
-              "loader": "file",
-              "options": Object {
-                "name": "[1]/[md4:hash:base62:12].[ext]",
-                "regExp": /public\\\\/\\(\\.\\*\\)\\\\\\.\\(\\[\\^\\.\\]\\+\\)\\$/,
-              },
+      Object {
+        "exclude": /node_modules\\|bower_components/,
+        "test": /public\\\\/\\.\\*\\\\\\.\\(\\?!\\(jpe\\?g\\|png\\|webm\\)\\$\\)\\(\\[\\^\\.\\]\\+\\$\\)\\$/,
+        "use": Array [
+          Object {
+            "loader": "file",
+            "options": Object {
+              "name": "[1]/[md4:hash:base62:12].[ext]",
+              "regExp": /public\\\\/\\(\\.\\*\\)\\\\\\.\\(\\[\\^\\.\\]\\+\\)\\$/,
             },
-          ],
-        },
-        Object {
-          "test": /\\\\\\.\\(jpe\\?g\\|png\\)\\$/i,
-          "use": Array [
-            "cache",
-            Object {
-              "loader": "responsive-loader",
-              "options": Object {
-                "adapter": [Function],
-                "name": "[folder]/[name]/[width]x[height]/[md4:hash:12].[ext]",
-              },
+          },
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(jpe\\?g\\|png\\)\\$/i,
+        "use": Array [
+          "cache",
+          Object {
+            "loader": "responsive-loader",
+            "options": Object {
+              "adapter": [Function],
+              "name": "[folder]/[name]/[width]x[height]/[md4:hash:12].[ext]",
             },
-          ],
-        },
-      ],
+          },
+        ],
+      },
       Object {
         "exclude": /node_modules\\|bower_components/,
         "include": undefined,
@@ -183,9 +181,6 @@ Object {
 
 exports[`development configureReactServer 1`] = `
 Object {
-  "alias": Object {
-    "node-fetch$": "node-fetch/lib/index.js",
-  },
   "devtool": "eval",
   "externals": Array [
     "js-beautify",
@@ -194,34 +189,32 @@ Object {
   "mode": "development",
   "module": Object {
     "rules": Array [
-      Array [
-        Object {
-          "exclude": /node_modules\\|bower_components/,
-          "test": /public\\\\/\\.\\*\\\\\\.\\(\\?!\\(jpe\\?g\\|png\\|webm\\)\\$\\)\\(\\[\\^\\.\\]\\+\\$\\)\\$/,
-          "use": Array [
-            Object {
-              "loader": "file",
-              "options": Object {
-                "name": "[1]/[md4:hash:base62:12].[ext]",
-                "regExp": /public\\\\/\\(\\.\\*\\)\\\\\\.\\(\\[\\^\\.\\]\\+\\)\\$/,
-              },
+      Object {
+        "exclude": /node_modules\\|bower_components/,
+        "test": /public\\\\/\\.\\*\\\\\\.\\(\\?!\\(jpe\\?g\\|png\\|webm\\)\\$\\)\\(\\[\\^\\.\\]\\+\\$\\)\\$/,
+        "use": Array [
+          Object {
+            "loader": "file",
+            "options": Object {
+              "name": "[1]/[md4:hash:base62:12].[ext]",
+              "regExp": /public\\\\/\\(\\.\\*\\)\\\\\\.\\(\\[\\^\\.\\]\\+\\)\\$/,
             },
-          ],
-        },
-        Object {
-          "test": /\\\\\\.\\(jpe\\?g\\|png\\)\\$/i,
-          "use": Array [
-            "cache",
-            Object {
-              "loader": "responsive-loader",
-              "options": Object {
-                "adapter": [Function],
-                "name": "[folder]/[name]/[width]x[height]/[md4:hash:12].[ext]",
-              },
+          },
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(jpe\\?g\\|png\\)\\$/i,
+        "use": Array [
+          "cache",
+          Object {
+            "loader": "responsive-loader",
+            "options": Object {
+              "adapter": [Function],
+              "name": "[folder]/[name]/[width]x[height]/[md4:hash:12].[ext]",
             },
-          ],
-        },
-      ],
+          },
+        ],
+      },
       Object {
         "include": /node_modules/,
         "test": /\\\\\\.mjs\\$/,
@@ -359,6 +352,9 @@ Object {
     },
   ],
   "resolve": Object {
+    "alias": Object {
+      "node-fetch$": "node-fetch/lib/index.js",
+    },
     "descriptionFiles": Array [
       "package.json",
     ],
@@ -395,9 +391,6 @@ Object {
 
 exports[`development configureStaticReactServer 1`] = `
 Object {
-  "alias": Object {
-    "node-fetch$": "node-fetch/lib/index.js",
-  },
   "devtool": "eval",
   "externals": Array [
     "js-beautify",
@@ -406,34 +399,32 @@ Object {
   "mode": "development",
   "module": Object {
     "rules": Array [
-      Array [
-        Object {
-          "exclude": /node_modules\\|bower_components/,
-          "test": /public\\\\/\\.\\*\\\\\\.\\(\\?!\\(jpe\\?g\\|png\\|webm\\)\\$\\)\\(\\[\\^\\.\\]\\+\\$\\)\\$/,
-          "use": Array [
-            Object {
-              "loader": "file",
-              "options": Object {
-                "name": "[1]/[md4:hash:base62:12].[ext]",
-                "regExp": /public\\\\/\\(\\.\\*\\)\\\\\\.\\(\\[\\^\\.\\]\\+\\)\\$/,
-              },
+      Object {
+        "exclude": /node_modules\\|bower_components/,
+        "test": /public\\\\/\\.\\*\\\\\\.\\(\\?!\\(jpe\\?g\\|png\\|webm\\)\\$\\)\\(\\[\\^\\.\\]\\+\\$\\)\\$/,
+        "use": Array [
+          Object {
+            "loader": "file",
+            "options": Object {
+              "name": "[1]/[md4:hash:base62:12].[ext]",
+              "regExp": /public\\\\/\\(\\.\\*\\)\\\\\\.\\(\\[\\^\\.\\]\\+\\)\\$/,
             },
-          ],
-        },
-        Object {
-          "test": /\\\\\\.\\(jpe\\?g\\|png\\)\\$/i,
-          "use": Array [
-            "cache",
-            Object {
-              "loader": "responsive-loader",
-              "options": Object {
-                "adapter": [Function],
-                "name": "[folder]/[name]/[width]x[height]/[md4:hash:12].[ext]",
-              },
+          },
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(jpe\\?g\\|png\\)\\$/i,
+        "use": Array [
+          "cache",
+          Object {
+            "loader": "responsive-loader",
+            "options": Object {
+              "adapter": [Function],
+              "name": "[folder]/[name]/[width]x[height]/[md4:hash:12].[ext]",
             },
-          ],
-        },
-      ],
+          },
+        ],
+      },
       Object {
         "include": /node_modules/,
         "test": /\\\\\\.mjs\\$/,
@@ -603,6 +594,9 @@ Object {
     },
   ],
   "resolve": Object {
+    "alias": Object {
+      "node-fetch$": "node-fetch/lib/index.js",
+    },
     "descriptionFiles": Array [
       "package.json",
     ],
@@ -643,54 +637,32 @@ Object {
   "mode": "production",
   "module": Object {
     "rules": Array [
-      Array [
-        Object {
-          "exclude": /node_modules\\|bower_components/,
-          "test": /public\\\\/\\.\\*\\\\\\.\\(\\?!\\(jpe\\?g\\|png\\|webm\\)\\$\\)\\(\\[\\^\\.\\]\\+\\$\\)\\$/,
-          "use": Array [
-            Object {
-              "loader": "file",
-              "options": Object {
-                "name": "[1]/[md4:hash:base62:12].[ext]",
-                "regExp": /public\\\\/\\(\\.\\*\\)\\\\\\.\\(\\[\\^\\.\\]\\+\\)\\$/,
-              },
+      Object {
+        "exclude": /node_modules\\|bower_components/,
+        "test": /public\\\\/\\.\\*\\\\\\.\\(\\?!\\(jpe\\?g\\|png\\|webm\\)\\$\\)\\(\\[\\^\\.\\]\\+\\$\\)\\$/,
+        "use": Array [
+          Object {
+            "loader": "file",
+            "options": Object {
+              "name": "[1]/[md4:hash:base62:12].[ext]",
+              "regExp": /public\\\\/\\(\\.\\*\\)\\\\\\.\\(\\[\\^\\.\\]\\+\\)\\$/,
             },
-          ],
-        },
-        Object {
-          "test": /\\\\\\.\\(jpe\\?g\\|png\\)\\$/i,
-          "use": Array [
-            "cache",
-            Object {
-              "loader": "responsive-loader",
-              "options": Object {
-                "adapter": [Function],
-                "name": "[folder]/[name]/[width]x[height]/[md4:hash:12].[ext]",
-              },
-            },
-          ],
-        },
-        ImageminPlugin {
-          "options": Object {
-            "bail": false,
-            "cache": true,
-            "exclude": undefined,
-            "filter": [Function],
-            "imageminOptions": Object {
-              "plugins": Array [
-                [Function],
-                [Function],
-              ],
-            },
-            "include": undefined,
-            "loader": false,
-            "manifest": undefined,
-            "maxConcurrency": 8,
-            "name": "[hash].[ext]",
-            "test": /\\\\\\.\\(jpe\\?g\\|png\\|gif\\|tif\\|webp\\|svg\\)\\$/i,
           },
-        },
-      ],
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(jpe\\?g\\|png\\)\\$/i,
+        "use": Array [
+          "cache",
+          Object {
+            "loader": "responsive-loader",
+            "options": Object {
+              "adapter": [Function],
+              "name": "[folder]/[name]/[width]x[height]/[md4:hash:12].[ext]",
+            },
+          },
+        ],
+      },
       Object {
         "exclude": /node_modules\\|bower_components/,
         "include": undefined,
@@ -879,6 +851,26 @@ Object {
         "transform": [Function],
       },
     },
+    ImageminPlugin {
+      "options": Object {
+        "bail": false,
+        "cache": true,
+        "exclude": undefined,
+        "filter": [Function],
+        "imageminOptions": Object {
+          "plugins": Array [
+            [Function],
+            [Function],
+          ],
+        },
+        "include": undefined,
+        "loader": false,
+        "manifest": undefined,
+        "maxConcurrency": 8,
+        "name": "[hash].[ext]",
+        "test": /\\\\\\.\\(jpe\\?g\\|png\\|gif\\|tif\\|webp\\|svg\\)\\$/i,
+      },
+    },
   ],
   "resolve": Object {
     "descriptionFiles": Array [
@@ -918,9 +910,6 @@ Object {
 
 exports[`production configureReactServer 1`] = `
 Object {
-  "alias": Object {
-    "node-fetch$": "node-fetch/lib/index.js",
-  },
   "devtool": false,
   "externals": Array [
     "js-beautify",
@@ -929,54 +918,32 @@ Object {
   "mode": "production",
   "module": Object {
     "rules": Array [
-      Array [
-        Object {
-          "exclude": /node_modules\\|bower_components/,
-          "test": /public\\\\/\\.\\*\\\\\\.\\(\\?!\\(jpe\\?g\\|png\\|webm\\)\\$\\)\\(\\[\\^\\.\\]\\+\\$\\)\\$/,
-          "use": Array [
-            Object {
-              "loader": "file",
-              "options": Object {
-                "name": "[1]/[md4:hash:base62:12].[ext]",
-                "regExp": /public\\\\/\\(\\.\\*\\)\\\\\\.\\(\\[\\^\\.\\]\\+\\)\\$/,
-              },
+      Object {
+        "exclude": /node_modules\\|bower_components/,
+        "test": /public\\\\/\\.\\*\\\\\\.\\(\\?!\\(jpe\\?g\\|png\\|webm\\)\\$\\)\\(\\[\\^\\.\\]\\+\\$\\)\\$/,
+        "use": Array [
+          Object {
+            "loader": "file",
+            "options": Object {
+              "name": "[1]/[md4:hash:base62:12].[ext]",
+              "regExp": /public\\\\/\\(\\.\\*\\)\\\\\\.\\(\\[\\^\\.\\]\\+\\)\\$/,
             },
-          ],
-        },
-        Object {
-          "test": /\\\\\\.\\(jpe\\?g\\|png\\)\\$/i,
-          "use": Array [
-            "cache",
-            Object {
-              "loader": "responsive-loader",
-              "options": Object {
-                "adapter": [Function],
-                "name": "[folder]/[name]/[width]x[height]/[md4:hash:12].[ext]",
-              },
-            },
-          ],
-        },
-        ImageminPlugin {
-          "options": Object {
-            "bail": false,
-            "cache": true,
-            "exclude": undefined,
-            "filter": [Function],
-            "imageminOptions": Object {
-              "plugins": Array [
-                [Function],
-                [Function],
-              ],
-            },
-            "include": undefined,
-            "loader": false,
-            "manifest": undefined,
-            "maxConcurrency": 8,
-            "name": "[hash].[ext]",
-            "test": /\\\\\\.\\(jpe\\?g\\|png\\|gif\\|tif\\|webp\\|svg\\)\\$/i,
           },
-        },
-      ],
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(jpe\\?g\\|png\\)\\$/i,
+        "use": Array [
+          "cache",
+          Object {
+            "loader": "responsive-loader",
+            "options": Object {
+              "adapter": [Function],
+              "name": "[folder]/[name]/[width]x[height]/[md4:hash:12].[ext]",
+            },
+          },
+        ],
+      },
       Object {
         "include": /node_modules/,
         "test": /\\\\\\.mjs\\$/,
@@ -1094,6 +1061,26 @@ Object {
         "hashFunction": "md4",
       },
     },
+    ImageminPlugin {
+      "options": Object {
+        "bail": false,
+        "cache": true,
+        "exclude": undefined,
+        "filter": [Function],
+        "imageminOptions": Object {
+          "plugins": Array [
+            [Function],
+            [Function],
+          ],
+        },
+        "include": undefined,
+        "loader": false,
+        "manifest": undefined,
+        "maxConcurrency": 8,
+        "name": "[hash].[ext]",
+        "test": /\\\\\\.\\(jpe\\?g\\|png\\|gif\\|tif\\|webp\\|svg\\)\\$/i,
+      },
+    },
     IgnoreEmitPlugin {
       "DEBUG": false,
       "ignorePatterns": Array [
@@ -1116,6 +1103,9 @@ Object {
     },
   ],
   "resolve": Object {
+    "alias": Object {
+      "node-fetch$": "node-fetch/lib/index.js",
+    },
     "descriptionFiles": Array [
       "package.json",
     ],
@@ -1152,9 +1142,6 @@ Object {
 
 exports[`production configureStaticReactServer 1`] = `
 Object {
-  "alias": Object {
-    "node-fetch$": "node-fetch/lib/index.js",
-  },
   "devtool": false,
   "externals": Array [
     "js-beautify",
@@ -1163,54 +1150,32 @@ Object {
   "mode": "production",
   "module": Object {
     "rules": Array [
-      Array [
-        Object {
-          "exclude": /node_modules\\|bower_components/,
-          "test": /public\\\\/\\.\\*\\\\\\.\\(\\?!\\(jpe\\?g\\|png\\|webm\\)\\$\\)\\(\\[\\^\\.\\]\\+\\$\\)\\$/,
-          "use": Array [
-            Object {
-              "loader": "file",
-              "options": Object {
-                "name": "[1]/[md4:hash:base62:12].[ext]",
-                "regExp": /public\\\\/\\(\\.\\*\\)\\\\\\.\\(\\[\\^\\.\\]\\+\\)\\$/,
-              },
+      Object {
+        "exclude": /node_modules\\|bower_components/,
+        "test": /public\\\\/\\.\\*\\\\\\.\\(\\?!\\(jpe\\?g\\|png\\|webm\\)\\$\\)\\(\\[\\^\\.\\]\\+\\$\\)\\$/,
+        "use": Array [
+          Object {
+            "loader": "file",
+            "options": Object {
+              "name": "[1]/[md4:hash:base62:12].[ext]",
+              "regExp": /public\\\\/\\(\\.\\*\\)\\\\\\.\\(\\[\\^\\.\\]\\+\\)\\$/,
             },
-          ],
-        },
-        Object {
-          "test": /\\\\\\.\\(jpe\\?g\\|png\\)\\$/i,
-          "use": Array [
-            "cache",
-            Object {
-              "loader": "responsive-loader",
-              "options": Object {
-                "adapter": [Function],
-                "name": "[folder]/[name]/[width]x[height]/[md4:hash:12].[ext]",
-              },
-            },
-          ],
-        },
-        ImageminPlugin {
-          "options": Object {
-            "bail": false,
-            "cache": true,
-            "exclude": undefined,
-            "filter": [Function],
-            "imageminOptions": Object {
-              "plugins": Array [
-                [Function],
-                [Function],
-              ],
-            },
-            "include": undefined,
-            "loader": false,
-            "manifest": undefined,
-            "maxConcurrency": 8,
-            "name": "[hash].[ext]",
-            "test": /\\\\\\.\\(jpe\\?g\\|png\\|gif\\|tif\\|webp\\|svg\\)\\$/i,
           },
-        },
-      ],
+        ],
+      },
+      Object {
+        "test": /\\\\\\.\\(jpe\\?g\\|png\\)\\$/i,
+        "use": Array [
+          "cache",
+          Object {
+            "loader": "responsive-loader",
+            "options": Object {
+              "adapter": [Function],
+              "name": "[folder]/[name]/[width]x[height]/[md4:hash:12].[ext]",
+            },
+          },
+        ],
+      },
       Object {
         "include": /node_modules/,
         "test": /\\\\\\.mjs\\$/,
@@ -1386,6 +1351,26 @@ Object {
         "hashFunction": "md4",
       },
     },
+    ImageminPlugin {
+      "options": Object {
+        "bail": false,
+        "cache": true,
+        "exclude": undefined,
+        "filter": [Function],
+        "imageminOptions": Object {
+          "plugins": Array [
+            [Function],
+            [Function],
+          ],
+        },
+        "include": undefined,
+        "loader": false,
+        "manifest": undefined,
+        "maxConcurrency": 8,
+        "name": "[hash].[ext]",
+        "test": /\\\\\\.\\(jpe\\?g\\|png\\|gif\\|tif\\|webp\\|svg\\)\\$/i,
+      },
+    },
     IgnoreEmitPlugin {
       "DEBUG": false,
       "ignorePatterns": Array [
@@ -1408,6 +1393,9 @@ Object {
     },
   ],
   "resolve": Object {
+    "alias": Object {
+      "node-fetch$": "node-fetch/lib/index.js",
+    },
     "descriptionFiles": Array [
       "package.json",
     ],

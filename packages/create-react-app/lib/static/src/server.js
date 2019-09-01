@@ -56,4 +56,7 @@ const render = clientStats => async locals => {
 const staticRenderer = createStaticRenderer(render)
 export default process.env.STAGE === 'development'
   ? staticRenderer
-  : locals => staticRenderer(require(`../dist/${process.env.STAGE}/client/stats.json`))(locals)
+  : locals =>
+      staticRenderer(require(`../dist/${process.env.STAGE}/client/stats.json`))(
+        locals
+      )

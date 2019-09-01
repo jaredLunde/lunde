@@ -21,6 +21,7 @@
   "scripts": {
     "format": "npm run format:src && npm run format:lib",
     "format:src": "prettier --write ./index.js",
-    "format:lib": "prettier --write \"./lib/**/*.{yml,js,md}\""
+    "format:lib": "prettier --write \"./lib/**/*.{yml,js,md}\"",
+    "prepublishOnly": "npm run format"
   }
 }

@@ -38,9 +38,7 @@ const createExternalBabelLoader = (defaultPresets, babelOverride = {}) => {
     test,
     ...babelMerge({presets: defaultPresets}, {presets, plugins}),
     include,
-    exclude: include
-      ? void 0
-      : exclude || /@babel(?:\/|\\{1,2})runtime|core-js|warning/,
+    exclude: include ? void 0 : exclude || /@babel(?:\/|\\{1,2})runtime|core-js|warning/,
     options: {
       ...options,
       // considers the file a "module" if import/export statements are present, or else
@@ -136,31 +134,12 @@ export const createPublicLoader = publicLoader => {
           },
         ],
       },
-      // Compresses images
-      isProd() &&
-        new ImageminPlugin({
-          cache: true,
-          bail: false,
-          loader: false,
-          maxConcurrency: 8,
-          imageminOptions: {
-            plugins: [
-              imageminMozJpeg({quality: 90, progressive: true}),
-              imageminOptipng({optimizationLevel: 7}),
-            ],
-          },
-        }),
     ].filter(Boolean)
   )
 }
 
 export const configureReactClient = (...configs) => {
-  const {
-    babelOverride = {},
-    publicLoader,
-    compressionOptions,
-    ...config
-  } = merge(...configs)
+  let {babelOverride = {}, publicLoader, compressionOptions, ...config} = merge(...configs)
   let envConfig
 
   if (!isProd()) {
@@ -205,6 +184,19 @@ export const configureReactClient = (...configs) => {
             chunks: true,
           },
         }),
+        // Compresses images
+        new ImageminPlugin({
+          cache: true,
+          bail: false,
+          loader: false,
+          maxConcurrency: 8,
+          imageminOptions: {
+            plugins: [
+              imageminMozJpeg({quality: 90, progressive: true}),
+              imageminOptipng({optimizationLevel: 7}),
+            ],
+          },
+        }),
       ].filter(Boolean),
 
       optimization: {
@@ -246,16 +238,16 @@ export const configureReactClient = (...configs) => {
     }
   }
 
+  publicLoader = createPublicLoader(publicLoader)
+  publicLoader = Array.isArray(publicLoader) ? publicLoader : [publicLoader]
+
   return createConfig(
     {
       name: 'client',
       target: 'web',
 
       module: {
-        rules: [
-          createPublicLoader(publicLoader),
-          ...createBabelLoadersForWeb(babelOverride),
-        ],
+        rules: [...publicLoader, ...createBabelLoadersForWeb(babelOverride)],
       },
 
       plugins: [
@@ -274,29 +266,31 @@ export const configureReactClient = (...configs) => {
 }
 
 export const configureReactServer = (...configs) => {
-  let {target = 'lambda', babelOverride = {}, publicLoader, ...config} = merge(
-    ...configs
-  )
+  let {target = 'lambda', babelOverride = {}, publicLoader, ...config} = merge(...configs)
   target = !isProd() ? 'node' : target
+  publicLoader = createPublicLoader(publicLoader)
+  publicLoader = Array.isArray(publicLoader) ? publicLoader : [publicLoader]
 
   return createConfig(
     {
       name: 'server',
       target,
 
-      alias: {
-        'node-fetch$': 'node-fetch/lib/index.js',
-      },
-
       module: {
         rules: [
-          createPublicLoader(publicLoader),
+          ...publicLoader,
           ...createBabelLoadersForNode(babelOverride),
           {
             test: /\.html|\.txt|\.tpl/,
             loaders: ['raw'],
           },
         ],
+      },
+
+      resolve: {
+        alias: {
+          'node-fetch$': 'node-fetch/lib/index.js',
+        },
       },
 
       output: {
@@ -307,6 +301,20 @@ export const configureReactServer = (...configs) => {
       externals: ['js-beautify', 'encoding'],
 
       plugins: [
+        // Compresses images
+        isProd() &&
+          new ImageminPlugin({
+            cache: true,
+            bail: false,
+            loader: false,
+            maxConcurrency: 8,
+            imageminOptions: {
+              plugins: [
+                imageminMozJpeg({quality: 90, progressive: true}),
+                imageminOptipng({optimizationLevel: 7}),
+              ],
+            },
+          }),
         // prevents emitting anything that isn't text, javascript, or json
         new IgnoreEmitPlugin(/\.(?!txt|[tj]sx?|json)\w+$/),
         new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
@@ -316,7 +324,7 @@ export const configureReactServer = (...configs) => {
           __CLIENT__: JSON.stringify(false),
           __STAGE__: JSON.stringify(process.env.STAGE),
         }),
-      ],
+      ].filter(Boolean),
     },
     config
   )

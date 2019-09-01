@@ -59,7 +59,11 @@ export const renderApp = clientStats => async (req, res) => {
   // somewhere a `<Redirect>` was rendered
   if (routerContext.url) {
     // redirect(res, routerContext.status || 301, routerContext.url)
-    redirect(res, routerContext.url, routerContext.location?.state?.status || 301)
+    redirect(
+      res,
+      routerContext.url,
+      routerContext.location?.state?.status || 301
+    )
   }
   // renders the Helmet attributes
   const {helmet} = helmetContext
@@ -88,10 +92,9 @@ export const renderApp = clientStats => async (req, res) => {
       ${helmet.script}
       <!-- Initial Apollo state -->
       <script>
-        window.__APOLLO_STATE__ = ${JSON.stringify(apolloClient.extract()).replace(
-          /</g,
-          '\\u003c'
-        )}
+        window.__APOLLO_STATE__ = ${JSON.stringify(
+          apolloClient.extract()
+        ).replace(/</g, '\\u003c')}
       </script>
     </head>
     <body ${helmet.bodyAttributes}>
@@ -117,7 +120,11 @@ export default pipe(
   // 404s on favicon requests
   noFavicon,
   // Sets up robots.txt middleware for micro
-  withRobots(`User-agent: *\n${process.env.STAGE === 'production' ? 'Allow' : 'Disallow'}: /`),
+  withRobots(
+    `User-agent: *\n${
+      process.env.STAGE === 'production' ? 'Allow' : 'Disallow'
+    }: /`
+  ),
   // sets up cookies
   withCookies(),
   // render app wrapper

@@ -1,4 +1,7 @@
-const {configureReactClient, configureStaticReactServer} = require('@lunde/configure-react-app')
+const {
+  configureReactClient,
+  configureStaticReactServer,
+} = require('@lunde/build-react-app')
 
 module.exports =
   process.env.TARGET === 'web'

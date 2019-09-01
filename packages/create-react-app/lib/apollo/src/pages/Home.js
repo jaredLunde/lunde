@@ -4,7 +4,7 @@ import {useQuery} from 'react-apollo'
 import gql from 'graphql-tag'
 import {Text, Box} from 'curls'
 
-const Home = props => {
+const Home = () => {
   const {loading, error, data} = useQuery(
     gql`
       {

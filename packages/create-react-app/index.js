@@ -1,17 +1,119 @@
-const {flag, required, trim} = require('@inst-cli/template-utils')
+const os = require('os')
+const path = require('path')
+const {
+  flag,
+  required,
+  trim,
+  autocompleteIni,
+} = require('@inst-cli/template-utils')
 
 module.exports = {}
+const CREDENTIALS_FILE = path.join(os.homedir(), '.aws/credentials')
 // creates template variables using Inquirer.js
 // see https://github.com/SBoudrias/Inquirer.js#objects for prompt object examples
 module.exports.prompts = (
   {ROOT_NAME, ROOT_DIR, PKG_NAME, PKG_DIR}, // default template variables
-  packageJson, // contents of the package.json file as a plain object
   args, // the arguments passed to the CLI
+  packageJson, // contents of the package.json file as a plain object
   inquirer // the inquirer prompt object
-) => [
-  // See https://github.com/SBoudrias/Inquirer.js#objects
-  // for valid prompts
-]
+) => {
+  const prompts = []
+
+  if (args.serverless || args.sls) {
+    prompts.push(
+      ...[
+        // See https://github.com/SBoudrias/Inquirer.js#objects
+        // for valid prompts
+        {
+          name: 'DOMAIN_PRODUCTION',
+          message: `Domain name  [${flag('production', 'green')}] |`,
+          filter: trim,
+          validate: required,
+        },
+        {
+          name: 'DOMAIN_STAGING',
+          message: `Domain name     [${flag('staging', 'white')}] |`,
+          default: a =>
+            a.DOMAIN_PRODUCTION.split('.').length > 2
+              ? `staging--${a.DOMAIN_PRODUCTION}`
+              : `staging.${a.DOMAIN_PRODUCTION}`,
+          filter: trim,
+          validate: required,
+        },
+        {
+          name: 'S3_BUCKET_PRODUCTION',
+          message: `S3 bucket    [${flag('production', 'green')}] |`,
+          default: a => `${PKG_NAME}-public`,
+          filter: trim,
+          validate: required,
+        },
+        {
+          name: 'S3_BUCKET_STAGING',
+          message: `S3 bucket       [${flag('staging', 'white')}] |`,
+          default: a => `staging--${a.S3_BUCKET_PRODUCTION}`,
+          filter: trim,
+          validate: required,
+        },
+
+        autocompleteIni(inquirer, CREDENTIALS_FILE, {
+          name: 'AWS_PROFILE',
+          message: `AWS profile               |`,
+          default: PKG_NAME,
+          filter: trim,
+          validate: required,
+        }),
+      ]
+    )
+
+    if (args.static) {
+      prompts.splice(
+        2,
+        0,
+        ...[
+          {
+            name: 'SITE_S3_BUCKET_PRODUCTION',
+            message: `Website S3 bucket  [${flag('production', 'green')}] |`,
+            default: a => a.DOMAIN_PRODUCTION,
+            filter: trim,
+            validate: required,
+          },
+          {
+            name: 'SITE_S3_BUCKET_STAGING',
+            message: `Website S3 bucket     [${flag('staging', 'white')}] |`,
+            default: a => a.DOMAIN_STAGING,
+            filter: trim,
+            validate: required,
+          },
+        ]
+      )
+    }
+  }
+
+  if (args.apollo) {
+    prompts.unshift(
+      ...[
+        {
+          name: 'APOLLO_DOMAIN_PRODUCTION',
+          message: `Apollo domain [${flag('production', 'green')}] |`,
+          filter: trim,
+          validate: required,
+        },
+        {
+          name: 'APOLLO_DOMAIN_STAGING',
+          message: `Apollo domain    [${flag('staging', 'white')}] |`,
+          filter: trim,
+          default: a =>
+            a.APOLLO_DOMAIN_PRODUCTION.split('.').length > 2
+              ? `staging-${a.APOLLO_DOMAIN_PRODUCTION}`
+              : `staging.${a.APOLLO_DOMAIN_PRODUCTION}`,
+          validate: required,
+        },
+      ]
+    )
+  }
+
+  return prompts
+}
 
 // package.json dependencies
 module.exports.dependencies = (variables, args) => {
@@ -21,19 +123,19 @@ module.exports.dependencies = (variables, args) => {
     '@lunde/render-react-app': 'latest',
     '@style-hooks/styled': 'latest',
     'core-js': 'latest',
-    'curls': 'latest',
+    curls: 'latest',
     'prop-types': 'latest',
-    'react': 'latest',
+    react: 'latest',
     'react-broker': 'latest',
     'react-dom': 'latest',
     'react-helmet-async': 'latest',
-    "resolve-url": "latest",
-    "react-router-dom": "latest",
+    'resolve-url': 'latest',
+    'react-router-dom': 'latest',
   }
 
   if (args.serverless || args.sls) {
     Object.assign(deps, {
-      'serverless-http': 'latest'
+      'serverless-http': 'latest',
     })
 
     if (args.static) {
@@ -43,16 +145,16 @@ module.exports.dependencies = (variables, args) => {
 
   if (args.apollo) {
     Object.assign(deps, {
-      "apollo-boost": "latest",
-      "apollo-link-context": "latest",
-      "apollo-link-logger": "latest",
-      "graphql": "latest",
-      "graphql-tag.macro": "latest",
-      "js-cookie": "latest",
-      "node-fetch": "latest",
-      "react-apollo": "latest",
-      "set-cookie-parser": "latest",
-      "unfetch": "latest"
+      'apollo-boost': 'latest',
+      'apollo-link-context': 'latest',
+      'apollo-link-logger': 'latest',
+      graphql: 'latest',
+      'graphql-tag.macro': 'latest',
+      'js-cookie': 'latest',
+      'node-fetch': 'latest',
+      'react-apollo': 'latest',
+      'set-cookie-parser': 'latest',
+      unfetch: 'latest',
     })
   }
 
@@ -62,7 +164,7 @@ module.exports.dependencies = (variables, args) => {
 // package.json dev dependencies
 module.exports.devDependencies = (variables, args) => {
   let deps = {
-    '@lunde/configure-react-app': 'latest',
+    '@lunde/build-react-app': 'latest',
     '@testing-library/jest-dom': 'latest',
     '@testing-library/react': 'latest',
     '@testing-library/react-hooks': 'latest',
@@ -71,28 +173,29 @@ module.exports.devDependencies = (variables, args) => {
     'cross-env': 'latest',
     eslint: 'latest',
     'eslint-import-resolver-jest': 'latest',
+    'eslint-plugin-jest': 'latest',
     'eslint-plugin-react': 'latest',
     'eslint-plugin-react-hooks': 'latest',
-    'eslint-plugin-jest': 'latest',
     husky: 'latest',
+    'identity-obj-proxy': 'latest',
     'lint-staged': 'latest',
     prettier: 'latest',
     'pretty-quick': 'latest',
     'react-test-renderer': 'latest',
-    rimraf: 'latest',
+    rimraf: '^2.6.3',
   }
 
   if (args.serverless || args.sls) {
     Object.assign(deps, {
-      "@stellar-apps/serverless-sync-bundle": "latest",
-      "@stellar-apps/serverless-dotenv": "latest",
-      'serverless': 'latest',
-      "serverless-apigw-binary": "latest",
-      "serverless-domain-manager": "^latest",
-      "serverless-plugin-lambda-warmup": "latest",
-      "serverless-plugin-scripts": "latest",
-      "serverless-pseudo-parameters": "latest",
-      "serverless-webpack": "latest",
+      '@stellar-apps/serverless-sync-bundle': 'latest',
+      '@stellar-apps/serverless-dotenv': 'latest',
+      serverless: 'latest',
+      'serverless-apigw-binary': 'latest',
+      'serverless-domain-manager': '^latest',
+      'serverless-plugin-lambda-warmup': 'latest',
+      'serverless-plugin-scripts': 'latest',
+      'serverless-pseudo-parameters': 'latest',
+      'serverless-webpack': 'latest',
     })
 
     if (args.static) {
@@ -104,7 +207,7 @@ module.exports.devDependencies = (variables, args) => {
 
   if (args.static) {
     Object.assign(deps, {
-      '@stellar-apps/static-site-generator-plugin': 'latest'
+      '@stellar-apps/static-site-generator-plugin': 'latest',
     })
   }
 
@@ -122,16 +225,12 @@ module.exports.include = (variables, args) => {
 
   if (isServerless === true) {
     include.push('**/serverless/**')
-  }
-  else if (isApollo) {
+  } else if (isApollo) {
     include.push('**/apollo/**')
-    if (isServerless)
-      include.push('**/serverless+apollo/**')
-  }
-  else if (isStatic) {
+    if (isServerless) include.push('**/serverless+apollo/**')
+  } else if (isStatic) {
     include.push('**/static/**')
-    if (isServerless)
-      include.push('**/serverless+static/**')
+    if (isServerless) include.push('**/serverless+static/**')
   }
 
   return include
@@ -139,7 +238,12 @@ module.exports.include = (variables, args) => {
 
 // filter for renaming files
 module.exports.rename = (filename, variables, args) =>
-  filename.replace(/(\/lib\/)(serverless)?(\+?(apollo|static)\/)?/g, '$1').replace('.inst.', '.')
+  (filename.endsWith('/gitignore')
+    ? filename.replace('gitignore', '.gitignore')
+    : filename
+  )
+    .replace(/\/(serverless|shared|static|apollo)(\+?(apollo|static)\/)?/g, '')
+    .replace('.inst.', '.')
 
 // runs after the package.json is created and deps are installed,
 // used for adding scripts and whatnot
@@ -151,22 +255,25 @@ module.exports.editPackageJson = (
   args
 ) => {
   packageJson.scripts = {
-    build: null,
-    // deploy: 'stellar-scripts deploy',
-    // teardown: 'stellar-scripts teardown',
-    clean: 'rimraf .cache-loader && rimraf dist && rimraf node_modules/.cache',
+    build: 'webpack',
+    clean: 'rimraf dist && rimraf .cache-loader && rimraf node_modules/.cache',
     format: 'prettier --write "src/**/*.js"',
     lint: 'eslint src',
     postinstall: 'npm run clean',
-    start: null,
+    start: '',
     test: 'jest',
     validate: 'npm run lint && npm run test -- --coverage',
   }
 
+  if (args.serverless) {
+    packageJson.scripts.deploy = ''
+    packageJson.scripts.teardown = ''
+  }
+
   packageJson.husky = {
     hooks: {
-      'pre-commit': 'lint-staged'
-    }
+      'pre-commit': 'lint-staged',
+    },
   }
 
   packageJson['lint-staged'] = {

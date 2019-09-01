@@ -59,7 +59,11 @@ export const renderApp = clientStats => async (req, res) => {
   // somewhere a `<Redirect>` was rendered
   if (routerContext.url) {
     // redirect(res, routerContext.status || 301, routerContext.url)
-    redirect(res, routerContext.url, routerContext.location?.state?.status || 301)
+    redirect(
+      res,
+      routerContext.url,
+      routerContext.location?.state?.status || 301
+    )
   }
   // renders the Helmet attributes
   const {helmet} = helmetContext
@@ -88,10 +92,9 @@ export const renderApp = clientStats => async (req, res) => {
       ${helmet.script}
       <!-- Initial Apollo state -->
       <script>
-        window.__APOLLO_STATE__ = ${JSON.stringify(apolloClient.extract()).replace(
-          /</g,
-          '\\u003c'
-        )}
+        window.__APOLLO_STATE__ = ${JSON.stringify(
+          apolloClient.extract()
+        ).replace(/</g, '\\u003c')}
       </script>
     </head>
     <body ${helmet.bodyAttributes}>
@@ -117,13 +120,18 @@ const middleware = pipe(
   // 404s on favicon requests
   noFavicon,
   // Sets up robots.txt middleware for micro
-  withRobots(`User-agent: *\n${process.env.STAGE === 'production' ? 'Allow' : 'Disallow'}: /`),
+  withRobots(
+    `User-agent: *\n${
+      process.env.STAGE === 'production' ? 'Allow' : 'Disallow'
+    }: /`
+  ),
   // sets up cookies
   withCookies()
 )
 
 // this is the server renderer that will handle all requests
-const serverRenderer = clientStats => middleware(createRenderer(renderApp(clientStats)))
+const serverRenderer = clientStats =>
+  middleware(createRenderer(renderApp(clientStats)))
 // sets up options for the Serverless lambda function
 let clientStats, mainServerless
 if (process.env.STAGE !== 'development') {
@@ -132,7 +140,9 @@ if (process.env.STAGE !== 'development') {
 }
 // this is the export that Lambda calls as its handler
 export const main = (event, context) =>
-  event.source === 'serverless-plugin-lambda-warmup' ? void 0 : mainServerless(event, context)
+  event.source === 'serverless-plugin-lambda-warmup'
+    ? void 0
+    : mainServerless(event, context)
 // by default this just exports the renderer
 // this will be used by Webpack dev renderers
 export default serverRenderer

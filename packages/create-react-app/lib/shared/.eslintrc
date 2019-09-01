@@ -19,7 +19,7 @@
     "no-prototype-builtins": "off",
     "react/no-children-prop": "off",
     "react/display-name": "off",
-    "react/prop-types": [2, {"ignore": ["children"]}]
+    "react/prop-types": "off"
   },
   "settings": {
     "react": {
@@ -34,7 +34,10 @@
     "jest/globals": true
   },
   "globals": {
-    "__DEV__": true
+    "__DEV__": true,
+    "__CLIENT__": true,
+    "__SERVER__": true,
+    "__STAGE__": true
   },
   "overrides": [
     {

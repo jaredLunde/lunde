@@ -16,5 +16,4 @@ const lazyProps = {loading: () => 'Loading...'}
 // The order these routes are defined in is the same order that they show up in
 // inside the <Switch> statement in the <Document> of '../index'
 export const Home = <Route path={urls.home()} exact component={lazy('./Home', lazyProps)} />
-
 export const NotFound = <Route path='*' exact component={lazy('./404', lazyProps)} />

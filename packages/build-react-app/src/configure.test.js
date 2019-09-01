@@ -1,8 +1,4 @@
-import {
-  configureReactClient,
-  configureReactServer,
-  configureStaticReactServer,
-} from './index'
+import {configureReactClient, configureReactServer, configureStaticReactServer} from './index'
 
 describe('development', () => {
   const OLD_ENV = process.env

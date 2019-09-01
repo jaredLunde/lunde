@@ -1,6 +1,6 @@
 {
-  "name": "@lunde/configure-react-app",
-  "version": "1.0.2",
+  "name": "@lunde/build-react-app",
+  "version": "1.0.0",
   "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
   "license": "MIT",
   "main": "dist/index.js",
@@ -23,26 +23,41 @@
     "prettier": "^1.18.2",
     "pretty-quick": "^1.11.1",
     "rimraf": "^3.0.0",
-    "webpack": "^4.39.2"
+    "webpack": "^4.39.3"
   },
   "dependencies": {
     "@lunde/babel-preset-react-app": "latest",
     "@lunde/webpack": "latest",
     "@stellar-apps/static-site-generator-plugin": "latest",
+    "babel-loader": "^8.0.6",
     "babel-merge": "latest",
+    "box": "^0.0.4",
+    "chalk": "^2.4.2",
     "compression-webpack-plugin": "^3.0.0",
+    "cookies": "^0.7.3",
     "dotenv-webpack": "^1.7.0",
+    "http-status": "^1.3.2",
     "ignore-emit-webpack-plugin": "^2.0.2",
     "imagemin-mozjpeg": "^8.0.0",
     "imagemin-optipng": "^7.0.0",
     "imagemin-webpack": "^5.1.0",
+    "ip": "^1.1.5",
+    "is-gzip": "^2.0.0",
+    "micro": "^9.3.4",
+    "micro-dev": "^3.0.0",
+    "mime": "^2.4.4",
+    "openssl-self-signed-certificate": "^1.1.6",
     "responsive-loader": "^1.2.0",
-    "sharp": "^0.23.0",
+    "sharp": "latest",
     "terser-webpack-plugin": "latest",
+    "webpack": "latest",
     "webpack-bundle-analyzer": "latest",
+    "webpack-cli": "latest",
+    "webpack-dev-middleware": "^3.7.0",
+    "webpack-hot-middleware": "^2.25.0",
+    "webpack-hot-server-middleware": "^0.6.0",
     "webpack-stats-plugin": "^0.3.0"
   },
-  "peerDependencies": {},
   "scripts": {
     "build": "babel src -d dist -x .js --ignore \"**/*.test.js\",\"**/test.js\" --delete-dir-on-start",
     "format": "npm run format:cjs && npm run format:src",
@@ -64,7 +79,7 @@
       "pretty-quick --staged"
     ]
   },
-  "homepage": "https://github.com/jaredLunde/lunde/tree/master/packages/configure-react-app#readme",
+  "homepage": "https://github.com/jaredLunde/lunde/tree/master/packages/build-react-app#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/jaredLunde/lunde.git"
