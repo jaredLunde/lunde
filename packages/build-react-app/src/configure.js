@@ -139,7 +139,13 @@ export const createPublicLoader = publicLoader => {
 }
 
 export const configureReactClient = (...configs) => {
-  let {babelOverride = {}, publicLoader, compressionOptions, ...config} = merge(...configs)
+  let {
+    babelOverride = {},
+    publicLoader,
+    compressionOptions,
+    analyze = false,
+    ...config
+  } = merge(...configs)
   let envConfig
 
   if (!isProd()) {
@@ -162,8 +168,8 @@ export const configureReactClient = (...configs) => {
       },
 
       plugins: [
-        process.env.ANALYZE === true && new BundleAnalyzerPlugin(),
-        !process.env.ANALYZE &&
+        analyze && new BundleAnalyzerPlugin(),
+        !analyze &&
           new CompressionPlugin(
             compressionOptions || {
               test: /\.(js|txt|html|json|md|svg|xml|yml)(\?.*)?$/i,
@@ -178,11 +184,13 @@ export const configureReactClient = (...configs) => {
             }
           ),
         new StatsWriterPlugin({
-          stats: {
-            all: false,
-            publicPath: true,
-            chunks: true,
-          },
+          stats: analyze
+            ? {all: true}
+            : {
+                all: false,
+                publicPath: true,
+                chunks: true,
+              },
         }),
         // Compresses images
         new ImageminPlugin({
@@ -301,20 +309,6 @@ export const configureReactServer = (...configs) => {
       externals: ['js-beautify', 'encoding'],
 
       plugins: [
-        // Compresses images
-        isProd() &&
-          new ImageminPlugin({
-            cache: true,
-            bail: false,
-            loader: false,
-            maxConcurrency: 8,
-            imageminOptions: {
-              plugins: [
-                imageminMozJpeg({quality: 90, progressive: true}),
-                imageminOptipng({optimizationLevel: 7}),
-              ],
-            },
-          }),
         // prevents emitting anything that isn't text, javascript, or json
         new IgnoreEmitPlugin(/\.(?!txt|[tj]sx?|json)\w+$/),
         new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),

@@ -1,6 +1,5 @@
 import {defaultRenderError} from './createRenderer'
 import {send} from 'micro'
-export * from './createRenderer'
 
 // this creates an http handler
 export default (

@@ -110,7 +110,7 @@ export const defaultRenderError = (req, res, err) => {
 }
 
 // this creates an http handler
-export default (
+export const createRenderer = (
   // function which generates the HTML markup for the app
   render,
   // callback for returning error pages

@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import {StaticRouter} from 'react-router-dom'
 import * as Broker from 'react-broker'
-import createStaticRenderer from '@lunde/render-react-app/createStaticRenderer'
+import {createStaticRenderer} from '@lunde/render-react-app'
 import App from './index'
 
 const render = clientStats => async locals => {
@@ -55,7 +55,7 @@ const render = clientStats => async locals => {
 
 const staticRenderer = createStaticRenderer(render)
 export default process.env.STAGE === 'development'
-  ? staticRenderer
+  ? ({clientStats}) => staticRenderer(clientStats)
   : locals =>
       staticRenderer(require(`../dist/${process.env.STAGE}/client/stats.json`))(
         locals

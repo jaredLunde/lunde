@@ -34,10 +34,11 @@
     "jest/globals": true
   },
   "globals": {
-    "__DEV__": true,
-    "__CLIENT__": true,
-    "__SERVER__": true,
-    "__STAGE__": true
+    "__DEV__": "readonly",
+    "__CLIENT__": "readonly",
+    "__SERVER__": "readonly",
+    "__STAGE__": "readonly",
+    "__webpack_public_path__": "readonly"
   },
   "overrides": [
     {

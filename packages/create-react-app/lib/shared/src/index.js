@@ -21,12 +21,12 @@ const Document = ({location}) => (
         content='width=device-width, user-scalable=yes, initial-scale=1.0'
       />
       <meta name='theme-color' content='#000' />
-      {process.env.PUBLIC_PATH.startsWith('http') && (
-        <link rel='dns-prefetch preconnect' href={process.env.PUBLIC_PATH} crossOrigin />
+      {__webpack_public_path__.startsWith('http') && (
+        <link rel='dns-prefetch preconnect' href={__webpack_public_path__} crossOrigin />
       )}
     </Helmet>
     <div id='portals' />
-    <Switch location={location} children={Object.values(pages)} />
+    <Switch location={location} children={Object.values(pages).map(({route}) => route)} />
   </>
 )
 

@@ -1061,26 +1061,6 @@ Object {
         "hashFunction": "md4",
       },
     },
-    ImageminPlugin {
-      "options": Object {
-        "bail": false,
-        "cache": true,
-        "exclude": undefined,
-        "filter": [Function],
-        "imageminOptions": Object {
-          "plugins": Array [
-            [Function],
-            [Function],
-          ],
-        },
-        "include": undefined,
-        "loader": false,
-        "manifest": undefined,
-        "maxConcurrency": 8,
-        "name": "[hash].[ext]",
-        "test": /\\\\\\.\\(jpe\\?g\\|png\\|gif\\|tif\\|webp\\|svg\\)\\$/i,
-      },
-    },
     IgnoreEmitPlugin {
       "DEBUG": false,
       "ignorePatterns": Array [
@@ -1349,26 +1329,6 @@ Object {
         "hashDigest": "base64",
         "hashDigestLength": 4,
         "hashFunction": "md4",
-      },
-    },
-    ImageminPlugin {
-      "options": Object {
-        "bail": false,
-        "cache": true,
-        "exclude": undefined,
-        "filter": [Function],
-        "imageminOptions": Object {
-          "plugins": Array [
-            [Function],
-            [Function],
-          ],
-        },
-        "include": undefined,
-        "loader": false,
-        "manifest": undefined,
-        "maxConcurrency": 8,
-        "name": "[hash].[ext]",
-        "test": /\\\\\\.\\(jpe\\?g\\|png\\|gif\\|tif\\|webp\\|svg\\)\\$/i,
       },
     },
     IgnoreEmitPlugin {

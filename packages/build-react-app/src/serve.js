@@ -91,7 +91,7 @@ function createHandler(error, serverRenderer) {
   }
 }
 
-module.exports = ({
+export default ({
   clientConfig, // dev webpack client config
   serverConfig, // dev webpack server config
   publicAssets, // path to local public assets

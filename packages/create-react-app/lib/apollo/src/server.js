@@ -5,7 +5,8 @@ import {ApolloProvider} from 'react-apollo'
 import {createHttpLink} from 'apollo-link-http'
 import {getDataFromTree} from '@apollo/react-ssr'
 import fetch from 'node-fetch'
-import createRenderer, {
+import {
+  createRenderer,
   redirect,
   noFavicon,
   withRobots,
@@ -116,19 +117,19 @@ export const renderApp = clientStats => async (req, res) => {
 }
 
 // exports the renderer w/ middleware
-export default pipe(
-  // 404s on favicon requests
-  noFavicon,
-  // Sets up robots.txt middleware for micro
-  withRobots(
-    `User-agent: *\n${
-      process.env.STAGE === 'production' ? 'Allow' : 'Disallow'
-    }: /`
-  ),
-  // sets up cookies
-  withCookies(),
-  // render app wrapper
-  createRenderer,
-  // renders the app
-  renderApp
-)
+export default ({clientStats}) =>
+  pipe(
+    // 404s on favicon requests
+    noFavicon,
+    // Sets up robots.txt middleware for micro
+    withRobots(
+      `User-agent: *\n${
+        process.env.STAGE === 'production' ? 'Allow' : 'Disallow'
+      }: /`
+    ),
+    // sets up cookies
+    withCookies()
+  )(
+    // renders the app
+    createRenderer(renderApp(clientStats))
+  )
