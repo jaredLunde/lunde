@@ -4,7 +4,7 @@
 
 # @lunde/build-react-app
 
-Utilities for building React apps and maintaining Webpack and Babel configurations
+Utilities for building and developing React apps
 
 ## Installation
 

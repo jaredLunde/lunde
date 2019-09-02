@@ -1,13 +1,16 @@
 {
   "name": "@lunde/build-react-app",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
   "license": "MIT",
   "main": "dist/index.js",
+  "bin": {
+    "build-react-app": "dist/bin.js"
+  },
   "files": [
     "/dist"
   ],
-  "description": "Utilities for creating and maintaining React applications",
+  "description": "Utilities for building and developing React apps",
   "sideEffects": false,
   "devDependencies": {
     "@lunde/babel-preset-es": "^1.0.1",
@@ -25,6 +28,7 @@
     "rimraf": "^3.0.0"
   },
   "dependencies": {
+    "@inst-cli/template-utils": "^1.0.2",
     "@lunde/babel-preset-react-app": "latest",
     "@lunde/webpack": "latest",
     "@stellar-apps/static-site-generator-plugin": "latest",
@@ -55,7 +59,8 @@
     "webpack-dev-middleware": "^3.7.0",
     "webpack-hot-middleware": "^2.25.0",
     "webpack-hot-server-middleware": "^0.6.0",
-    "webpack-stats-plugin": "^0.3.0"
+    "webpack-stats-plugin": "^0.3.0",
+    "yargs": "^14.0.0"
   },
   "scripts": {
     "build": "babel src -d dist -x .js --ignore \"**/*.test.js\",\"**/test.js\" --delete-dir-on-start",
