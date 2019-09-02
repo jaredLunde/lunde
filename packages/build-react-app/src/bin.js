@@ -4,16 +4,18 @@ import yargs from 'yargs'
 import {log, flag, pwd, getPkgJson} from '@inst-cli/template-utils'
 import path from 'path'
 import webpack from 'webpack'
+import serve_ from './serve'
 
 yargs.scriptName('build-react-app')
 
 yargs.command(
-  'serve [env] [-h|--host host] [-p|--port port] [-a|--assets assets] [-c|--config config] [-ab|--analyze]',
+  'serve [env] [-h|--host host] [-p|--port port] [-a|--assets assets] [-c|--config config]',
   'Starts the nearest React app in a micro server',
   yargs => {
     yargs.positional('env', {
+      alias: 'e',
       describe:
-        `The node environment to start the app in. If not provided, this will default to  ` +
+        `The node environment to start the app in. If not provided, this will default to ` +
         `process.env.NODE_ENV || "development".`,
       type: 'string',
     })
@@ -50,6 +52,7 @@ yargs.command(
   'Bundles the nearest React app',
   yargs => {
     yargs.positional('env', {
+      alias: 'e',
       describe:
         `The node environment to build the app in. If not provided, this will default to  ` +
         `process.env.NODE_ENV || "development".`,
@@ -81,7 +84,7 @@ function logDone() {
 
 // routes the cmd
 switch (cmd) {
-  case 'start':
+  case 'serve':
     serve(args).then(logDone)
     break
   case 'build':
@@ -102,7 +105,7 @@ async function serve({env, stage, host = '::', port, assets, config}) {
   process.env.STAGE = stage || process.env.STAGE || 'development'
   config = require(config || path.join(path.dirname(pkgJson.__path), 'webpack.config.js'))
 
-  return require('./serve')({
+  return serve_({
     // dev webpack client config
     clientConfig: config.find(v => v.name === 'client'),
     // dev webpack server config

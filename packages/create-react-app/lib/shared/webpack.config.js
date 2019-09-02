@@ -8,6 +8,7 @@ module.exports = [
     output: {
       path: path.join(__dirname, 'dist', stage, 'client'),
     },
+    analyze: process.env.ANALYZE,
   }),
 
   configureReactServer({

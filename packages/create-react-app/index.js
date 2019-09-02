@@ -255,13 +255,14 @@ module.exports.editPackageJson = (
   args
 ) => {
   packageJson.scripts = {
-    build: 'webpack',
+    analyze: 'ANALYZE=true build-react-app serve production',
+    build: 'build-react-app build',
     clean: 'rimraf dist && rimraf .cache-loader && rimraf node_modules/.cache',
     format: 'prettier --write "src/**/*.js"',
     lint: 'eslint src',
     postinstall: 'npm run clean',
-    start: '',
-    test: 'jest',
+    serve: 'build-react-app serve',
+    test: 'jest --passWithNoTests',
     validate: 'npm run lint && npm run test -- --coverage',
   }
 

@@ -1,5 +1,8 @@
 const path = require('path')
-const {configureReactClient, configureStaticReactServer} = require('@lunde/build-react-app')
+const {
+  configureReactClient,
+  configureStaticReactServer,
+} = require('@lunde/build-react-app')
 const stage = process.env.STAGE || 'development'
 
 module.exports = [
@@ -8,6 +11,7 @@ module.exports = [
     output: {
       path: path.join(__dirname, 'dist', stage),
     },
+    analyze: process.env.ANALYZE,
   }),
 
   configureStaticReactServer({
