@@ -115,21 +115,19 @@ export const renderApp = clientStats => async (req, res) => {
     </html>
   `
 }
-
-// exports the renderer w/ middleware
+// creates middleware pipeline
+const middleware = pipe(
+  // 404s on favicon requests
+  noFavicon,
+  // Sets up robots.txt middleware for micro
+  withRobots(
+    `User-agent: *\n${
+      process.env.STAGE === 'production' ? 'Allow' : 'Disallow'
+    }: /`
+  ),
+  // sets up cookies
+  withCookies()
+)
+// exports the renderer w/ middleware\
 export default ({clientStats}) =>
-  pipe(
-    // 404s on favicon requests
-    noFavicon,
-    // Sets up robots.txt middleware for micro
-    withRobots(
-      `User-agent: *\n${
-        process.env.STAGE === 'production' ? 'Allow' : 'Disallow'
-      }: /`
-    ),
-    // sets up cookies
-    withCookies()
-  )(
-    // renders the app
-    createRenderer(renderApp(clientStats))
-  )
+  middleware(createRenderer(renderApp(clientStats)))

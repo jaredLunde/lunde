@@ -12,7 +12,7 @@ const render = clientStats => async locals => {
   const helmetContext = {}
   // creates the App in React
   const app = (
-    <StaticRouter location={locals.url || locals.path} context={{}}>
+    <StaticRouter location={locals.path} context={{}}>
       <App helmetContext={helmetContext} chunkCache={chunkCache} {...locals} />
     </StaticRouter>
   )
@@ -52,11 +52,12 @@ const render = clientStats => async locals => {
     </html>
   `.trim()
 }
-
-const staticRenderer = createStaticRenderer(render)
-export default process.env.STAGE === 'development'
-  ? ({clientStats}) => staticRenderer(clientStats)
+// BUILD_ENV will be 'static' when the 'build' script is called
+// and 'server' when the 'serve' script is called
+export default process.env.BUILD_ENV !== 'static'
+  ? ({clientStats}) => req =>
+      createStaticRenderer(render(clientStats))({path: req.url})
   : locals =>
-      staticRenderer(require(`../dist/${process.env.STAGE}/client/stats.json`))(
+      createStaticRenderer(render(require('../public/.cache/stats.json')))(
         locals
       )

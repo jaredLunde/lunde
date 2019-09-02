@@ -26,7 +26,6 @@ module.exports = {
     __DEV__: true,
     __CLIENT__: true,
     __SERVER__: true,
-    __STAGE__: '',
     __webpack_public_path__: '',
   },
 }

@@ -1,24 +1,27 @@
 const path = require('path')
 const {
   configureReactClient,
-  configureStaticReactServer,
+  configureReactServer,
 } = require('@lunde/build-react-app')
-const stage = process.env.STAGE || 'development'
 
 module.exports = [
   configureReactClient({
     entry: [path.join(__dirname, 'src/client.js')],
     output: {
-      path: path.join(__dirname, 'dist', stage),
+      path: path.join(__dirname, 'public', 'assets'),
     },
+    stats: {
+      filename: '../.cache/stats.json', // this is relative to output.path above
+      stats: {all: true},
+    },
+    compression: false,
     analyze: process.env.ANALYZE,
   }),
 
-  configureStaticReactServer({
+  configureReactServer({
     entry: [path.join(__dirname, 'src/server.js')],
     output: {
-      path: path.join(__dirname, 'dist', stage),
-      filename: 'render.js',
+      path: path.join(__dirname, 'public'),
     },
   }),
 ]

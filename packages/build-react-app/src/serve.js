@@ -101,7 +101,7 @@ export default ({
   host = '::',
   port = 3000,
 }) => {
-  const publicPath = clientConfig.output.publicPath
+  const publicPath = clientConfig.output.publicPath || '/public/'
 
   // cleans the old files out of the dev directory
   rimraf.sync(clientConfig.output.path)

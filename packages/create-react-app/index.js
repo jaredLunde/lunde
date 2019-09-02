@@ -254,6 +254,7 @@ module.exports.editPackageJson = (
   variables /*from prompts() above*/,
   args
 ) => {
+  packageJson.private = true
   packageJson.scripts = {
     analyze: 'ANALYZE=true build-react-app serve production',
     build: 'build-react-app build',

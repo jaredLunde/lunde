@@ -4,6 +4,7 @@ import yargs from 'yargs'
 import {log, flag, pwd, getPkgJson} from '@inst-cli/template-utils'
 import path from 'path'
 import webpack from 'webpack'
+import ora from 'ora'
 import serve_ from './serve'
 
 yargs.scriptName('build-react-app')
@@ -85,7 +86,7 @@ function logDone() {
 // routes the cmd
 switch (cmd) {
   case 'serve':
-    serve(args).then(logDone)
+    serve(args)
     break
   case 'build':
     build(args).then(logDone)
@@ -99,8 +100,9 @@ switch (cmd) {
     )
 }
 
-async function serve({env, stage, host = '::', port, assets, config}) {
+function serve({env, stage, host = '::', port, assets, config}) {
   const pkgJson = getPkgJson(pwd())
+  process.env.BUILD_ENV = 'server'
   process.env.NODE_ENV = env || process.env.NODE_ENV || 'development'
   process.env.STAGE = stage || process.env.STAGE || 'development'
   config = require(config || path.join(path.dirname(pkgJson.__path), 'webpack.config.js'))
@@ -121,30 +123,47 @@ async function serve({env, stage, host = '::', port, assets, config}) {
 
 async function build({env, stage, config}) {
   const pkgJson = getPkgJson(pwd())
+  process.env.BUILD_ENV = 'static'
   process.env.NODE_ENV = env || process.env.NODE_ENV || 'development'
   process.env.STAGE = stage || process.env.STAGE || 'development'
-  config = require(config || path.join(path.dirname(pkgJson.__path), 'webpack.config.js'))
+  const configPath = config || path.join(path.dirname(pkgJson.__path), 'webpack.config.js')
+  const configs = require(configPath)
+  // find() below ensures the configs are compiled in the correct order so
+  // server has access to the stats file of client
+  for (let config of [
+    configs.find(v => v.name === 'client'),
+    configs.find(v => v.name === 'server'),
+  ]) {
+    await new Promise(resolve => {
+      const name = chalk.bold(config.name)
+      const spinner = ora({spinner: 'point'}).start(`Building ${name}`)
 
-  return new Promise(resolve =>
-    webpack(config).run((err, stats) => {
-      if (err || stats.hasErrors()) {
-        if (err) {
-          console.log(chalk.red('[Build Error]'))
-          console.log(err)
-        }
+      try {
+        webpack([config]).run((err, stats) => {
+          if (err || stats.hasErrors()) {
+            spinner.stop()
+            if (err) {
+              console.log(chalk.red(`[${name} error]`))
+              console.log(err)
+            }
 
-        if (stats.stats[0].compilation.errors.length) {
-          console.log(chalk.red('[Client Errors]'))
-          console.log(stats.stats[0].compilation.errors.join('\n\n'))
-        }
+            if (stats.stats[0].compilation.errors.length) {
+              console.log(chalk.red(`[${name} error]`))
+              console.log(stats.stats[0].compilation.errors.join('\n\n'))
+            }
 
-        if (stats.stats[1].compilation.errors.length) {
-          console.log(chalk.red('[Server Errors]'))
-          console.log(stats.stats[1].compilation.errors.join('\n\n'))
-        }
+            spinner.fail(`${name} build failed`)
+          } else {
+            spinner.succeed(`${name} build succeeded`)
+          }
+
+          resolve()
+        })
+      } catch (err) {
+        console.log(chalk.red(`[${name} error]`))
+        console.log(err)
+        spinner.fail(`${name} build failed`)
       }
-
-      resolve()
     })
-  )
+  }
 }

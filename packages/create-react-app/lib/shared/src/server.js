@@ -80,8 +80,4 @@ const middleware = pipe(
   withCookies()
 )
 // exports the renderer w/ middleware
-export default ({clientStats}) =>
-  middleware(
-    // renders the app
-    createRenderer(renderApp(clientStats))
-  )
+export default ({clientStats}) => middleware(createRenderer(renderApp(clientStats)))

@@ -108,12 +108,12 @@ export const createPublicLoader = publicLoader => {
       // Loads all files require()'d from /public/ folders
       {
         // Images get special treatment
-        test: /public\/.*\.(?!(jpe?g|png|webm)$)([^.]+$)$/,
+        test: /assets\/.*\.(?!(jpe?g|png|webm)$)([^.]+$)$/,
         use: [
           {
             loader: 'file',
             options: {
-              regExp: /public\/(.*)\.([^.]+)$/,
+              regExp: /assets\/(.*)\.([^.]+)$/,
               name: '[1]/[md4:hash:base62:12].[ext]',
             },
           },
@@ -141,8 +141,9 @@ export const createPublicLoader = publicLoader => {
 export const configureReactClient = (...configs) => {
   let {
     babelOverride = {},
+    stats,
     publicLoader,
-    compressionOptions,
+    compression,
     analyze = false,
     ...config
   } = merge(...configs)
@@ -170,28 +171,35 @@ export const configureReactClient = (...configs) => {
       plugins: [
         analyze && new BundleAnalyzerPlugin(),
         !analyze &&
+          compression !== false &&
           new CompressionPlugin(
-            compressionOptions || {
-              test: /\.(js|txt|html|json|md|svg|xml|yml)(\?.*)?$/i,
-              cache: true,
-              algorithm: 'gzip',
-              threshold: 1024,
-              filename: '[path]',
-              compressionOptions: {
-                level: zlib.Z_BEST_COMPRESSION,
-                memLevel: zlib.Z_BEST_COMPRESSION,
-              },
-            }
+            typeof compression === 'object'
+              ? compression
+              : {
+                  test: /\.(js|txt|html|json|md|svg|xml|yml)(\?.*)?$/i,
+                  cache: true,
+                  algorithm: 'gzip',
+                  threshold: 1024,
+                  filename: '[path]',
+                  compressionOptions: {
+                    level: zlib.Z_BEST_COMPRESSION,
+                    memLevel: zlib.Z_BEST_COMPRESSION,
+                  },
+                }
           ),
-        new StatsWriterPlugin({
-          stats: analyze
-            ? {all: true}
-            : {
-                all: false,
-                publicPath: true,
-                chunks: true,
-              },
-        }),
+        new StatsWriterPlugin(
+          stats || {
+            filename: '.cache/stats.json',
+            stats: analyze
+              ? {all: true}
+              : {
+                  all: false,
+                  publicPath: true,
+                  chunks: true,
+                  assetsByChunkName: true,
+                },
+          }
+        ),
         // Compresses images
         new ImageminPlugin({
           cache: true,
@@ -254,6 +262,10 @@ export const configureReactClient = (...configs) => {
       name: 'client',
       target: 'web',
 
+      output: {
+        publicPath: '/assets/',
+      },
+
       module: {
         rules: [...publicLoader, ...createBabelLoadersForWeb(babelOverride)],
       },
@@ -264,7 +276,6 @@ export const configureReactClient = (...configs) => {
           __DEV__: JSON.stringify(!isProd()),
           __SERVER__: JSON.stringify(false),
           __CLIENT__: JSON.stringify(true),
-          __STAGE__: JSON.stringify(process.env.STAGE),
         }),
       ],
     },
@@ -274,15 +285,29 @@ export const configureReactClient = (...configs) => {
 }
 
 export const configureReactServer = (...configs) => {
-  let {target = 'lambda', babelOverride = {}, publicLoader, ...config} = merge(...configs)
+  let {
+    // all builds
+    entry,
+    target = 'lambda',
+    babelOverride = {},
+    publicLoader,
+    // static builds
+    paths = [],
+    locals = {},
+    crawl = true,
+    compression = false,
+    // everything else
+    ...config
+  } = merge(...configs)
   target = !isProd() ? 'node' : target
   publicLoader = createPublicLoader(publicLoader)
   publicLoader = Array.isArray(publicLoader) ? publicLoader : [publicLoader]
 
-  return createConfig(
+  let nextConfig = createConfig(
     {
       name: 'server',
       target,
+      entry,
 
       module: {
         rules: [
@@ -302,6 +327,7 @@ export const configureReactServer = (...configs) => {
       },
 
       output: {
+        publicPath: '/assets/',
         filename: 'render.js',
         libraryTarget: 'commonjs2',
       },
@@ -309,83 +335,84 @@ export const configureReactServer = (...configs) => {
       externals: ['js-beautify', 'encoding'],
 
       plugins: [
-        // prevents emitting anything that isn't text, javascript, or json
-        new IgnoreEmitPlugin(/\.(?!txt|[tj]sx?|json)\w+$/),
+        // prevents emitting anything that isn't html, text, javascript, or json
+        new IgnoreEmitPlugin(/\.(?!html|txt|[tj]sx?|json)\w+$/),
         new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
-        new webpack.DefinePlugin({
-          __DEV__: JSON.stringify(!isProd()),
-          __SERVER__: JSON.stringify(true),
-          __CLIENT__: JSON.stringify(false),
-          __STAGE__: JSON.stringify(process.env.STAGE),
-        }),
-      ].filter(Boolean),
-    },
-    config
-  )
-}
-
-export const configureStaticReactServer = (...configs) => {
-  const {staticSiteOptions = {}, ...config} = configureReactServer(...configs)
-  return merge(
-    {
-      module: {
-        rules: [
-          {
-            test: /robots(\.disallow)?.txt$/,
-            use: [
-              {
-                loader: 'file',
-                options: {
-                  name: 'robots.txt',
-                },
-              },
-            ],
-          },
-          {
-            test: /\.html/,
-            loaders: ['raw'],
-          },
-        ],
-      },
-
-      plugins: [
-        isProd() &&
-          new StaticSiteGeneratorPlugin({
-            crawl: true,
-            locals: {
-              // Properties here are merged into `locals`
-              // passed to the exported render function
-            },
-            paths: ['/', ...(staticSiteOptions?.paths || [])],
-            ...staticSiteOptions,
-          }),
-        isProd() &&
-          new CompressionPlugin({
-            test: /\.(txt|html|json|md|xml|yml)(\?.*)?$/i,
-            cache: true,
-            algorithm: 'gzip',
-            threshold: 1024,
-            filename: '[path]',
-            compressionOptions: {
-              level: zlib.Z_BEST_COMPRESSION,
-              memLevel: zlib.Z_BEST_COMPRESSION,
-            },
-          }),
         new webpack.DefinePlugin({
           process: {
             cwd: function() {},
-            env: {
-              NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-              STAGE: JSON.stringify(process.env.STAGE),
-            },
+            env: Object.keys(process.env).reduce(
+              (p, key) => Object.assign(p, {[key]: JSON.stringify(process.env[key])}),
+              {}
+            ),
           },
           __DEV__: JSON.stringify(!isProd()),
           __SERVER__: JSON.stringify(true),
           __CLIENT__: JSON.stringify(false),
-          __STAGE__: JSON.stringify(process.env.STAGE),
         }),
       ].filter(Boolean),
     },
     config
   )
+
+  if (process.env.BUILD_ENV === 'static') {
+    nextConfig = merge(
+      nextConfig,
+      {
+        output: {
+          publicPath: '/assets/',
+          filename: `.cache/render.js`,
+        },
+
+        module: {
+          rules: [
+            {
+              test: /robots(\.disallow)?.txt$/,
+              use: [
+                {
+                  loader: 'file',
+                  options: {
+                    name: 'robots.txt',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+
+        plugins: [
+          new StaticSiteGeneratorPlugin({
+            crawl,
+            locals,
+            paths: ['/', ...(paths || [])],
+          }),
+          isProd() &&
+            compression !== false &&
+            new CompressionPlugin(
+              typeof compression === 'object'
+                ? compression
+                : {
+                    test: /\.(txt|html|json|md|xml|yml)(\?.*)?$/i,
+                    cache: true,
+                    algorithm: 'gzip',
+                    threshold: 1024,
+                    filename: '[path]',
+                    compressionOptions: {
+                      level: zlib.Z_BEST_COMPRESSION,
+                      memLevel: zlib.Z_BEST_COMPRESSION,
+                    },
+                  }
+            ),
+          new webpack.DefinePlugin({
+            process: {
+              cwd: function() {},
+            },
+          }),
+        ].filter(Boolean),
+      },
+      config
+    )
+  }
+
+  return nextConfig
 }
