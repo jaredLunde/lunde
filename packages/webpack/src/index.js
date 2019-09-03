@@ -1,16 +1,10 @@
 import mergeWebpack from 'webpack-merge'
 import webpack from 'webpack'
 
+export * from './plugins'
 export const isProd = () => process.env.NODE_ENV === 'production'
 
-export const createBabelLoader = ({
-  test,
-  presets,
-  plugins,
-  include,
-  exclude,
-  options,
-}) => ({
+export const createBabelLoader = ({test, presets, plugins, include, exclude, options}) => ({
   test: test || /(\.[mtj]sx?)$$/,
   use: {
     loader: 'babel',

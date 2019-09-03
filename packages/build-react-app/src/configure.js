@@ -9,9 +9,15 @@ import IgnoreEmitPlugin from 'ignore-emit-webpack-plugin'
 import ImageminPlugin from 'imagemin-webpack'
 import imageminMozJpeg from 'imagemin-mozjpeg'
 import imageminOptipng from 'imagemin-optipng'
-import StaticSiteGeneratorPlugin from '@stellar-apps/static-site-generator-plugin'
 import CompressionPlugin from 'compression-webpack-plugin'
-import {createBabelLoader, createConfig, merge, isProd} from '@lunde/webpack'
+import {
+  StaticSitePlugin,
+  RimrafPlugin,
+  createBabelLoader,
+  createConfig,
+  merge,
+  isProd,
+} from '@lunde/webpack'
 
 const defaultAbsoluteRuntime = path.dirname(
   require.resolve('@babel/runtime-corejs3/package.json')
@@ -187,19 +193,6 @@ export const configureReactClient = (...configs) => {
                   },
                 }
           ),
-        new StatsWriterPlugin(
-          stats || {
-            filename: '.cache/stats.json',
-            stats: analyze
-              ? {all: true}
-              : {
-                  all: false,
-                  publicPath: true,
-                  chunks: true,
-                  assetsByChunkName: true,
-                },
-          }
-        ),
         // Compresses images
         new ImageminPlugin({
           cache: true,
@@ -271,6 +264,19 @@ export const configureReactClient = (...configs) => {
       },
 
       plugins: [
+        new StatsWriterPlugin(
+          stats || {
+            filename: '.cache/stats.json',
+            stats: analyze
+              ? {all: true}
+              : {
+                  all: false,
+                  publicPath: true,
+                  chunks: true,
+                  assetsByChunkName: true,
+                },
+          }
+        ),
         new webpack.LoaderOptionsPlugin({minimize: false, debug: !isProd()}),
         new webpack.DefinePlugin({
           __DEV__: JSON.stringify(!isProd()),
@@ -381,7 +387,7 @@ export const configureReactServer = (...configs) => {
         },
 
         plugins: [
-          new StaticSiteGeneratorPlugin({
+          new StaticSitePlugin({
             crawl,
             locals,
             paths: ['/', ...(paths || [])],
@@ -408,6 +414,7 @@ export const configureReactServer = (...configs) => {
               cwd: function() {},
             },
           }),
+          new RimrafPlugin({path: '**/.cache', hook: 'done'}),
         ].filter(Boolean),
       },
       config

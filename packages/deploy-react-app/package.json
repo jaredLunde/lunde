@@ -1,41 +1,40 @@
 {
-  "name": "@lunde/webpack",
-  "version": "1.0.2",
+  "name": "@lunde/deploy-react-app",
+  "version": "1.0.0",
   "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/es/index.js",
+  "bin": {
+    "deploy-react-app": "dist/bin.js"
+  },
   "files": [
     "/dist"
   ],
-  "description": "Configures Webpack in a manner consistent with tools like CRA",
+  "description": "Several deployment strategies for React apps",
+  "keywords": [
+    "deploy react-app"
+  ],
   "sideEffects": false,
   "devDependencies": {
-    "@lunde/babel-preset-es": "^1.0.1",
-    "babel-eslint": "^10.0.2",
-    "cross-env": "^5.2.0",
-    "eslint": "^6.2.2",
-    "eslint-import-resolver-jest": "^3.0.0",
-    "eslint-plugin-jest": "^22.15.2",
-    "husky": "^3.0.4",
-    "jest": "^24.9.0",
-    "lint-staged": "^9.2.3",
-    "prettier": "^1.18.2",
-    "pretty-quick": "^1.11.1",
-    "webpack": "^4.39.2"
+    "@lunde/babel-preset-es": "latest",
+    "babel-eslint": "latest",
+    "cross-env": "latest",
+    "eslint": "latest",
+    "eslint-import-resolver-jest": "latest",
+    "eslint-plugin-jest": "latest",
+    "husky": "latest",
+    "jest": "latest",
+    "lint-staged": "latest",
+    "prettier": "latest",
+    "pretty-quick": "latest",
+    "rimraf": "latest"
   },
-  "dependencies": {
-    "cheerio": "^1.0.0-rc.3",
-    "eval": "^0.1.4",
-    "rimraf": "^2.6.3",
-    "webpack-merge": "^4.2.1",
-    "webpack-sources": "^1.4.3"
-  },
-  "peerDependencies": {
-    "webpack": "^4.39.2"
-  },
+  "dependencies": {},
+  "peerDependencies": {},
   "scripts": {
     "build": "babel src -d dist -x .js --ignore \"**/*.test.js\",\"**/test.js\" --delete-dir-on-start",
-    "format": "npm run format:cjs && npm run format:src",
+    "format": "npm run format:cjs && npm run format:es && npm run format:src",
     "format:cjs": "prettier --write \"dist/**/*.js\"",
     "format:src": "prettier --write \"src/**/*.js\"",
     "lint": "eslint src",
@@ -54,7 +53,7 @@
       "pretty-quick --staged"
     ]
   },
-  "homepage": "https://github.com/jaredLunde/lunde/tree/master/packages/webpack#readme",
+  "homepage": "https://github.com/jaredLunde/lunde/tree/master/packages/deploy-react-app#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/jaredLunde/lunde.git"

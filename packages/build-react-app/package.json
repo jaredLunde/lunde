@@ -1,6 +1,6 @@
 {
   "name": "@lunde/build-react-app",
-  "version": "1.0.34",
+  "version": "1.0.37",
   "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
   "license": "MIT",
   "main": "dist/index.js",
@@ -25,13 +25,12 @@
     "lint-staged": "^9.2.4",
     "prettier": "^1.18.2",
     "pretty-quick": "^1.11.1",
-    "rimraf": "^2.6.3"
+    "rimraf": "^3.0.0"
   },
   "dependencies": {
     "@inst-cli/template-utils": "^1.0.2",
     "@lunde/babel-preset-react-app": "latest",
-    "@lunde/webpack": "latest",
-    "@stellar-apps/static-site-generator-plugin": "latest",
+    "@lunde/webpack": "^1.0.2",
     "babel-loader": "^8.0.6",
     "babel-merge": "latest",
     "boxen": "^4.1.0",
