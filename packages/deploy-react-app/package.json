@@ -1,6 +1,6 @@
 {
   "name": "@lunde/deploy-react-app",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
   "license": "MIT",
   "main": "dist/index.js",
@@ -29,13 +29,13 @@
     "pretty-quick": "latest",
     "rimraf": "latest"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@inst-cli/template-utils": "^1.0.7"
+  },
   "peerDependencies": {},
   "scripts": {
     "build": "babel src -d dist -x .js --ignore \"**/*.test.js\",\"**/test.js\" --delete-dir-on-start",
-    "format": "npm run format:cjs && npm run format:es && npm run format:src",
-    "format:cjs": "prettier --write \"dist/**/*.js\"",
-    "format:src": "prettier --write \"src/**/*.js\"",
+    "format": "prettier --write \"{dist,src}/**/*.js\"",
     "lint": "eslint src",
     "prepublishOnly": "npm run lint && npm run test && npm run build && npm run format",
     "test": "jest",
