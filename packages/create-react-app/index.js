@@ -19,7 +19,7 @@ module.exports.prompts = (
 ) => {
   const prompts = []
 
-  if (args.serverless || args.sls) {
+  if (args.aws) {
     prompts.push(
       ...[
         // See https://github.com/SBoudrias/Inquirer.js#objects
@@ -133,7 +133,7 @@ module.exports.dependencies = (variables, args) => {
     'react-router-dom': 'latest',
   }
 
-  if (args.serverless || args.sls) {
+  if (args.aws) {
     Object.assign(deps, {
       'serverless-http': 'latest',
     })
@@ -185,7 +185,7 @@ module.exports.devDependencies = (variables, args) => {
     rimraf: '^2.6.3',
   }
 
-  if (args.serverless || args.sls) {
+  if (args.aws) {
     Object.assign(deps, {
       '@stellar-apps/serverless-sync-bundle': 'latest',
       '@stellar-apps/serverless-dotenv': 'latest',
@@ -205,12 +205,6 @@ module.exports.devDependencies = (variables, args) => {
     }
   }
 
-  if (args.static) {
-    Object.assign(deps, {
-      '@stellar-apps/static-site-generator-plugin': 'latest',
-    })
-  }
-
   return deps
 }
 
@@ -219,18 +213,18 @@ module.exports.peerDependencies = {}
 
 module.exports.include = (variables, args) => {
   const include = ['**/shared/**']
-  const isServerless = args.serverless || args.sls
+  const isServerless = args.aws
   const isApollo = args.apollo
-  const isStatic = args.static
+  const isStatic = args.static || args.now || args.github
 
   if (isServerless === true) {
-    include.push('**/serverless/**')
+    include.push('**/aws/**')
   } else if (isApollo) {
     include.push('**/apollo/**')
-    if (isServerless) include.push('**/serverless+apollo/**')
+    if (isServerless) include.push('**/aws+apollo/**')
   } else if (isStatic) {
     include.push('**/static/**')
-    if (isServerless) include.push('**/serverless+static/**')
+    if (isServerless) include.push('**/aws+static/**')
   }
 
   return include
@@ -242,7 +236,7 @@ module.exports.rename = (filename, variables, args) =>
     ? filename.replace('gitignore', '.gitignore')
     : filename
   )
-    .replace(/\/(serverless|shared|static|apollo)(\+?(apollo|static)\/)?/g, '')
+    .replace(/\/(aws|shared|static|apollo)(\+?(apollo|static)\/)?/g, '')
     .replace('.inst.', '.')
 
 // runs after the package.json is created and deps are installed,
@@ -259,17 +253,28 @@ module.exports.editPackageJson = (
     analyze: 'ANALYZE=true build-react-app serve production',
     build: 'build-react-app build',
     clean: 'rimraf dist && rimraf .cache-loader && rimraf node_modules/.cache',
+    deploy: null,
     format: 'prettier --write "src/**/*.js"',
     lint: 'eslint src',
     postinstall: 'npm run clean',
     serve: 'build-react-app serve',
+    teardown: null,
     test: 'jest --passWithNoTests',
     validate: 'npm run lint && npm run test -- --coverage',
   }
 
-  if (args.serverless) {
-    packageJson.scripts.deploy = ''
-    packageJson.scripts.teardown = ''
+  if (args.aws) {
+    packageJson.scripts.deploy = 'deploy-react-app --aws'
+    packageJson.scripts.teardown = 'deploy-react-app --aws --teardown'
+  }
+  else if (args.now) {
+    packageJson.scripts.deploy = 'deploy-react-app --now'
+    packageJson.scripts.teardown = 'deploy-react-app --now --teardown'
+    packageJson.scripts.now = 'npx now'
+  }
+  else if (args.github) {
+    packageJson.scripts.deploy = 'deploy-react-app --github'
+    packageJson.scripts.teardown = 'deploy-react-app --github --teardown'
   }
 
   packageJson.husky = {

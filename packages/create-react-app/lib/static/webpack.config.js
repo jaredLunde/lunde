@@ -1,8 +1,5 @@
 const path = require('path')
-const {
-  configureReactClient,
-  configureReactServer,
-} = require('@lunde/build-react-app')
+const {configureReactClient, configureReactServer} = require('@lunde/build-react-app')
 
 module.exports = [
   configureReactClient({
