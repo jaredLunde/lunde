@@ -16,7 +16,8 @@
   ],
   "rules": {
     "no-console": "off",
-    "no-prototype-builtins": "off"
+    "no-prototype-builtins": "off",
+    "no-case-declarations": "off"
   },
   "env": {
     "browser": true,

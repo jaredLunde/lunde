@@ -10,38 +10,32 @@ import serve_ from './serve'
 yargs.scriptName('build-react-app')
 
 yargs.command(
-  'serve [env] [-h|--host host] [-p|--port port] [-a|--assets assets] [-c|--config config]',
+  'serve [-p|--prod] [--host host] [--port port] [--assets assets] [--config config]',
   'Starts the nearest React app in a micro server',
   yargs => {
-    yargs.positional('env', {
-      alias: 'e',
-      describe:
-        `The node environment to start the app in. If not provided, this will default to ` +
-        `process.env.NODE_ENV || "development".`,
-      type: 'string',
+    yargs.positional('prod', {
+      alias: 'p',
+      describe: `Serves in the production NODE_ENV. Otherwise defaults to process.env.NODE_ENV || "development"`,
+      type: 'boolean',
     })
 
     yargs.option('host', {
-      alias: 'h',
       type: 'string',
       describe: 'A hostname to run your server on. Defaults to ::.',
     })
 
     yargs.option('port', {
-      alias: 'p',
       type: 'number',
       describe: 'The port number to run your server on. Defaults to 3000.',
     })
 
     yargs.option('assets', {
-      alias: 'a',
       type: 'string',
       describe:
         'A path to public assets outside of and not handled by Webpack in your project.',
     })
 
     yargs.option('config', {
-      alias: 'c',
       type: 'string',
       describe: 'A path to a Webpack config. Defaults to webpack.config.js.',
     })
@@ -49,15 +43,13 @@ yargs.command(
 )
 
 yargs.command(
-  'build [env] [-s|--stage stage] [-c|--config config]',
+  'build [-p|--prod] [-s|--stage stage] [-c|--config config]',
   'Bundles the nearest React app',
   yargs => {
-    yargs.positional('env', {
-      alias: 'e',
-      describe:
-        `The node environment to build the app in. If not provided, this will default to  ` +
-        `process.env.NODE_ENV || "development".`,
-      type: 'string',
+    yargs.positional('prod', {
+      alias: 'p',
+      describe: `Builds in the production NODE_ENV. Otherwise defaults to process.env.NODE_ENV || "development"`,
+      type: 'boolean',
     })
 
     yargs.option('stage', {
@@ -100,10 +92,12 @@ switch (cmd) {
     )
 }
 
-function serve({env, stage, host = '::', port, assets, config}) {
+function serve({prod, stage, host = '::', port, assets, config}) {
   const pkgJson = getPkgJson(pwd())
   process.env.BUILD_ENV = 'server'
-  process.env.NODE_ENV = env || process.env.NODE_ENV || 'development'
+  process.env.NODE_ENV = prod
+    ? 'production'
+    : process.env.NODE_ENV || 'development'
   process.env.STAGE = stage || process.env.STAGE || 'development'
   config = require(config ||
     path.join(path.dirname(pkgJson.__path), 'webpack.config.js'))
@@ -122,10 +116,12 @@ function serve({env, stage, host = '::', port, assets, config}) {
   })
 }
 
-async function build({env, stage, config}) {
+async function build({prod, stage, config}) {
   const pkgJson = getPkgJson(pwd())
   process.env.BUILD_ENV = 'static'
-  process.env.NODE_ENV = env || process.env.NODE_ENV || 'development'
+  process.env.NODE_ENV = prod
+    ? 'production'
+    : process.env.NODE_ENV || 'development'
   process.env.STAGE = stage || process.env.STAGE || 'development'
   const configPath =
     config || path.join(path.dirname(pkgJson.__path), 'webpack.config.js')

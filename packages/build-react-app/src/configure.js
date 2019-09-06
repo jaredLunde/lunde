@@ -152,6 +152,7 @@ export const configureReactClient = (...configs) => {
     stats,
     publicLoader,
     compression,
+    clean = true,
     analyze = false,
     ...config
   } = merge(...configs)
@@ -266,6 +267,7 @@ export const configureReactClient = (...configs) => {
       },
 
       plugins: [
+        clean && new RimrafPlugin(),
         new StatsWriterPlugin(
           stats || {
             filename: '.cache/stats.json',
@@ -285,7 +287,7 @@ export const configureReactClient = (...configs) => {
           __SERVER__: JSON.stringify(false),
           __CLIENT__: JSON.stringify(true),
         }),
-      ],
+      ].filter(Boolean),
     },
     envConfig,
     config
@@ -296,6 +298,8 @@ export const configureReactServer = (...configs) => {
   let {
     // all builds
     entry,
+    clean = true,
+    output,
     target = 'lambda',
     babelOverride = {},
     publicLoader,
@@ -338,11 +342,13 @@ export const configureReactServer = (...configs) => {
         publicPath: '/assets/',
         filename: 'render.js',
         libraryTarget: 'commonjs2',
+        ...output,
       },
 
       externals: ['js-beautify', 'encoding'],
 
       plugins: [
+        clean && new RimrafPlugin(),
         // prevents emitting anything that isn't html, text, javascript, or json
         new IgnoreEmitPlugin(/\.(?!html|txt|[tj]sx?|json)\w+$/),
         new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
@@ -370,6 +376,7 @@ export const configureReactServer = (...configs) => {
       {
         output: {
           publicPath: '/assets/',
+          ...output,
           filename: `.cache/render.js`,
         },
 
@@ -393,7 +400,7 @@ export const configureReactServer = (...configs) => {
           new StaticSitePlugin({
             crawl,
             locals,
-            paths: ['/', ...(paths || [])],
+            paths: ['/', '/404', ...(paths || [])],
           }),
           isProd() &&
             compression !== false &&

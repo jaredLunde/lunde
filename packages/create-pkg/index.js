@@ -39,7 +39,7 @@ module.exports.devDependencies = (variables, args) => {
     "lint-staged": "latest",
     prettier: "latest",
     "pretty-quick": "latest",
-    rimraf: "latest"
+    rimraf: "^2.6.3"
   };
 
   if (args.ts) {
@@ -60,19 +60,22 @@ module.exports.devDependencies = (variables, args) => {
 // package.json peer dependencies
 module.exports.peerDependencies = {};
 
-module.exports.exclude = (variables, args) =>
-  args.ts ? ["**/*.untyped.*"] : ["**/*.typed.*"];
+module.exports.include = (variables, args) => {
+  const include = ["**/shared/**"];
 
-module.exports.rename = (filename, variables, args) => {
-  if (filename.endsWith("gitignore") && !filename.endsWith(".gitignore")) {
-    return filename.replace("gitignore", ".gitignore");
-  }
+  if (args.ts) include.push("**/typed/**");
+  else include.push("**/untyped/**");
 
-  return filename
-    .replace(".typed", "")
-    .replace(".untyped", "")
-    .replace(".inst.", ".");
+  return include;
 };
+
+module.exports.rename = (filename, variables, args) =>
+  (filename.endsWith("/gitignore")
+    ? filename.replace("gitignore", ".gitignore")
+    : filename
+  )
+    .replace(/(\/shared|typed|untyped\/)/, "/")
+    .replace(".inst.", ".");
 
 // runs after the package.json is created and deps are installed,
 // used for adding scripts and whatnot

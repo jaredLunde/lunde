@@ -1,7 +1,8 @@
 import rimraf from 'rimraf';
 
 export default class RimrafPlugin {
-  constructor({path, hook = 'emit'}) {
+  constructor(opt = {}) {
+    const {path, hook = 'emit'} = opt;
     this.path = path;
     this.hook = hook;
   }
