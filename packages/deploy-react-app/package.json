@@ -3,17 +3,16 @@
   "version": "1.0.0",
   "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
   "license": "MIT",
-  "main": "dist/cjs/index.js",
-  "module": "dist/es/index.js",
+  "main": "dist/index.js",
   "bin": {
-    "deploy-react-app": "dist/bin.js"
+    "deploy-react-app": "dist/index.js"
   },
   "files": [
     "/dist"
   ],
   "description": "Several deployment strategies for React apps",
   "keywords": [
-    "deploy react-app"
+    "deploy react app"
   ],
   "sideEffects": false,
   "devDependencies": {

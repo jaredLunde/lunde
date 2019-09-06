@@ -1,2 +1,2 @@
-export StaticSitePlugin from './StaticSitePlugin'
-export RimrafPlugin from './RimrafPlugin'
+export StaticSitePlugin from './StaticSitePlugin';
+export RimrafPlugin from './RimrafPlugin';

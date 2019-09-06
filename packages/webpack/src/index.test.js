@@ -1,5 +1,5 @@
-import {createConfig} from './index'
+import {createConfig} from './index';
 
 test('passes', () => {
-  expect(createConfig()).toMatchSnapshot()
-})
+  expect(createConfig()).toMatchSnapshot();
+});

@@ -33,7 +33,8 @@ function pipe() {
 // TODO: HTTPS
 // See https://github.com/gagle/node-ssl-self-signed-certificate/blob/master/lib/index.js
 // eslint-disable-next-line no-unused-vars
-const microHttps = fn => https.createServer({key, cert}, (req, res) => run(req, res, fn))
+const microHttps = fn =>
+  https.createServer({key, cert}, (req, res) => run(req, res, fn))
 
 const serveStatic = (route, localPath) => {
   if (!localPath) {
@@ -113,11 +114,17 @@ export default ({
   // micro listener which is run after the compiler is done
   const startListening = handler => {
     return () => {
-      if (process.env.NODE_ENV !== 'production' || process.env.SSR_DEBUG === 'true') {
+      if (
+        process.env.NODE_ENV !== 'production' ||
+        process.env.SSR_DEBUG === 'true'
+      ) {
         microDev({silent, limit, host, port})(handler)
       }
 
-      if (process.env.NODE_ENV === 'production' && process.env.SSR_DEBUG !== 'true') {
+      if (
+        process.env.NODE_ENV === 'production' &&
+        process.env.SSR_DEBUG !== 'true'
+      ) {
         const server = micro(handler)
         server.listen(port, host, err => {
           if (err) {
@@ -177,17 +184,28 @@ export default ({
         }
       } else {
         const [clientStats] = stats.toJson().children
-        const serverPath = path.join(serverConfig.output.path, serverConfig.output.filename)
+        const serverPath = path.join(
+          serverConfig.output.path,
+          serverConfig.output.filename
+        )
         const serverRenderer = require(serverPath).default
         // handler
-        startListening(pipe.apply(null, middleware)(serverRenderer({clientStats})))()
+        startListening(
+          pipe.apply(null, middleware)(serverRenderer({clientStats}))
+        )()
       }
     })
   } else {
     // boots up the client config with hot middleweare
-    clientConfig.entry = [`webpack-hot-middleware/client?noInfo=false`, ...clientConfig.entry]
+    clientConfig.entry = [
+      `webpack-hot-middleware/client?noInfo=false`,
+      ...clientConfig.entry,
+    ]
     // adds hot module replacement to the client plugins
-    clientConfig.plugins = [new webpack.HotModuleReplacementPlugin(), ...clientConfig.plugins]
+    clientConfig.plugins = [
+      new webpack.HotModuleReplacementPlugin(),
+      ...clientConfig.plugins,
+    ]
 
     // starts the webpack compilers
     const compiler = webpack([clientConfig, serverConfig])
@@ -202,9 +220,11 @@ export default ({
       serverSideRender: true,
       noInfo: true,
     })
-    const devMiddleware = next => (req, res) => instance(req, res, () => next(req, res))
+    const devMiddleware = next => (req, res) =>
+      instance(req, res, () => next(req, res))
     const hmw = webpackHotMiddleware(clientCompiler)
-    const hotMiddleware = next => (req, res) => hmw(req, res, () => next(req, res))
+    const hotMiddleware = next => (req, res) =>
+      hmw(req, res, () => next(req, res))
     const hotServerMiddleware = webpackHotServerMiddleware(compiler, {
       reload: true,
       createHandler,

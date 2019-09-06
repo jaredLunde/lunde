@@ -225,6 +225,9 @@ module.exports.include = (variables, args) => {
   } else if (isStatic) {
     include.push('**/static/**')
     if (isServerless) include.push('**/aws+static/**')
+  } else if (args.now) {
+    include.push('**/now/**')
+    if (isServerless) include.push('**/now/**')
   }
 
   return include
@@ -266,13 +269,11 @@ module.exports.editPackageJson = (
   if (args.aws) {
     packageJson.scripts.deploy = 'deploy-react-app --aws'
     packageJson.scripts.teardown = 'deploy-react-app --aws --teardown'
-  }
-  else if (args.now) {
+  } else if (args.now) {
     packageJson.scripts.deploy = 'deploy-react-app --now'
     packageJson.scripts.teardown = 'deploy-react-app --now --teardown'
     packageJson.scripts.now = 'npx now'
-  }
-  else if (args.github) {
+  } else if (args.github) {
     packageJson.scripts.deploy = 'deploy-react-app --github'
     packageJson.scripts.teardown = 'deploy-react-app --github --teardown'
   }

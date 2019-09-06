@@ -1,10 +1,17 @@
-import mergeWebpack from 'webpack-merge'
-import webpack from 'webpack'
+import mergeWebpack from 'webpack-merge';
+import webpack from 'webpack';
 
-export * from './plugins'
-export const isProd = () => process.env.NODE_ENV === 'production'
+export * from './plugins';
+export const isProd = () => process.env.NODE_ENV === 'production';
 
-export const createBabelLoader = ({test, presets, plugins, include, exclude, options}) => ({
+export const createBabelLoader = ({
+  test,
+  presets,
+  plugins,
+  include,
+  exclude,
+  options,
+}) => ({
   test: test || /(\.[mtj]sx?)$$/,
   use: {
     loader: 'babel',
@@ -26,7 +33,7 @@ export const createBabelLoader = ({test, presets, plugins, include, exclude, opt
   },
   include,
   exclude,
-})
+});
 
 const devConfig = {
   devtool: 'eval',
@@ -44,7 +51,7 @@ const devConfig = {
     moduleIds: 'hashed',
     chunkIds: 'named',
   },
-}
+};
 
 const productionConfig = {
   devtool: false,
@@ -66,18 +73,18 @@ const productionConfig = {
     moduleIds: 'total-size',
     chunkIds: 'total-size',
   },
-}
+};
 
-export const merge = mergeWebpack.smartStrategy({'module.rules': 'prepend'})
+export const merge = mergeWebpack.smartStrategy({'module.rules': 'prepend'});
 export const createConfig = (...configs) => {
-  let {target = 'web', ...config} = merge({}, ...configs)
+  let {target = 'web', ...config} = merge({}, ...configs);
 
   const mainFields =
     target === 'web'
       ? // web main fields
         ['browser', 'module', 'jsnext', 'esnext', 'jsnext:main', 'main']
       : // node main fields
-        ['module', 'jsnext', 'esnext', 'jsnext:main', 'main']
+        ['module', 'jsnext', 'esnext', 'jsnext:main', 'main'];
 
   return merge(
     {
@@ -120,5 +127,5 @@ export const createConfig = (...configs) => {
     },
     isProd() ? productionConfig : devConfig,
     config
-  )
-}
+  );
+};

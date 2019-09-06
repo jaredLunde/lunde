@@ -105,7 +105,8 @@ function serve({env, stage, host = '::', port, assets, config}) {
   process.env.BUILD_ENV = 'server'
   process.env.NODE_ENV = env || process.env.NODE_ENV || 'development'
   process.env.STAGE = stage || process.env.STAGE || 'development'
-  config = require(config || path.join(path.dirname(pkgJson.__path), 'webpack.config.js'))
+  config = require(config ||
+    path.join(path.dirname(pkgJson.__path), 'webpack.config.js'))
 
   return serve_({
     // dev webpack client config
@@ -126,7 +127,8 @@ async function build({env, stage, config}) {
   process.env.BUILD_ENV = 'static'
   process.env.NODE_ENV = env || process.env.NODE_ENV || 'development'
   process.env.STAGE = stage || process.env.STAGE || 'development'
-  const configPath = config || path.join(path.dirname(pkgJson.__path), 'webpack.config.js')
+  const configPath =
+    config || path.join(path.dirname(pkgJson.__path), 'webpack.config.js')
   const configs = require(configPath)
   // find() below ensures the configs are compiled in the correct order so
   // server has access to the stats file of client

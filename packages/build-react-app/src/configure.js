@@ -44,11 +44,13 @@ const createExternalBabelLoader = (defaultPresets, babelOverride = {}) => {
     test,
     ...babelMerge({presets: defaultPresets}, {presets, plugins}),
     include,
-    exclude: include ? void 0 : exclude || /@babel(?:\/|\\{1,2})runtime|core-js|warning/,
+    exclude: include
+      ? void 0
+      : exclude || /@babel(?:\/|\\{1,2})runtime|core-js|warning/,
     options: {
       ...options,
-      // considers the file a "module" if import/export statements are present, or else
-      // considers it a "script"
+      // considers the file a "module" if import/export statements are present
+      // otherwise it's considered a "script"
       sourceType: 'unambiguous',
       // doesn't generate source maps for perf reasons
       sourceMaps: false,
@@ -348,7 +350,8 @@ export const configureReactServer = (...configs) => {
           process: {
             cwd: function() {},
             env: Object.keys(process.env).reduce(
-              (p, key) => Object.assign(p, {[key]: JSON.stringify(process.env[key])}),
+              (p, key) =>
+                Object.assign(p, {[key]: JSON.stringify(process.env[key])}),
               {}
             ),
           },
