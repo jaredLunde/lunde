@@ -1,5 +1,6 @@
 import fs from 'fs'
 import ip from 'ip'
+import ora from 'ora'
 import boxen from 'boxen'
 import url from 'url'
 import path from 'path'
@@ -102,6 +103,7 @@ export default ({
   host = '::',
   port = 3000,
 }) => {
+  const spinner = ora({spinner: 'dots3', color: 'gray', isEnabled: false})
   const publicPath = clientConfig.output.publicPath || '/public/'
 
   // cleans the old files out of the dev directory
@@ -118,6 +120,7 @@ export default ({
         process.env.NODE_ENV !== 'production' ||
         process.env.SSR_DEBUG === 'true'
       ) {
+        spinner.stop()
         microDev({silent, limit, host, port})(handler)
       }
 
@@ -125,6 +128,7 @@ export default ({
         process.env.NODE_ENV === 'production' &&
         process.env.SSR_DEBUG !== 'true'
       ) {
+        spinner.stop()
         const server = micro(handler)
         server.listen(port, host, err => {
           if (err) {
@@ -160,6 +164,7 @@ export default ({
   }
 
   if (process.env.NODE_ENV === 'production') {
+    spinner.start(chalk.gray('building'))
     middleware.push(
       serveStatic(publicPath, publicAssets),
       serveStatic(publicPath, clientConfig.output.path)
@@ -168,6 +173,8 @@ export default ({
     // starts the webpack compilers
     webpack([clientConfig, serverConfig]).run((err, stats) => {
       if (err || stats.hasErrors()) {
+        spinner.stop()
+
         if (err) {
           console.log(chalk.red('[SSR Error]'))
           console.log(err)
@@ -182,7 +189,10 @@ export default ({
           console.log(chalk.red('[Server Errors]'))
           console.log(stats.stats[1].compilation.errors.join('\n\n'))
         }
+
+        spinner.fail(chalk.gray('build failed'))
       } else {
+        spinner.succeed(chalk.gray('build succeeded'))
         const [clientStats] = stats.toJson().children
         const serverPath = path.join(
           serverConfig.output.path,
@@ -196,6 +206,7 @@ export default ({
       }
     })
   } else {
+    spinner.start(chalk.gray('building'))
     // boots up the client config with hot middleweare
     clientConfig.entry = [
       `webpack-hot-middleware/client?noInfo=false`,
@@ -219,6 +230,7 @@ export default ({
       disableHostCheck: true,
       serverSideRender: true,
       noInfo: true,
+      logLevel: 'error',
     })
     const devMiddleware = next => (req, res) =>
       instance(req, res, () => next(req, res))
@@ -232,9 +244,11 @@ export default ({
     // taps into the webpack hook to start the micro app once it has finished
     // compiling
     middleware.push(devMiddleware, hotMiddleware)
-    instance.waitUntilValid(
-      // pipes the middleware to create a handler
-      startListening(pipe.apply(null, middleware)(hotServerMiddleware))
-    )
+    instance.waitUntilValid((...args) => {
+      spinner.succeed(chalk.gray('build succeeded'))
+      return startListening(pipe.apply(null, middleware)(hotServerMiddleware))(
+        ...args
+      )
+    })
   }
 }

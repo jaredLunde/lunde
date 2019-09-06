@@ -138,12 +138,15 @@ async function build({env, stage, config}) {
   ]) {
     await new Promise(resolve => {
       const name = chalk.bold(config.name)
-      const spinner = ora({spinner: 'point'}).start(`Building ${name}`)
+      const spinner = ora({spinner: 'dots3', color: 'gray'}).start(
+        `${name} ${chalk.gray('building')}`
+      )
 
       try {
         webpack([config]).run((err, stats) => {
           if (err || stats.hasErrors()) {
             spinner.stop()
+
             if (err) {
               console.log(chalk.red(`[${name} error]`))
               console.log(err)
@@ -154,9 +157,9 @@ async function build({env, stage, config}) {
               console.log(stats.stats[0].compilation.errors.join('\n\n'))
             }
 
-            spinner.fail(`${name} build failed`)
+            spinner.fail(`${name} ${chalk.gray('build failed')}`)
           } else {
-            spinner.succeed(`${name} build succeeded`)
+            spinner.succeed(`${name} ${chalk.gray('build succeeded')}`)
           }
 
           resolve()
@@ -164,7 +167,7 @@ async function build({env, stage, config}) {
       } catch (err) {
         console.log(chalk.red(`[${name} error]`))
         console.log(err)
-        spinner.fail(`${name} build failed`)
+        spinner.fail(`${name} ${chalk.gray('build failed')}`)
       }
     })
   }
