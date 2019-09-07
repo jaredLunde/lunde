@@ -59,7 +59,7 @@ yargs.command(
 const args = yargs.argv
 const pkg = getPkgJson(pwd())
 const crossEnv = findBin('cross-env')
-let cmd
+let cmd, stage
 
 switch (args._[0]) {
   case 'now':
@@ -95,14 +95,16 @@ switch (args._[0]) {
     if (args.teardown)
       log(`Tearing down ${chalk.bold(pkg.name)} from ${chalk.bold('AWS')}`)
     else log(`Deploying ${chalk.bold(pkg.name)} to ${chalk.bold('AWS')}`)
+    stage = typeof args.stage === 'string' ? args.stage : 'staging'
+    stage = args.prod ? 'production' : stage
 
     cmd = `
       ${crossEnv} \
         NODE_ENV=production \
-        STAGE=${args.stage || 'staging'} \
+        STAGE=${stage} \
       npx serverless \
         deploy \
-        --stage ${args.stage || 'staging'} 
+        --stage ${stage} 
     `
     break
 

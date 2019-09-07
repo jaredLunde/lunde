@@ -1,16 +1,12 @@
 const os = require('os')
 const path = require('path')
-const {
-  flag,
-  required,
-  trim,
-  autocompleteIni,
-} = require('@inst-cli/template-utils')
+const {required, trim, autocompleteIni} = require('@inst-cli/template-utils')
 
 module.exports = {}
 const CREDENTIALS_FILE = path.join(os.homedir(), '.aws/credentials')
 // creates template variables using Inquirer.js
-// see https://github.com/SBoudrias/Inquirer.js#objects for prompt object examples
+// see https://github.com/SBoudrias/Inquirer.js#objects for prompt object
+// examples
 module.exports.prompts = (
   {ROOT_NAME, ROOT_DIR, PKG_NAME, PKG_DIR}, // default template variables
   args, // the arguments passed to the CLI
@@ -21,94 +17,48 @@ module.exports.prompts = (
 
   if (args.aws) {
     prompts.push(
-      ...[
-        // See https://github.com/SBoudrias/Inquirer.js#objects
-        // for valid prompts
-        {
-          name: 'DOMAIN_PRODUCTION',
-          message: `Domain name  [${flag('production', 'green')}] |`,
-          filter: trim,
-          validate: required,
-        },
-        {
-          name: 'DOMAIN_STAGING',
-          message: `Domain name     [${flag('staging', 'white')}] |`,
-          default: a =>
-            a.DOMAIN_PRODUCTION.split('.').length > 2
-              ? `staging--${a.DOMAIN_PRODUCTION}`
-              : `staging.${a.DOMAIN_PRODUCTION}`,
-          filter: trim,
-          validate: required,
-        },
-        {
-          name: 'S3_BUCKET_PRODUCTION',
-          message: `S3 bucket    [${flag('production', 'green')}] |`,
-          default: a => `${PKG_NAME}-public`,
-          filter: trim,
-          validate: required,
-        },
-        {
-          name: 'S3_BUCKET_STAGING',
-          message: `S3 bucket       [${flag('staging', 'white')}] |`,
-          default: a => `staging--${a.S3_BUCKET_PRODUCTION}`,
-          filter: trim,
-          validate: required,
-        },
-
-        autocompleteIni(inquirer, CREDENTIALS_FILE, {
-          name: 'AWS_PROFILE',
-          message: `AWS profile               |`,
-          default: PKG_NAME,
-          filter: trim,
-          validate: required,
-        }),
-      ]
-    )
-
-    if (args.static) {
-      prompts.splice(
-        2,
-        0,
-        ...[
-          {
-            name: 'SITE_S3_BUCKET_PRODUCTION',
-            message: `Website S3 bucket  [${flag('production', 'green')}] |`,
-            default: a => a.DOMAIN_PRODUCTION,
-            filter: trim,
-            validate: required,
-          },
-          {
-            name: 'SITE_S3_BUCKET_STAGING',
-            message: `Website S3 bucket     [${flag('staging', 'white')}] |`,
-            default: a => a.DOMAIN_STAGING,
-            filter: trim,
-            validate: required,
-          },
-        ]
-      )
-    }
-  }
-
-  if (args.apollo) {
-    prompts.unshift(
-      ...[
-        {
-          name: 'APOLLO_DOMAIN_PRODUCTION',
-          message: `Apollo domain [${flag('production', 'green')}] |`,
-          filter: trim,
-          validate: required,
-        },
-        {
-          name: 'APOLLO_DOMAIN_STAGING',
-          message: `Apollo domain    [${flag('staging', 'white')}] |`,
-          filter: trim,
-          default: a =>
-            a.APOLLO_DOMAIN_PRODUCTION.split('.').length > 2
-              ? `staging-${a.APOLLO_DOMAIN_PRODUCTION}`
-              : `staging.${a.APOLLO_DOMAIN_PRODUCTION}`,
-          validate: required,
-        },
-      ]
+      {
+        name: 'DOMAIN',
+        message: `Domain name`,
+        filter: trim,
+        validate: required,
+      },
+      {
+        name: 'APOLLO_DOMAIN',
+        message: `Apollo API endpoint`,
+        filter: trim,
+        validate: required,
+        default: a => `api.${a.DOMAIN}`,
+        when: !!args.apollo,
+      },
+      {
+        name: 'S3_BUCKET',
+        message: `Public S3 bucket`,
+        default: () => `${PKG_NAME}-public`,
+        filter: trim,
+        validate: required,
+        when: !args.static,
+      },
+      {
+        name: 'DEPLOYMENT_BUCKET',
+        message: 'Serverless artifacts bucket',
+        default: 'lunde-serverless-deploys',
+        filter: trim,
+      },
+      {
+        name: 'USE_APEX_REDIRECT',
+        message: 'Include apex redirect?',
+        type: 'confirm',
+        default: true,
+        when: a => a.DOMAIN.split('.').length === 2,
+      },
+      autocompleteIni(inquirer, CREDENTIALS_FILE, {
+        name: 'PROFILE',
+        message: `AWS profile`,
+        default: PKG_NAME,
+        filter: trim,
+        validate: required,
+      })
     )
   }
 
@@ -156,23 +106,20 @@ module.exports.dependencies = (variables, args) => {
 
   if (args.aws) {
     Object.assign(deps, {
-      '@stellar-apps/serverless-sync-bundle': 'latest',
-      '@stellar-apps/serverless-dotenv': 'latest',
-      serverless: 'latest',
+      '@lunde/serverless-certificate-manager': 'latest',
+      '@lunde/serverless-bundle': 'latest',
       'serverless-apigw-binary': 'latest',
-      'serverless-domain-manager': '^latest',
+      'serverless-domain-manager': 'latest',
       'serverless-http': 'latest',
       'serverless-plugin-lambda-warmup': 'latest',
       'serverless-plugin-scripts': 'latest',
       'serverless-pseudo-parameters': 'latest',
-      'serverless-webpack': 'latest',
     })
 
     if (args.static) {
       delete deps['serverless-apigw-binary']
       delete deps['serverless-http']
       delete deps['serverless-plugin-lambda-warmup']
-      delete deps['serverless-webpack']
     }
   }
 
@@ -262,6 +209,7 @@ module.exports.editPackageJson = (
   if (args.aws) {
     packageJson.scripts.deploy = 'deploy-react-app aws --stage'
     packageJson.scripts.teardown = 'deploy-react-app aws --teardown --stage'
+    packageJson.scripts.sls = 'npx serverless'
   } else if (args.now) {
     packageJson.scripts.deploy = 'deploy-react-app now'
     packageJson.scripts.teardown = 'deploy-react-app now --teardown'

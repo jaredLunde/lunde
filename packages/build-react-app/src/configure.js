@@ -186,6 +186,7 @@ export const configureReactClient = (...configs) => {
               ? compression
               : {
                   test: /\.(js|txt|html|json|md|svg|xml|yml)(\?.*)?$/i,
+                  exclude: /\/\.cache\//,
                   cache: true,
                   algorithm: 'gzip',
                   threshold: 1024,
@@ -304,6 +305,7 @@ export const configureReactServer = (...configs) => {
     babelOverride = {},
     publicLoader,
     // static builds
+    staticSite = false,
     paths = [],
     locals = {},
     crawl = true,
@@ -370,7 +372,7 @@ export const configureReactServer = (...configs) => {
     config
   )
 
-  if (process.env.BUILD_ENV === 'static') {
+  if (staticSite === true || process.env.BUILD_ENV === 'static') {
     nextConfig = merge(
       nextConfig,
       {
@@ -409,6 +411,7 @@ export const configureReactServer = (...configs) => {
                 ? compression
                 : {
                     test: /\.(txt|html|json|md|xml|yml)(\?.*)?$/i,
+                    exclude: /\/\.cache\//,
                     cache: true,
                     algorithm: 'gzip',
                     threshold: 1024,

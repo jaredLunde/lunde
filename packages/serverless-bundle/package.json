@@ -1,0 +1,75 @@
+{
+  "name": "@lunde/serverless-bundle",
+  "version": "1.0.1",
+  "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "files": [
+    "/dist"
+  ],
+  "description": "Builds Serverless Webpack bundles and syncs them to S3",
+  "keywords": [
+    "serverless sync bundle",
+    "webpack",
+    "serverless",
+    "s3",
+    "s3 sync"
+  ],
+  "sideEffects": false,
+  "devDependencies": {
+    "@lunde/babel-preset-es": "latest",
+    "babel-eslint": "latest",
+    "cross-env": "latest",
+    "eslint": "latest",
+    "eslint-import-resolver-jest": "latest",
+    "eslint-plugin-jest": "latest",
+    "husky": "latest",
+    "jest": "latest",
+    "lint-staged": "latest",
+    "prettier": "latest",
+    "pretty-quick": "latest",
+    "rimraf": "^2.6.3",
+    "webpack": "^4.39.3"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.524.0",
+    "change-case": "^3.1.0",
+    "deepmerge": "^4.0.0",
+    "is-gzip": "^2.0.0",
+    "is-plain-object": "^3.0.0",
+    "mime": "^2.4.4",
+    "minimatch": "^3.0.4",
+    "ora": "^3.4.0",
+    "read-chunk": "^3.2.0"
+  },
+  "peerDependencies": {
+    "webpack": "^4.39.3"
+  },
+  "scripts": {
+    "build": "babel src -d dist -x .js --ignore \"**/*.test.js\",\"**/test.js\" --delete-dir-on-start",
+    "format": "prettier --write \"{dist,src}/**/*.js\"",
+    "lint": "eslint src",
+    "prepublishOnly": "npm run lint && npm run test && npm run build && npm run format",
+    "test": "jest",
+    "validate": "npm run lint && npm run test -- --coverage"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.js": [
+      "eslint",
+      "pretty-quick --staged"
+    ]
+  },
+  "homepage": "https://github.com/jaredLunde/lunde/tree/master/packages/serverless-bundle#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaredLunde/lunde.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jaredLunde/lunde/issues"
+  }
+}

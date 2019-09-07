@@ -54,7 +54,7 @@ const render = clientStats => async locals => {
 }
 // BUILD_ENV will be 'static' when the 'build' script is called
 // and 'server' when the 'serve' script is called
-export default process.env.BUILD_ENV !== 'static'
+export default process.env.BUILD_ENV === 'server'
   ? ({clientStats}) => req =>
       createStaticRenderer(render(clientStats))({path: req.url})
   : locals =>

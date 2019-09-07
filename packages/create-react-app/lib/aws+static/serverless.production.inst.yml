@@ -1,0 +1,3 @@
+domain: <:DOMAIN:>
+s3Bucket: <:DOMAIN:>
+hostedZone: <:(value += props.DOMAIN.split('.').slice(-2).join('.')):>.

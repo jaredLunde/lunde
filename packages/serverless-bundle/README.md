@@ -1,0 +1,176 @@
+[![bundlephobia](https://img.shields.io/bundlephobia/minzip/serverless-bundle?style=plastic)](https://bundlephobia.com/result?p=serverless-bundle)
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://jaredlunde.mit-license.org/)
+
+---
+# @lunde/serverless-bundle
+A Serverless plugin that bundles your application with Webpack and uploads it to an 
+S3 bucket. This is useful for including static assets in web apps that run in Lambda
+functions, as well as static web apps. 
+
+## Installation
+#### `npm i @lunde/serverless-bundle`
+#### `yarn add @lunde/serverless-bundle`
+
+## Usage
+```yaml
+# serverless.yml
+plugins:
+  - @lunde/serverless-bundle
+ 
+custom:
+  bundle:
+    'webpack.config.js':
+      params:
+        maxRetries: 5
+      bucket: 
+        name: test-lunde-public-0
+       object:
+        '**/*.js':
+          # file, filename, basename, dirname, publicPath, ext
+          key: 'customized/[file].key[ext]'
+          params:
+          contentType: 'auto'
+          cacheControl: 'public, immutable, max-age=31536000'
+        '*':
+          params:
+          ACL: 'public-read'
+      
+```
+## Configuring AWS credentials
+By default credentials are read through the `provider.profile` property in your config. If that
+property doesn't exist or is different than the credentials you'd like to configure for setting up
+your bucket, they can be configured through `custom.bundle.credentials`
+
+#### Parameters
+- `profile {string}`
+    - Your AWS profile in `~/.aws/credentials`
+    
+To use credentials without a `profile` set the params below
+- `accessKeyId {string}`
+    - The AWS access key ID
+- `secretAccessKey {string}`
+    - The AWS secret access key
+
+#### Example
+```yaml
+custom:
+  bundle:
+    'webpack.config.js':
+        credentials:
+          profile: lunde-s3
+```
+
+## Configuring the [`AWS.S3`](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor-property) constructor
+Location in config: `custom.bundle.params`
+
+See the [S3() API](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor-property) for
+a complete list of parameters.
+```yaml
+custom:
+  bundle:
+    'webpack.config.js':
+        params:
+        maxRetries: 3
+```
+
+## Commands
+### `sls bundle`
+This command bundles your application with Webpack. 
+
+#### Configuring
+Location in config: `custom.bundle.[webpackConfigFile]`
+- `webpackConfigFile` is relative to the `serverless.yml` service file 
+    
+-----
+
+### `sls sync-bundle`
+This command uploads your bundle to S3. Any assets emitted by your Webpack compilation will
+be uploaded by this command unless `custom.bundle.object.[glob].exclude` is `true`.
+
+The upload process is highly granular. With glob matching you can attach specific parameters
+and metadata to individual files or file types with ease. 
+
+#### Configuring
+Location in config: `custom.bundle.[webpackConfigFile]`
+
+#### Parameters
+- `bucket`
+    - `name {string}`
+        - The name of your S3 bucket
+    - `prefix {string}`
+        - A default prefix for your bucket objects
+    - `retain {bool}`
+        - **default** `false`
+        - If retain is set to `true`, this bucket will **not** be emptied when `sls remove` is
+          run. Otherwise, the bucket will be emptied each time that happens within the defined
+          `prefix` above.
+    - `credentials {object}`
+        - `profile {string}`
+            - The AWS profile to use
+        - `accessKeyId {string}`
+            - If not using a profile, use keys directly
+        - `secretAccessKey {string}`
+- `object`
+    - Object groups are determined via [glob patterns](https://github.com/motemen/minimatch-cheat-sheet#minimatch-cheat-sheet) 
+      defined in `custom.bundle.object`, where a pattern of `*` is applied to all files. The config for each 
+      glob is deep merged in the order they appear in the `serverless.yml`, top-down. The merging algorithm can be seen 
+      [here](https://github.com/TehShrike/deepmerge#example-usage).
+    - `key {string}`
+        - **default** `[filename]`
+        - A pattern-based string which allows you to further customize where your files wind up in your
+          S3 bucket.
+        - *Patterns*
+            - `[filename]`
+                - The filename emitted by Webpack
+            - `[file]`
+                - The name of the file without its extension
+            - `[ext]`
+                - The file extension
+            - `[basename]`
+                - The `file` and the `ext` without a directory name
+            - `[dirname]`
+                - The `filename` without a `basename`
+    - `exclude {bool}`
+        - If `true` any file matching this glob will not be uploaded to S3
+    - `params {object}`
+        - The `params` object sent in [`S3.upload()`](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#upload-property)
+        - Any parameter defined in the `S3.upload()` API can be defined here.
+        - **defaults**
+            - `bucket`
+                - The bucket name defined in `custom.bundle.bucket.name`
+            - `key`
+                - The `key` pattern filled from the `key` parameter above
+            - `contentType`
+                - By default this command fills in the `contentType` for you 
+                  via [`mime.getType()`](https://github.com/broofa/node-mime#mimegettypepathorextension)
+                  You can override the default by providing your own `contentType`
+
+#### Example
+In this example all javascript files are provided parameters for `**/*.js` and `*`. All other
+files are only provided with parameters for `*`.
+
+```yaml
+custom:
+  bundle:
+    'webpack.config.js':
+      bucket: 
+        name: 'my-bucket'
+        retain: true
+      object:
+        '**/*.js':
+          # file, filename, basename, dirname, ext
+          key: '[filename]'
+           params:
+            ACL: 'public-read'
+            contentType: 'application/javascript'
+            cacheControl: 'public, immutable, max-age=31536000'
+        '*':
+          params:
+            # This key would override the key in '**/*.js'
+            key: '[filename].dryrun'
+            metadata:
+              serverless-bundle: yes
+```
+
+## LICENSE
+MIT
