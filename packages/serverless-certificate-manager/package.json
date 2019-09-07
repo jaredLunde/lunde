@@ -1,0 +1,63 @@
+{
+  "name": "@lunde/serverless-certificate-manager",
+  "version": "1.0.0",
+  "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "files": [
+    "/dist"
+  ],
+  "description": "A Serverless ACM certificate manager which allows for certificate re-use and re-issuing outside the scope of CloudFormation",
+  "keywords": [
+    "serverless certificate manager"
+  ],
+  "sideEffects": false,
+  "devDependencies": {
+    "@lunde/babel-preset-es": "latest",
+    "babel-eslint": "latest",
+    "cross-env": "latest",
+    "eslint": "latest",
+    "eslint-import-resolver-jest": "latest",
+    "eslint-plugin-jest": "latest",
+    "husky": "latest",
+    "jest": "latest",
+    "lint-staged": "latest",
+    "prettier": "latest",
+    "pretty-quick": "latest",
+    "rimraf": "^2.6.3"
+  },
+  "dependencies": {
+    "@inst-cli/template-utils": "^1.0.7",
+    "aws-sdk": "^2.524.0",
+    "chalk": "^2.4.2",
+    "ora": "^3.4.0"
+  },
+  "peerDependencies": {},
+  "scripts": {
+    "build": "babel src -d dist -x .js --ignore \"**/*.test.js\",\"**/test.js\" --delete-dir-on-start",
+    "format": "prettier --write \"{dist,src}/**/*.js\"",
+    "lint": "eslint src",
+    "prepublishOnly": "npm run lint && npm run test && npm run build && npm run format",
+    "test": "jest",
+    "validate": "npm run lint && npm run test -- --coverage"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.js": [
+      "eslint",
+      "pretty-quick --staged"
+    ]
+  },
+  "homepage": "https://github.com/jaredLunde/lunde/tree/master/packages/serverless-certificate-manager#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaredLunde/lunde.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jaredLunde/lunde/issues"
+  }
+}
