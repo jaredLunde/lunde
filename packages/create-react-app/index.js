@@ -2,6 +2,14 @@ const os = require('os')
 const path = require('path')
 const {required, trim, autocompleteIni} = require('@inst-cli/template-utils')
 
+const sortByKeys = obj =>
+  Object.keys(obj)
+    .sort()
+    .reduce((acc, key) => {
+      acc[key] = obj[key]
+      return acc
+    }, {})
+
 module.exports = {}
 const CREDENTIALS_FILE = path.join(os.homedir(), '.aws/credentials')
 // creates template variables using Inquirer.js
@@ -138,12 +146,7 @@ module.exports.dependencies = (variables, args) => {
     })
   }
 
-  return Object.keys(deps)
-    .sort()
-    .reduce((acc, key) => {
-      acc[key] = deps[key]
-      return acc
-    }, {})
+  return sortByKeys(deps)
 }
 
 // package.json peer dependencies
@@ -196,28 +199,28 @@ module.exports.editPackageJson = (
     analyze: 'ANALYZE=true build-react-app serve production',
     build: 'build-react-app build',
     clean: 'rimraf dist && rimraf .cache-loader && rimraf node_modules/.cache',
-    deploy: null,
     format: 'prettier --write "src/**/*.js"',
     lint: 'eslint src',
     postinstall: 'npm run clean',
     serve: 'build-react-app serve',
-    teardown: null,
     test: 'jest --passWithNoTests',
     validate: 'npm run lint && npm run test -- --coverage',
   }
 
   if (args.aws) {
-    packageJson.scripts.deploy = 'deploy-react-app aws --stage'
-    packageJson.scripts.teardown = 'deploy-react-app aws --teardown --stage'
+    packageJson.scripts.up = 'deploy-react-app aws --stage'
+    packageJson.scripts.down = 'deploy-react-app aws --down --stage'
     packageJson.scripts.sls = 'npx serverless'
   } else if (args.now) {
-    packageJson.scripts.deploy = 'deploy-react-app now'
-    packageJson.scripts.teardown = 'deploy-react-app now --teardown'
+    packageJson.scripts.up = 'deploy-react-app now'
+    packageJson.scripts.down = 'deploy-react-app now --down'
     packageJson.scripts.now = 'npx now'
   } else if (args.github) {
-    packageJson.scripts.deploy = 'deploy-react-app github'
-    packageJson.scripts.teardown = 'deploy-react-app github --teardown'
+    packageJson.scripts.up = 'deploy-react-app github'
+    packageJson.scripts.down = 'deploy-react-app github --down'
   }
+
+  packageJson.scripts = sortByKeys(packageJson.scripts)
 
   packageJson.husky = {
     hooks: {

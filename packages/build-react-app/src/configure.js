@@ -268,7 +268,8 @@ export const configureReactClient = (...configs) => {
       },
 
       plugins: [
-        clean && new RimrafPlugin(),
+        clean &&
+          new RimrafPlugin({path: typeof clean === 'string' ? clean : void 0}),
         new StatsWriterPlugin(
           stats || {
             filename: '.cache/stats.json',
@@ -350,7 +351,8 @@ export const configureReactServer = (...configs) => {
       externals: ['js-beautify', 'encoding'],
 
       plugins: [
-        clean && new RimrafPlugin(),
+        clean &&
+          new RimrafPlugin({path: typeof clean === 'string' ? clean : void 0}),
         // prevents emitting anything that isn't html, text, javascript, or json
         new IgnoreEmitPlugin(/\.(?!html|txt|[tj]sx?|json)\w+$/),
         new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),

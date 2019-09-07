@@ -8,26 +8,22 @@ import {log, error, findBin, pwd, getPkgJson} from '@inst-cli/template-utils'
 
 yargs.scriptName('build-react-app')
 
-yargs.command(
-  'now [-p|--prod] [-t|--teardown]',
-  'Deploys the app to Now',
-  y => {
-    y.option('prod', {
-      alias: 'p',
-      describe: `Deploys in the production environment.`,
-      type: 'boolean',
-    })
+yargs.command('now [-p|--prod] [-d|--down]', 'Deploys the app to Now', y => {
+  y.option('prod', {
+    alias: 'p',
+    describe: `Deploys in the production environment.`,
+    type: 'boolean',
+  })
 
-    y.option('teardown', {
-      alias: 't',
-      describe: `Deletes your deployment in the current environment`,
-      type: 'boolean',
-    })
-  }
-)
+  y.option('down', {
+    alias: 'd',
+    describe: `Deletes your deployment in the current environment`,
+    type: 'boolean',
+  })
+})
 
 yargs.command(
-  'aws  [-s|--stage stage] [-t|--teardown]',
+  'aws  [-s|--stage stage] [-d|--down]',
   'Deploys the app to AWS',
   y => {
     y.option('stage', {
@@ -36,8 +32,8 @@ yargs.command(
       describe: `The stage to deploy to. Defaults to 'staging'.`,
     })
 
-    y.option('teardown', {
-      alias: 't',
+    y.option('down', {
+      alias: 'd',
       describe: `Deletes your deployment in the current stage and environment`,
       type: 'boolean',
     })
@@ -45,11 +41,11 @@ yargs.command(
 )
 
 yargs.command(
-  'github [-t|--teardown]',
+  'github [-d|--down]',
   'Deploys the app to GitHub Pages. GitHub Pages builds only have a production option.',
   y => {
-    y.option('teardown', {
-      alias: 't',
+    y.option('down', {
+      alias: 'd',
       describe: `Deletes your deployment`,
       type: 'boolean',
     })
@@ -63,7 +59,7 @@ let cmd, stage
 
 switch (args._[0]) {
   case 'now':
-    if (args.teardown)
+    if (args.down)
       log(`Tearing down ${chalk.bold(pkg.name)} from ${chalk.bold('Now')}`)
     else log(`Deploying ${chalk.bold(pkg.name)} to ${chalk.bold('Now')}`)
     let nowJson = JSON.parse(
@@ -73,13 +69,13 @@ switch (args._[0]) {
     )
     cmd = `
       now \
-        ${args.teardown ? `rm ${nowJson.name}` : ''} \
+        ${args.down ? `rm ${nowJson.name}` : ''} \\
         ${args.prod ? '--prod' : ''}
     `
     break
 
   case 'github':
-    if (args.teardown)
+    if (args.down)
       log(
         `Tearing down ${chalk.bold(pkg.name)} from ${chalk.bold(
           'GitHub Pages'
@@ -92,10 +88,11 @@ switch (args._[0]) {
     break
 
   case 'aws':
-    if (args.teardown)
+    if (args.down)
       log(`Tearing down ${chalk.bold(pkg.name)} from ${chalk.bold('AWS')}`)
     else log(`Deploying ${chalk.bold(pkg.name)} to ${chalk.bold('AWS')}`)
-    stage = typeof args.stage === 'string' ? args.stage : 'staging'
+    stage =
+      typeof args.stage === 'string' && args.stage ? args.stage : 'staging'
     stage = args.prod ? 'production' : stage
 
     cmd = `
@@ -103,7 +100,7 @@ switch (args._[0]) {
         NODE_ENV=production \
         STAGE=${stage} \
       npx serverless \
-        deploy \
+        ${args.down ? 'remove' : 'deploy'} \\
         --stage ${stage} 
     `
     break

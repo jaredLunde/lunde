@@ -197,7 +197,7 @@ custom:
   bundle:
     'webpack.config.js':
       bucket:
-        # The name of the bucket where the client code will be deployed
+        # The name of the bucket where the bundle will be deployed
         name: ${self:custom.stage.s3Bucket}
         retain: false
       # Parameters passed to the AWS.S3() constructor in aws-sdk
@@ -218,8 +218,7 @@ custom:
             # preference is that the pages are always revalidated
             cacheControl: 'no-cache, must-revalidate, max-age=0'
         '*':
+          key: 'assets/[filename]'
           params:
             ACL: 'public-read'
-            # Files should have hashes in their filenames based upon their content
-            # and therefore be immutable, making them safe to cache indefinitely
             cacheControl: 'public, immutable, max-age=31536000'

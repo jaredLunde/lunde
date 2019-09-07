@@ -87,7 +87,8 @@ async function uploadToS3(
   filenames.forEach(filename => {
     // opens up a file stream from the local file
     const absoluteName = path.join(outputPath, filename)
-
+    // ignores cleaned files
+    if (fs.existsSync(absoluteName) === false) return
     // gets the config for this type of file
     let config = {
       key: '[filename]',
@@ -98,6 +99,7 @@ async function uploadToS3(
       for (let glob in object) {
         if (glob === '*' || minimatch(filename, glob, {dot: true}) === true) {
           config = deepMerge(config, object[glob])
+          break
         }
       }
 
