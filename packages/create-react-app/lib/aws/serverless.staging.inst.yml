@@ -1,5 +1,5 @@
 domain: <:(value += props.DOMAIN.split('.').length > 2 ? `staging-${props.DOMAIN}` : `staging.${props.DOMAIN}`):>
-s3Bucket: <:(value += props.DOMAIN.split('.').length > 2 ? `staging-${props.DOMAIN}` : `staging.${props.DOMAIN}`):>
+s3Bucket: staging-<:S3_BUCKET:>
 hostedZone: <:(value += props.DOMAIN.split('.').slice(-2).join('.')):>.
 environment:
   STAGE: ${self:provider.stage}

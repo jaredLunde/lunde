@@ -16,7 +16,7 @@ module.exports = [
       stats: {all: true},
     },
     clean: outputPath,
-    compression: true,
+    compression: false,
     analyze: process.env.ANALYZE,
   }),
 
@@ -26,7 +26,6 @@ module.exports = [
       path: outputPath,
     },
     staticSite: process.env.BUILD_ENV !== 'server',
-    compression: true,
     clean: false,
   }),
 ]

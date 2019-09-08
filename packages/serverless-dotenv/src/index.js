@@ -5,8 +5,8 @@ import chalk from 'chalk'
 import fs from 'fs'
 import minimatch from 'minimatch'
 
-function exclude(exclusions) {
-  return !exclusions || !exclusions.length
+const exclude = exclusions =>
+  !exclusions || !exclusions.length
     ? () => true
     : function(name) {
         for (let glob of exclusions) {
@@ -17,9 +17,8 @@ function exclude(exclusions) {
 
         return true
       }
-}
 
-function assignEnv(func, variables, stageVariables) {
+const assignEnv = (func, variables, stageVariables) => {
   const stageEnvironment = {}
   stageVariables.forEach(
     variable => (stageEnvironment[variable] = variables[variable])
@@ -93,6 +92,7 @@ module.exports = class ServerlessPlugin {
       }
     } else {
       this.log('Could not find a .env file')
+      return
     }
 
     Object.keys(functions).forEach(fn => {

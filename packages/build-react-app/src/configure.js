@@ -186,7 +186,7 @@ export const configureReactClient = (...configs) => {
               ? compression
               : {
                   test: /\.(js|txt|html|json|md|svg|xml|yml)(\?.*)?$/i,
-                  exclude: /\/\.cache\//,
+                  exclude: /\.cache\//,
                   cache: true,
                   algorithm: 'gzip',
                   threshold: 1024,
@@ -413,7 +413,7 @@ export const configureReactServer = (...configs) => {
                 ? compression
                 : {
                     test: /\.(txt|html|json|md|xml|yml)(\?.*)?$/i,
-                    exclude: /\/\.cache\//,
+                    exclude: /\.cache\//,
                     cache: true,
                     algorithm: 'gzip',
                     threshold: 1024,

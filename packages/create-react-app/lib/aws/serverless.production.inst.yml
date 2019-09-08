@@ -1,5 +1,5 @@
 domain: <:DOMAIN:>
-s3Bucket: <:DOMAIN:>
+s3Bucket: <:S3_BUCKET:>
 hostedZone: <:(value += props.DOMAIN.split('.').slice(-2).join('.')):>.
 environment:
   STAGE: ${self:provider.stage}

@@ -42,9 +42,16 @@ module.exports.prompts = (
       {
         name: 'S3_BUCKET',
         message: `Public S3 bucket`,
-        default: () => `${PKG_NAME}-public`,
+        default: `${PKG_NAME}-public`,
         filter: trim,
         validate: required,
+        when: !args.static,
+      },
+      {
+        name: 'S3_BUCKET_EXISTS',
+        type: 'confirm',
+        message: `Does the S3 bucket already exist?`,
+        default: false,
         when: !args.static,
       },
       {
@@ -115,7 +122,7 @@ module.exports.dependencies = (variables, args) => {
   if (args.aws) {
     Object.assign(deps, {
       '@lunde/serverless-bundle': 'latest',
-      '@lunde/serverless-certificate-manager': 'latest',
+      '@lunde/serverless-certificate-manager': '^2.6.13',
       '@lunde/serverless-dotenv': 'latest',
       'serverless-apigw-binary': 'latest',
       'serverless-domain-manager': 'latest',
@@ -123,6 +130,7 @@ module.exports.dependencies = (variables, args) => {
       'serverless-plugin-lambda-warmup': 'latest',
       'serverless-plugin-scripts': 'latest',
       'serverless-pseudo-parameters': 'latest',
+      'serverless-webpack': 'latest',
     })
 
     if (args.static) {
@@ -130,6 +138,7 @@ module.exports.dependencies = (variables, args) => {
       delete deps['serverless-apigw-binary']
       delete deps['serverless-http']
       delete deps['serverless-plugin-lambda-warmup']
+      delete deps['serverless-webpack']
     }
   }
 
@@ -160,7 +169,7 @@ module.exports.include = (variables, args) => {
   const isApollo = args.apollo
   const isStatic = args.static || args.now || args.github
 
-  if (isServerless === true) {
+  if (isServerless === true && !args.static) {
     include.push('**/aws/**')
   }
   if (isApollo) {
@@ -210,6 +219,10 @@ module.exports.editPackageJson = (
   }
 
   if (args.aws) {
+    if (!args.static) {
+      packageJson.scripts.build = 'build-react-app build --target node'
+    }
+
     packageJson.scripts.up = 'deploy-react-app aws --stage'
     packageJson.scripts.down = 'deploy-react-app aws --down --stage'
     packageJson.scripts.sls = 'npx serverless'

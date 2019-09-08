@@ -27,12 +27,11 @@ provider:
     # Compress response when larger than specified size in bytes (must be between 0 and 10485760)
     minimumCompressionSize: 2048
   # Optional endpoint configuration for API Gateway REST API. Other option is 'edge'
-  endpointType: ${env:SERVERLESS__ENDPOINT_TYPE}
+  endpointType: ${self:custom.stage.endpointType, "regional"}
 
 resources:
-  Resources:<:if S3_BUCKET.length > 0:>
+  Resources:<:if S3_BUCKET_EXISTS === false:>
     # Creates a bucket for public assets
-    # DELETE if using a shared or existing bucket
     ClientS3Bucket:
       Type: AWS::S3::Bucket
       # DeletionPolicy: Retain
@@ -40,7 +39,7 @@ resources:
         # The bucket itself should be private by default for security, objects can
         # optionally be defined as public
         AccessControl: Private
-        BucketName: ${self:custom.stage.S3Bucket}
+        BucketName: ${self:custom.stage.s3Bucket}
         CorsConfiguration:
           CorsRules:
             # By default, this only allows the static site's domain as an origin. You can
@@ -129,9 +128,7 @@ custom:
   stage: ${file(./serverless.${self:provider.stage}.yml)}
   # Creates ACM certificates for the app domains
   certificateManager:
-    - refFor:
-        - resources.Resources.StaticCloudFrontDistribution.Properties.DistributionConfig.ViewerCertificate.AcmCertificateArn
-      # Make `false` to delete this certificate on teardown
+    - # Make `false` to delete this certificate on teardown
       # This is `true` by default to avoid accidentally deleting a shared certificate
       retain: true
       domains:
@@ -147,6 +144,8 @@ custom:
               ? `- '*.${props.DOMAIN}'`
               : ''
         ):>
+      # refFor:
+      #   - resources.Resources.StaticCloudFrontDistribution.Properties.DistributionConfig.ViewerCertificate.AcmCertificateArn
   # Sets up the domain name in Route 53 an attaches API Gateway to the certificate
   customDomain:
     domainName: ${self:custom.stage.domain}
@@ -154,13 +153,17 @@ custom:
     basePath: ''
     createRoute53Record: true
     endpointType: ${self:provider.endpointType}
-    # certificateName: ${self:custom.domain}
   scripts:
     hooks:
       # Creates the domain name on complete deployments
-      'after:package:finalize': sls create_domain --stage ${self:provider.stage}
+      'after:package:finalize': npx serverless create_domain --stage ${self:provider.stage}
+      <:if S3_BUCKET_EXISTS === false:>
       # Deletes the domain on teardown
-      'before:remove:remove': sls delete_domain --stage ${self:provider.stage}
+      'before:remove:remove': npx serverless delete_domain --stage ${self:provider.stage}
+      <:else:>
+      # Cleans the s3 bucket and deletes the domain on teardown
+      'before:remove:remove': npx aws s3 rm s3://${self:custom.stage.s3Bucket} --recursive && npx serverless delete_domain --stage ${self:provider.stage}
+      <:fi>
   # Sets up binary media types in API Gateway -> Settings
   apigwBinary:
     types:
@@ -175,7 +178,7 @@ custom:
       - production
   # Server bundle creation
   webpack:
-    webpackConfig: 'webpack/server.config.js'
+    webpackConfig: 'webpack.config.server.js'
     includeModules: true
     packager: 'yarn'
     packagerOptions:
@@ -183,7 +186,7 @@ custom:
   # Defines settings for the application bundles
   bundle:
     # Client-side bundle for JS, images, etc.
-    'webpack.config.js':
+    'webpack.config.client.js':
       bucket:
         # The name of the bucket where the client code will be deployed
         name: ${self:custom.stage.s3Bucket}
@@ -195,11 +198,9 @@ custom:
         maxRetries: 5
       object:
         # Excludes the stats file generated with Webpack from being synced
-        'stats.json':
+        '**/.cache/**':
           exclude: true
         '*':
           params:
             ACL: 'public-read'
-            # Files should have hashes in their filenames based upon their content
-            # and therefore be immutable, making them safe to cache indefinitely
             cacheControl: 'public, immutable, max-age=31536000'

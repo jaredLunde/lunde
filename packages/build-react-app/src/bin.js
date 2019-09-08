@@ -10,13 +10,19 @@ import serve_ from './serve'
 yargs.scriptName('build-react-app')
 
 yargs.command(
-  'serve [-p|--prod] [--host host] [--port port] [--assets assets] [--config config]',
+  'serve [-p|--prod] [-s|--stage stage] [--host host] [--port port] [--assets assets] [--config config]',
   'Starts the nearest React app in a micro server',
   yargs => {
     yargs.positional('prod', {
       alias: 'p',
       describe: `Serves in the production NODE_ENV. Otherwise defaults to process.env.NODE_ENV || "development"`,
       type: 'boolean',
+    })
+
+    yargs.option('stage', {
+      alias: 's',
+      describe: `The stage to build in your app for. Defaults to process.env.STAGE.`,
+      type: 'string',
     })
 
     yargs.option('host', {
@@ -43,7 +49,7 @@ yargs.command(
 )
 
 yargs.command(
-  'build [-p|--prod] [-s|--stage stage] [-c|--config config]',
+  'build [-p|--prod] [-t|--target] [-s|--stage stage] [-c|--config config]',
   'Bundles the nearest React app',
   yargs => {
     yargs.positional('prod', {
@@ -52,9 +58,15 @@ yargs.command(
       type: 'boolean',
     })
 
+    yargs.option('target', {
+      alias: 't',
+      describe: `Sets a BUILD_ENV environment variable for your build target, either 'static' or 'node'. Defaults to 'static'.`,
+      type: 'string',
+    })
+
     yargs.option('stage', {
       alias: 's',
-      describe: `The stage to build in your app for. Defaults to process.env.STAGE || "development".`,
+      describe: `The stage to build in your app for. Defaults to process.env.STAGE.`,
       type: 'string',
     })
 
@@ -98,7 +110,7 @@ function serve({prod, stage, host = '::', port, assets, config}) {
   process.env.NODE_ENV = prod
     ? 'production'
     : process.env.NODE_ENV || 'development'
-  process.env.STAGE = stage || process.env.STAGE || 'development'
+  process.env.STAGE = stage || process.env.STAGE
   config = require(config ||
     path.join(path.dirname(pkgJson.__path), 'webpack.config.js'))
 
@@ -116,13 +128,13 @@ function serve({prod, stage, host = '::', port, assets, config}) {
   })
 }
 
-async function build({prod, stage, config}) {
+async function build({prod, stage, target, config}) {
   const pkgJson = getPkgJson(pwd())
-  process.env.BUILD_ENV = 'static'
+  process.env.BUILD_ENV = target || 'static'
   process.env.NODE_ENV = prod
     ? 'production'
     : process.env.NODE_ENV || 'development'
-  process.env.STAGE = stage || process.env.STAGE || 'development'
+  process.env.STAGE = stage || process.env.STAGE
   const configPath =
     config || path.join(path.dirname(pkgJson.__path), 'webpack.config.js')
   const configs = require(configPath)
