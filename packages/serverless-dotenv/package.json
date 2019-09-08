@@ -1,0 +1,65 @@
+{
+  "name": "@lunde/serverless-dotenv",
+  "version": "1.0.0",
+  "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "files": [
+    "/dist"
+  ],
+  "description": "A Serverless plugin that injects .env files into your serverless.yml based upon the --stage",
+  "keywords": [
+    "serverless dotenv",
+    "dotenv",
+    "serverless"
+  ],
+  "sideEffects": false,
+  "devDependencies": {
+    "@lunde/babel-preset-es": "latest",
+    "babel-eslint": "latest",
+    "cross-env": "latest",
+    "eslint": "latest",
+    "eslint-import-resolver-jest": "latest",
+    "eslint-plugin-jest": "latest",
+    "husky": "latest",
+    "jest": "latest",
+    "lint-staged": "latest",
+    "prettier": "latest",
+    "pretty-quick": "latest",
+    "rimraf": "^2.6.3"
+  },
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "dotenv": "^8.1.0",
+    "dotenv-expand": "^5.1.0",
+    "minimatch": "^3.0.4"
+  },
+  "peerDependencies": {},
+  "scripts": {
+    "build": "babel src -d dist -x .js --ignore \"**/*.test.js\",\"**/test.js\" --delete-dir-on-start",
+    "format": "prettier --write \"{dist,src}/**/*.js\"",
+    "lint": "eslint src",
+    "prepublishOnly": "npm run lint && npm run test && npm run build && npm run format",
+    "test": "jest",
+    "validate": "npm run lint && npm run test -- --coverage"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.js": [
+      "eslint",
+      "pretty-quick --staged"
+    ]
+  },
+  "homepage": "https://github.com/jaredLunde/lunde/tree/master/packages/serverless-dotenv#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaredLunde/lunde.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jaredLunde/lunde/issues"
+  }
+}

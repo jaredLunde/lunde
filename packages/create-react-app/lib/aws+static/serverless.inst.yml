@@ -191,8 +191,18 @@ custom:
       # This is `true` by default to avoid accidentally deleting a shared certificate
       retain: true
       domains:
-        <:(value += props.DOMAIN.split('.').length > 2 ? `- '*.${props.DOMAIN.split('.').slice(-1 * props.DOMAIN.length - 1).join('.')}'` : `- ${props.DOMAIN}`):>
-        <:(value += props.DOMAIN.split('.').length === 2 ? `- '*.${props.DOMAIN}'` : ''):>
+        <:(
+          value +=
+            props.DOMAIN.split('.').length > 2
+              ? `- '*.${props.DOMAIN.split('.').slice(1).join('.')}'`
+              : `- ${props.DOMAIN}`
+        ):>
+        <:(
+          value +=
+            props.DOMAIN.split('.').length === 2
+              ? `- '*.${props.DOMAIN}'`
+              : ''
+        ):>
   # Defines settings for the application bundles
   bundle:
     'webpack.config.js':

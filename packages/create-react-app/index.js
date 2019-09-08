@@ -114,8 +114,9 @@ module.exports.dependencies = (variables, args) => {
 
   if (args.aws) {
     Object.assign(deps, {
-      '@lunde/serverless-certificate-manager': 'latest',
       '@lunde/serverless-bundle': 'latest',
+      '@lunde/serverless-certificate-manager': 'latest',
+      '@lunde/serverless-dotenv': 'latest',
       'serverless-apigw-binary': 'latest',
       'serverless-domain-manager': 'latest',
       'serverless-http': 'latest',
@@ -125,6 +126,7 @@ module.exports.dependencies = (variables, args) => {
     })
 
     if (args.static) {
+      delete deps['@lunde/serverless-dotenv']
       delete deps['serverless-apigw-binary']
       delete deps['serverless-http']
       delete deps['serverless-plugin-lambda-warmup']

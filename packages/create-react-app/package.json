@@ -1,6 +1,6 @@
 {
   "name": "@lunde/create-react-app",
-  "version": "1.0.25",
+  "version": "1.0.33",
   "main": "index.js",
   "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
   "license": "MIT",
@@ -21,7 +21,7 @@
   "scripts": {
     "format": "npm run format:src && npm run format:lib",
     "format:src": "prettier --write ./index.js",
-    "format:lib": "prettier --write \"./lib/**/*.{yml,js,md}\"",
+    "format:lib": "prettier --write \"./lib/**/!(*.inst.)*.{js,md}\"",
     "prepublishOnly": "npm run format"
   }
 }
