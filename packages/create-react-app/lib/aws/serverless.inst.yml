@@ -34,6 +34,9 @@ resources:
     # Creates a bucket for public assets
     ClientS3Bucket:
       Type: AWS::S3::Bucket
+      # NOTE: if you change the deletion policy below to Retain, don't forget
+      #       to remove `npx aws s3 rm ...` in the 'before:remove:remove' script hook
+      #       in the custom hook scripts portion of the YAML file
       # DeletionPolicy: Retain
       Properties:
         # The bucket itself should be private by default for security, objects can
@@ -156,14 +159,11 @@ custom:
   scripts:
     hooks:
       # Creates the domain name on complete deployments
-      'after:package:finalize': npx serverless create_domain --stage ${self:provider.stage}
-      <:if S3_BUCKET_EXISTS === false:>
-      # Deletes the domain on teardown
-      'before:remove:remove': npx serverless delete_domain --stage ${self:provider.stage}
-      <:else:>
+      'after:package:finalize': npx serverless create_domain --stage ${self:provider.stage}<:if S3_BUCKET_EXISTS === false:>
       # Cleans the s3 bucket and deletes the domain on teardown
-      'before:remove:remove': npx aws s3 rm s3://${self:custom.stage.s3Bucket} --recursive && npx serverless delete_domain --stage ${self:provider.stage}
-      <:fi>
+      'before:remove:remove': npx aws s3 rm s3://${self:custom.stage.s3Bucket} --recursive && npx serverless delete_domain --stage ${self:provider.stage}<:else:>
+      # Deletes the domain on teardown
+      'before:remove:remove': npx serverless delete_domain --stage ${self:provider.stage}<:fi:>
   # Sets up binary media types in API Gateway -> Settings
   apigwBinary:
     types:

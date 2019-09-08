@@ -1,6 +1,31 @@
 const os = require('os')
 const path = require('path')
-const {required, trim, autocompleteIni} = require('@inst-cli/template-utils')
+const AWS = require('aws-sdk')
+const {
+  required,
+  error,
+  trim,
+  autocompleteIni,
+} = require('@inst-cli/template-utils')
+
+const doesBucketExist = async (profile, bucket) => {
+  const s3 = new AWS.S3({
+    credentials: new AWS.SharedIniFileCredentials({profile}),
+  })
+
+  try {
+    await s3.headBucket({Bucket: bucket}).promise()
+    return true
+  } catch (error) {
+    if (error.statusCode === 404) {
+      return false
+    } else if (error.statusCode === 403) {
+      return true
+    }
+
+    throw error
+  }
+}
 
 const sortByKeys = obj =>
   Object.keys(obj)
@@ -24,7 +49,20 @@ module.exports.prompts = (
   const prompts = []
 
   if (args.aws) {
+    let bucketExists = false
+    inquirer.registerPrompt(
+      'confirm-validated',
+      require('inquirer-confirm-validated')
+    )
+
     prompts.push(
+      autocompleteIni(inquirer, CREDENTIALS_FILE, {
+        name: 'PROFILE',
+        message: `AWS profile`,
+        default: 'default',
+        filter: trim,
+        validate: required,
+      }),
       {
         name: 'DOMAIN',
         message: `Domain name`,
@@ -32,33 +70,52 @@ module.exports.prompts = (
         validate: required,
       },
       {
-        name: 'APOLLO_DOMAIN',
-        message: `Apollo API endpoint`,
-        filter: trim,
-        validate: required,
-        default: a => `api.${a.DOMAIN}`,
-        when: !!args.apollo,
-      },
-      {
         name: 'S3_BUCKET',
-        message: `Public S3 bucket`,
+        message: `Static assets S3 bucket`,
         default: `${PKG_NAME}-public`,
         filter: trim,
-        validate: required,
+        validate: function(input, a) {
+          if (required(input) === false) return false
+
+          const done = this.async()
+          doesBucketExist(a.PROFILE, input).then(exists => {
+            bucketExists = exists
+            done(null, true)
+          })
+        },
         when: !args.static,
       },
       {
         name: 'S3_BUCKET_EXISTS',
-        type: 'confirm',
-        message: `Does the S3 bucket already exist?`,
-        default: false,
-        when: !args.static,
+        type: 'confirm-validated',
+        message: `This S3 bucket already exists. Do you want to continue?`,
+        default: true,
+        when: () => !args.static && bucketExists,
+        validate: input => {
+          if (input === false) process.exit(0)
+          return true
+        },
       },
       {
         name: 'DEPLOYMENT_BUCKET',
         message: 'Serverless artifacts bucket',
         default: 'lunde-serverless-deploys',
         filter: trim,
+        validate: function(input, a) {
+          const done = this.async()
+          if (!input) done(null, true)
+
+          doesBucketExist(a.PROFILE, input).then(exists => {
+            if (exists === true) done(null, true)
+            else {
+              console.log('')
+              error(
+                'This deployment bucket does not exist. You must create this bucket before continuing.'
+              )
+              process.exit(0)
+            }
+          })
+        },
       },
       {
         name: 'USE_APEX_REDIRECT',
@@ -67,13 +124,14 @@ module.exports.prompts = (
         default: true,
         when: a => a.DOMAIN.split('.').length === 2,
       },
-      autocompleteIni(inquirer, CREDENTIALS_FILE, {
-        name: 'PROFILE',
-        message: `AWS profile`,
-        default: PKG_NAME,
+      {
+        name: 'APOLLO_DOMAIN',
+        message: `Apollo API endpoint`,
         filter: trim,
         validate: required,
-      })
+        default: a => `api.${a.DOMAIN}`,
+        when: !!args.apollo,
+      }
     )
   }
 
@@ -122,15 +180,15 @@ module.exports.dependencies = (variables, args) => {
   if (args.aws) {
     Object.assign(deps, {
       '@lunde/serverless-bundle': 'latest',
-      '@lunde/serverless-certificate-manager': '^2.6.13',
+      '@lunde/serverless-certificate-manager': 'latest',
       '@lunde/serverless-dotenv': 'latest',
-      'serverless-apigw-binary': 'latest',
-      'serverless-domain-manager': 'latest',
-      'serverless-http': 'latest',
-      'serverless-plugin-lambda-warmup': 'latest',
-      'serverless-plugin-scripts': 'latest',
-      'serverless-pseudo-parameters': 'latest',
-      'serverless-webpack': 'latest',
+      'serverless-apigw-binary': '^0.4.4',
+      'serverless-domain-manager': '^2.6.13',
+      'serverless-http': '^2.3.0',
+      'serverless-plugin-lambda-warmup': '^1.0.1',
+      'serverless-plugin-scripts': '^1.0.2',
+      'serverless-pseudo-parameters': '^2.4.0',
+      'serverless-webpack': '^5.3.1',
     })
 
     if (args.static) {
@@ -210,10 +268,10 @@ module.exports.editPackageJson = (
     analyze: 'ANALYZE=true build-react-app serve production',
     build: 'build-react-app build',
     clean: 'rimraf dist && rimraf .cache-loader && rimraf node_modules/.cache',
+    dev: 'build-react-app serve',
     format: 'prettier --write "src/**/*.js"',
     lint: 'eslint src',
     postinstall: 'npm run clean',
-    serve: 'build-react-app serve',
     test: 'jest --passWithNoTests',
     validate: 'npm run lint && npm run test -- --coverage',
   }
