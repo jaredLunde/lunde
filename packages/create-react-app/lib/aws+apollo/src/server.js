@@ -23,7 +23,7 @@ import App from './index'
 export const renderApp = clientStats => async (req, res) => {
   // provided to react-helmet-async
   const helmetContext = {}
-  // tracks redirections and status changes in the Router
+  // tracks redirects and status changes in the Router
   const routerContext = {}
   // creates the Apollo client
   const apolloClient = createApolloClient(
@@ -130,13 +130,13 @@ const middleware = pipe(
 )
 
 // this is the server renderer that will handle all requests
-const serverRenderer = clientStats =>
+const serverRenderer = ({clientStats}) =>
   middleware(createRenderer(renderApp(clientStats)))
 // sets up options for the Serverless lambda function
 let clientStats, mainServerless
 if (process.env.STAGE !== 'development') {
   clientStats = require(`../dist/${process.env.STAGE}/client/stats.json`)
-  mainServerless = require('serverless-http')(serverRenderer(clientStats))
+  mainServerless = require('serverless-http')(serverRenderer({clientStats}))
 }
 // this is the export that Lambda calls as its handler
 export const main = (event, context) =>

@@ -2,7 +2,14 @@ import React from 'react'
 import {Switch} from 'react-router-dom'
 import {HelmetProvider, Helmet} from 'react-helmet-async'
 import {Provider as BrokerProvider} from 'react-broker'
-import {ThemeProvider, css, browserResets, prettyText, containmentAttrs} from 'curls'
+import {
+  Text,
+  ThemeProvider,
+  css,
+  browserResets,
+  prettyText,
+  containmentAttrs,
+} from 'curls'
 import {ScrollToTop} from './components'
 import * as theme from './theme'
 import * as pages from './pages'
@@ -22,11 +29,23 @@ const Document = ({location}) => (
       />
       <meta name='theme-color' content='#000' />
       {__webpack_public_path__.startsWith('http') && (
-        <link rel='dns-prefetch preconnect' href={__webpack_public_path__} crossOrigin />
+        <link
+          rel='dns-prefetch preconnect'
+          href={__webpack_public_path__}
+          crossOrigin
+        />
       )}
+      <noscript>
+        <Text center size='md' d='block' p='3'>
+          Javascript must be enabled in order to view this website
+        </Text>
+      </noscript>
     </Helmet>
     <div id='portals' />
-    <Switch location={location} children={Object.values(pages).map(({route}) => route)} />
+    <Switch
+      location={location}
+      children={Object.values(pages).map(({route}) => route)}
+    />
   </>
 )
 

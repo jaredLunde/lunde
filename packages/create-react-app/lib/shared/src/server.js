@@ -13,71 +13,62 @@ import {
 import App from './index'
 
 export const renderApp = clientStats => async (req, res) => {
-  // keeps track of lazy chunks used by the current page
   const chunkCache = Broker.createChunkCache()
-  // provided to react-helmet-async
   const helmetContext = {}
-  // tracks redirections and status changes in the Router
   const routerContext = {}
-  // creates the App in React
-  const app = (
+  const html = await Broker.loadAll(
     <StaticRouter location={req.url} context={routerContext}>
       <App helmetContext={helmetContext} chunkCache={chunkCache} />
-    </StaticRouter>
+    </StaticRouter>,
+    ReactDOMServer.renderToString
   )
-  // preloads all async components and fetcher queries
-  const html = await Broker.loadAll(app, ReactDOMServer.renderToString)
-  // sets the status from the router context to the response
+
   if (routerContext.status) {
     res.statusCode = routerContext.status
   }
-  // somewhere a `<Redirect>` was rendered
+
   if (routerContext.url) {
-    // redirect(res, routerContext.status || 301, routerContext.url)
-    redirect(res, routerContext.url, routerContext.location?.state?.status || 301)
+    // A <Redirect> was rendered somewhere in the <App>
+    redirect(
+      res,
+      routerContext.url,
+      routerContext.location?.state?.status || 301
+    )
   }
-  // renders the Helmet attributes
+
   const {helmet} = helmetContext
   const chunks = chunkCache.getChunkScripts(clientStats, {preload: true})
-  // returns the document
+
   return `
     <!DOCTYPE html>
     <html ${helmet.htmlAttributes}>
       <head>
-        <!-- Preloads bundle scripts -->
         ${chunks.preload}
-        <!-- Page Title -->
         ${helmet.title}
-        <!-- Helmet meta -->
+        ${helmet.base}
         ${helmet.meta}
-        <!-- Helmet links -->
         ${helmet.link}
-        <!-- Helmet styles -->
         ${helmet.style}
-        <!-- Helmet scripts -->
         ${helmet.script}
       </head>
       <body ${helmet.bodyAttributes}>
-        <noscript>
-          <div style="font-family: sans-serif; padding: 2rem; text-align: center;">
-            Javascript must be enabled in order to view this website
-          </div>
-        </noscript>
+        ${helmet.noscript}
         <div id="⚛️">${html}</div>
-        <!-- Bundle scripts -->
         ${chunks.scripts}
       </body>
     </html>
   `.trim()
 }
-// creates the middleware pipeline
+
 const middleware = pipe(
-  // 404s on favicon requests
   noFavicon,
-  // Sets up robots.txt middleware for micro
-  withRobots(`User-agent: *\n${process.env.STAGE === 'production' ? 'Allow' : 'Disallow'}: /`),
-  // sets up cookies
+  withRobots(
+    `User-agent: *\n${
+      process.env.STAGE === 'production' ? 'Allow' : 'Disallow'
+    }: /`
+  ),
   withCookies()
 )
-// exports the renderer w/ middleware
-export default ({clientStats}) => middleware(createRenderer(renderApp(clientStats)))
+
+export default ({clientStats}) =>
+  middleware(createRenderer(renderApp(clientStats)))

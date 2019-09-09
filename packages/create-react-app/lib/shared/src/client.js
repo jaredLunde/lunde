@@ -7,10 +7,12 @@ import App from './index'
 
 const history = createBrowserHistory()
 const root = document.getElementById('⚛️')
-const hydrate = App => ReactDOM.hydrate(<Router history={history} children={<App />} />, root)
+const hydrate = App =>
+  ReactDOM.hydrate(<Router history={history} children={<App />} />, root)
 // Hydrates the app after Broker has loaded its chunks
 loadInitial().then(() => hydrate(App))
 
 if (__DEV__) {
-  module.hot && module.hot.accept('./index', () => hydrate(require('./index').default))
+  module.hot &&
+    module.hot.accept('./index', () => hydrate(require('./index').default))
 }
