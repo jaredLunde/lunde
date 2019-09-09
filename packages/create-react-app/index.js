@@ -225,7 +225,7 @@ module.exports.include = (variables, args) => {
   const include = ['**/shared/**']
   const isServerless = args.aws
   const isApollo = args.apollo
-  const isStatic = args.static || args.now || args.github
+  const isStatic = args.static || args.github
 
   if (isServerless === true && !args.static) {
     include.push('**/aws/**')
@@ -234,14 +234,13 @@ module.exports.include = (variables, args) => {
     include.push('**/apollo/**')
     if (isServerless) include.push('**/aws+apollo/**')
   }
-  if (isStatic) {
+  if (isStatic || args.now) {
     include.push('**/static/**')
     if (isServerless) include.push('**/aws+static/**')
   }
   if (args.now) {
     include.push('**/now/**')
   }
-
   return include
 }
 

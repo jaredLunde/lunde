@@ -36,9 +36,11 @@ const Document = ({location}) => (
         />
       )}
       <noscript>
-        <Text center size='md' d='block' p='3'>
-          Javascript must be enabled in order to view this website
-        </Text>
+        {`
+          <div style="font-family: sans-serif; padding: 2rem; text-align: center;">
+            Javascript must be enabled in order to view this website
+          </div>
+        `}
       </noscript>
     </Helmet>
     <div id='portals' />

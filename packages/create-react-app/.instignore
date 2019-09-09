@@ -1,1 +1,2 @@
 **/!(*.inst.)*
+**/node_modules/**
