@@ -75,6 +75,9 @@ const serverRenderer = ({clientStats}) =>
   middleware(createRenderer(renderApp(clientStats)))
 let clientStats, mainServerless
 
+// 'node': build script is running
+// 'server': dev script is running
+// 'serverless': up script is running
 if (process.env.BUILD_ENV !== 'server') {
   clientStats = require(`../public/client/.cache/stats.json`)
   mainServerless = require('serverless-http')(serverRenderer({clientStats}))

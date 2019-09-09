@@ -69,7 +69,7 @@ switch (args._[0]) {
     )
     cmd = `
       now \
-        ${args.down ? `rm ${nowJson.name}` : ''} \\
+        ${args.down ? `rm ${nowJson.name}` : ''} \
         ${args.prod ? '--prod' : ''}
     `
     break
@@ -94,13 +94,15 @@ switch (args._[0]) {
     stage =
       typeof args.stage === 'string' && args.stage ? args.stage : 'staging'
     stage = args.prod ? 'production' : stage
+    const buildEnv = process.env.BUILD_ENV || 'serverless'
 
     cmd = `
       ${crossEnv} \
         NODE_ENV=production \
+        BUILD_ENV=${buildEnv} \
         STAGE=${stage} \
       npx serverless \
-        ${args.down ? 'remove' : 'deploy'} \\
+        ${args.down ? 'remove' : 'deploy'} \
         --stage ${stage} 
     `
     break

@@ -37,8 +37,8 @@ const render = clientStats => async locals => {
     </html>
   `.trim()
 }
-// BUILD_ENV will be 'static' when the 'build' script is running
-// and 'server' when the 'dev' script is running
+// 'static': build script is running
+// 'server': dev script is running
 export default process.env.BUILD_ENV === 'server'
   ? ({clientStats}) => req =>
       createStaticRenderer(render(clientStats))({path: req.url})

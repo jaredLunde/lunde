@@ -24,8 +24,8 @@ const defaultAbsoluteRuntime = path.dirname(
 )
 
 // Internal dependencies
-const createInternalBabelLoader = (defaultPresets, babelOverride = {}) => {
-  const {test, presets, plugins, include, exclude, options} = babelOverride
+const createInternalBabelLoader = (defaultPresets, override = {}) => {
+  const {test, presets, plugins, include, exclude, options} = override
 
   return createBabelLoader({
     test,
@@ -37,8 +37,8 @@ const createInternalBabelLoader = (defaultPresets, babelOverride = {}) => {
 }
 
 // External dependencies
-const createExternalBabelLoader = (defaultPresets, babelOverride = {}) => {
-  const {test, presets, plugins, include, exclude, options} = babelOverride
+const createExternalBabelLoader = (defaultPresets, override = {}) => {
+  const {test, presets, plugins, include, exclude, options} = override
 
   return createBabelLoader({
     test,
@@ -60,7 +60,7 @@ const createExternalBabelLoader = (defaultPresets, babelOverride = {}) => {
   })
 }
 
-export const createBabelLoadersForWeb = (target, babelOverride = {}) => {
+export const createBabelLoadersForWeb = (target, override = {}) => {
   const defaultPresets = [
     [
       '@lunde/react-app',
@@ -73,12 +73,12 @@ export const createBabelLoadersForWeb = (target, babelOverride = {}) => {
   ]
 
   return [
-    createInternalBabelLoader(defaultPresets, babelOverride.internal),
-    createExternalBabelLoader(defaultPresets, babelOverride.external),
+    createInternalBabelLoader(defaultPresets, override.internal),
+    createExternalBabelLoader(defaultPresets, override.external),
   ]
 }
 
-export const createBabelLoadersForNode = (target, babelOverride = {}) => {
+export const createBabelLoadersForNode = (target, override = {}) => {
   const defaultPresets = [
     [
       '@lunde/react-app',
@@ -102,8 +102,8 @@ export const createBabelLoadersForNode = (target, babelOverride = {}) => {
       include: /node_modules/,
       type: 'javascript/auto',
     },
-    createInternalBabelLoader(defaultPresets, babelOverride.internal),
-    createExternalBabelLoader(defaultPresets, babelOverride.external),
+    createInternalBabelLoader(defaultPresets, override.internal),
+    createExternalBabelLoader(defaultPresets, override.external),
   ]
 }
 
@@ -148,7 +148,7 @@ export const createPublicLoader = publicLoader => {
 
 export const configureReactClient = (...configs) => {
   let {
-    babelOverride = {},
+    babel = {},
     stats,
     publicLoader,
     compression,
@@ -264,7 +264,7 @@ export const configureReactClient = (...configs) => {
       },
 
       module: {
-        rules: [...publicLoader, ...createBabelLoadersForWeb(babelOverride)],
+        rules: [...publicLoader, ...createBabelLoadersForWeb(babel)],
       },
 
       plugins: [
@@ -303,13 +303,10 @@ export const configureReactServer = (...configs) => {
     clean = true,
     output,
     target = 'lambda',
-    babelOverride = {},
+    babel = {},
     publicLoader,
     // static builds
     staticSite = false,
-    paths = [],
-    locals = {},
-    crawl = true,
     compression = false,
     // everything else
     ...config
@@ -327,7 +324,7 @@ export const configureReactServer = (...configs) => {
       module: {
         rules: [
           ...publicLoader,
-          ...createBabelLoadersForNode(babelOverride),
+          ...createBabelLoadersForNode(babel),
           {
             test: /\.html|\.txt|\.tpl/,
             loaders: ['raw'],
@@ -374,7 +371,10 @@ export const configureReactServer = (...configs) => {
     config
   )
 
-  if (staticSite === true || process.env.BUILD_ENV === 'static') {
+  if (staticSite === true || typeof staticSite === 'object') {
+    const {paths = ['/', '/404/'], locals = {}, crawl = true} =
+      typeof staticSite === 'object' ? staticSite : {}
+
     nextConfig = merge(
       nextConfig,
       {
@@ -401,11 +401,7 @@ export const configureReactServer = (...configs) => {
         },
 
         plugins: [
-          new StaticSitePlugin({
-            crawl,
-            locals,
-            paths: ['/', '/404', ...(paths || [])],
-          }),
+          new StaticSitePlugin({crawl, locals, paths}),
           isProd() &&
             compression !== false &&
             new CompressionPlugin(

@@ -4,7 +4,8 @@
   "alias": ["<:PKG_NAME:>"],
   "build": {
     "env": {
-      "NODE_ENV": "production"
+      "NODE_ENV": "production",
+      "BUILD_ENV": "static"
     }
   },
   "routes": [
