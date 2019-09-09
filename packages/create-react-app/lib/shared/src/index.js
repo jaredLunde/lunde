@@ -3,7 +3,6 @@ import {Switch} from 'react-router-dom'
 import {HelmetProvider, Helmet} from 'react-helmet-async'
 import {Provider as BrokerProvider} from 'react-broker'
 import {
-  Text,
   ThemeProvider,
   css,
   browserResets,
