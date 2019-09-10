@@ -14,6 +14,15 @@ yarn dev -p 3000
 
 ### dev
 
+| Argument | Alias | Type |  Description |
+| --- | --- | --- | --- |
+| --prod | -p | `boolean` | Serves the app in a `production` environment. Otherwise defaults to `process.env.NODE_ENV` or `"development"`. |  
+| --host <host> | -h | `string` | The hostname to run your server on. Defaults to `::` |
+| --port <port> | -p | `number` | The port number to run your server on. Defaults to `3000` |
+| --assets <assets> | -p | `string` | A path to public assets outside of and not handled by Webpack in your project |
+| --stage <stage> | -s  | `string` | The stage to build your app in if utilizing stages. Defaults to `process.env.STAGE` |
+| --config <config> | -c  | `string` | The path to a Webpack config. Defaults to `webpack.config.js` |
+
 ### build
 
 Bundles your React app with Webpack to the output path `./public`. 
@@ -22,10 +31,10 @@ for more information.
 
 | Argument | Alias | Type |  Description |
 | --- | --- | --- | --- |
-| --prod | -p | `boolean` | Builds in the production NODE_ENV. Otherwise defaults to `process.env.NODE_ENV` or `"development"`. |  
+| --prod | -p | `boolean` | Builds in the `production` environment. Otherwise defaults to `process.env.NODE_ENV` or `"development"`. |  
 | --target <target> | -t | `string` | Sets a BUILD_ENV environment variable for your build target, either `"static"` or `"node"`. Defaults to `"static"`. |
-| --stage | -s  | `string` | The stage to build your app in if utilizing stages. Defaults to `process.env.STAGE` |
-| --config | -c  | `string` | The path to a Webpack config. Defaults to `webpack.config.js` |
+| --stage <stage> | -s  | `string` | The stage to build your app in if utilizing stages. Defaults to `process.env.STAGE` |
+| --config <config> | -c  | `string` | The path to a Webpack config. Defaults to `webpack.config.js` |
 
 ### analyze
 Runs Webpack bundle analyzer on your production build
