@@ -1,27 +1,7 @@
 # <:PKG_NAME:>
 
-[Getting started](#getting-started)
-
-[Scripts](#scripts)
-  + [analyze](#analyze)
-  + [build](#build)
-  + [clean](#clean)
-  + [dev](#dev)
-  + [format](#format)
-  + [lint](#lint)
-  + [test](#test)
-  + [validate](#validate)
-
-[Application](#application)
-  + [Entry files](#entry-files)
-  + [Pages](#pages)
-  + [Components](#components)
-  + [Theme](#theme)
-  + [Static assets](#static-assets)
-
-[LICENSE](#license)
-  
 ## Getting started
+
 ```shell script
 git clone https://github.com/jaredLunde/<:PKG_NAME:>.git
 cd <:PKG_NAME:>
@@ -30,11 +10,12 @@ yarn install
 yarn dev -p 3000
 ```
 
-## Scripts
-### analyze
-Runs Webpack bundle analyzer on your production build
+## Development scripts
+
+### dev
 
 ### build
+
 Bundles your React app with Webpack to the output path `./public`. 
 See [webpack.config.js](tree/master/webpack.config.js) and [build-react-app](https://github.com/jaredLunde/lunde/tree/master/packages/build-react-app)
 for more information.
@@ -46,15 +27,8 @@ for more information.
 | --stage | -s  | `string` | The stage to build your app in if utilizing stages. Defaults to `process.env.STAGE` |
 | --config | -c  | `string` | The path to a Webpack config. Defaults to `webpack.config.js` |
 
-### clean
-Recursively removes any distribution files generated in a build and any caches
-created by Webpack. 
-
-### dev
-
-### format
-Formats all files ending in `.js`, `.md`, and `.yaml` using Prettier, excluding
-`node_modules` and `/public`
+### analyze
+Runs Webpack bundle analyzer on your production build
 
 ### lint
 Runs `eslint` on the `src` directory according to the local [`.eslintrc`](tree/master/.eslintrc)
@@ -65,11 +39,26 @@ Tests your application using `jest` according to the local [`jest.config.js`](tr
 ### validate
 Lints and tests your application using the `lint` and `test` scripts above
 
-## Application
+## Maintenance scripts
+
+### clean
+Recursively removes any distribution files generated in a build and any caches
+created by Webpack. 
+
+### format
+Formats all files ending in `.js`, `.md`, and `.yaml` using Prettier, excluding
+`node_modules` and `/public`
+
+## Application structures
+
 ### Entry files
+
 ### Pages
+
 ### Components
+
 ### Theme
+
 ### Static assets
 
 ## LICENSE
