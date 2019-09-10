@@ -102,4 +102,4 @@ MIT
 
 ---
 
-Created with ⌨️ by [`@lunde/create-react-app`](https://github.com/jaredLunde/lunde/tree/master/packages/create-react-app)
+*Created with ⌨️ and 🕒 by [`@lunde/create-react-app`](https://github.com/jaredLunde/lunde/tree/master/packages/create-react-app)*
