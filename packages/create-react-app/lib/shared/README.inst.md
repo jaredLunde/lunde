@@ -51,7 +51,7 @@ created by Webpack.
 Formats all files ending in `.js`, `.md`, and `.yaml` using Prettier, excluding
 `node_modules` and `/public`
 
-## 🌳 Things to know
+## 📒 Things to know
 
 ### Configuration files
 
