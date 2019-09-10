@@ -97,8 +97,9 @@ to include images, fonts, and other files in your bundle assets. When you import
 [`src/assets`](tree/master/src/pages/index.js) directory it will be loaded with `file-loader` when the
 extension doesn't match `(jpe?g|png|webm)` and `responsive-loader` when it does.
 
-## Credits
-This app was created using [`@lunde/create-react-app`](https://github.com/jaredLunde/lunde/tree/master/packages/create-react-app)
-
 ## LICENSE
 MIT
+
+---
+
+Created with ⌨️ by [`@lunde/create-react-app`](https://github.com/jaredLunde/lunde/tree/master/packages/create-react-app)
