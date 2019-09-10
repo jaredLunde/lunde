@@ -14,6 +14,8 @@ yarn dev -p 3000
 
 ### dev
 
+Starts your React app in a development server at http://localhost:3000 by default
+
 | Argument | Alias | Type |  Description |
 | --- | --- | --- | --- |
 | --prod | -p | `boolean` | Serves the app in a `production` environment. Otherwise defaults to `process.env.NODE_ENV` or `"development"`. |  

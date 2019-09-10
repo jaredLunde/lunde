@@ -1,6 +1,6 @@
 {
   "name": "@lunde/create-react-app",
-  "version": "1.0.64",
+  "version": "1.0.66",
   "main": "index.js",
   "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
   "license": "MIT",
@@ -15,7 +15,8 @@
   "files": [
     "/lib",
     "/bin",
-    "index.js"
+    "index.js",
+    ".instignore"
   ],
   "devDependencies": {
     "prettier": "^1.18.2"

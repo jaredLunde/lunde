@@ -266,7 +266,8 @@ module.exports.editPackageJson = (
   packageJson.scripts = {
     analyze: 'ANALYZE=true build-react-app serve production',
     build: 'build-react-app build',
-    clean: 'rimraf public && rimraf .cache-loader && rimraf node_modules/.cache',
+    clean:
+      'rimraf public && rimraf .cache-loader && rimraf node_modules/.cache',
     dev: 'build-react-app serve',
     format: 'prettier --write "**/*.{js,md,yml}"',
     lint: 'eslint src',
@@ -302,7 +303,7 @@ module.exports.editPackageJson = (
 
   packageJson['lint-staged'] = {
     'src/**/*.js': ['eslint', 'pretty-quick --staged'],
-    '**/*.{md,yml}': ['pretty-quick --staged']
+    '**/*.{md,yml}': ['pretty-quick --staged'],
   }
 
   packageJson.homepage = `https://github.com/jaredLunde/${variables.PKG_NAME}#readme`
