@@ -302,6 +302,7 @@ module.exports.editPackageJson = (
 
   packageJson['lint-staged'] = {
     'src/**/*.js': ['eslint', 'pretty-quick --staged'],
+    '**/*.{md,yml}': ['pretty-quick --staged']
   }
 
   packageJson.homepage = `https://github.com/jaredLunde/${variables.PKG_NAME}#readme`
