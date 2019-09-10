@@ -83,20 +83,21 @@ to include images, fonts, and other files in your bundle assets. When you import
 [`src/assets`](tree/master/src/pages/index.js) directory it will be loaded with `file-loader` when the
 extension doesn't match `(jpe?g|png|webm)` and `responsive-loader` when it does.
 
-### Configuration files
-| File | Description |
-| --- | --- |
-| [webpack.config.js](tree/master/webpack.config.js) | Configures `webpack` |
-| [jest.config.js](tree/master/jest.config.js) | Configures `jest` |
-| [.prettierrc](tree/master/prettierrc) | Configures `prettier` |
-| [.eslintrc](tree/master/eslintrc) | Configures `eslint` |
-| [.babelrc](tree/master/babelrc) | Configures `babel` for the test environment only |
-
 ### Entry files
 | File | Description |
 | --- | --- |
 | [src/client.js](tree/master/src/client.js) | The entry file for building the app with a `web` target |
 | [src/server.js](tree/master/src/server.js) | The entry file for building the app with a `node` target |
+
+
+### Configuration files
+| File | Description |
+| --- | --- |
+| [webpack.config.js](tree/master/webpack.config.js) | Configures `webpack`. See also [@lunde/build-react-app](https://github.com/jaredLunde/lunde/tree/master/packages/build-react-app). |
+| [jest.config.js](tree/master/jest.config.js) | Configures `jest` |
+| [.prettierrc](tree/master/prettierrc) | Configures `prettier` |
+| [.eslintrc](tree/master/eslintrc) | Configures `eslint` |
+| [.babelrc](tree/master/babelrc) | Configures `babel` for the test environment only |
 
 ## LICENSE
 MIT
