@@ -95,6 +95,7 @@ extension doesn't match `(jpe?g|png|webm)` and `responsive-loader` when it does.
 | --- | --- |
 | [webpack.config.js](tree/master/webpack.config.js) | Configures `webpack`. See also [@lunde/build-react-app](https://github.com/jaredLunde/lunde/tree/master/packages/build-react-app). |
 | [jest.config.js](tree/master/jest.config.js) | Configures `jest` |
+| [.travis.yml](tree/master/.travis.yml) | (Optional) add CI/CD to your app with [Travis CI](https://travis-ci.org) |
 | [.prettierrc](tree/master/prettierrc) | Configures `prettier` |
 | [.eslintrc](tree/master/eslintrc) | Configures `eslint` |
 | [.babelrc](tree/master/babelrc) | Configures `babel` for the test environment only |
