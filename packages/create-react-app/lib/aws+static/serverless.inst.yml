@@ -105,6 +105,7 @@ resources:
               ResponsePagePath: /index.html
           # Sets up the CF cache behaviors for objects retrieved from the origin
           DefaultCacheBehavior:
+            Compress: true
             AllowedMethods:
               - GET
               - HEAD

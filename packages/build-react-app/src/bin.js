@@ -13,7 +13,7 @@ yargs.command(
   'serve [-p|--prod] [-s|--stage stage] [--host host] [--port port] [--assets assets] [--config config]',
   'Starts the nearest React app in a micro server',
   yargs => {
-    yargs.positional('prod', {
+    yargs.option('prod', {
       alias: 'p',
       describe: `Serves in the production NODE_ENV. Otherwise defaults to process.env.NODE_ENV || "development"`,
       type: 'boolean',
@@ -52,7 +52,7 @@ yargs.command(
   'build [-p|--prod] [-t|--target] [-s|--stage stage] [-c|--config config]',
   'Bundles the nearest React app',
   yargs => {
-    yargs.positional('prod', {
+    yargs.option('prod', {
       alias: 'p',
       describe: `Builds in the production NODE_ENV. Otherwise defaults to process.env.NODE_ENV || "development"`,
       type: 'boolean',
