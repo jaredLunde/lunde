@@ -44,13 +44,13 @@ Runs `webpack-bundle-analyzer` on your production build
 ## 🚥 QA scripts
 
 ### test
-Tests your application using `jest` according to the local [`jest.config.js`](tree/master/jest.config.js)
+Tests your application with `jest` according to the local [`jest.config.js`](tree/master/jest.config.js)
 
 ### lint
 Runs `eslint` on the `src` directory according to the local [`.eslintrc`](tree/master/.eslintrc)
 
 ### validate
-Lints and tests your application using the `lint` and `test` scripts above
+Lints and tests your application with the `lint` and `test` scripts above
 
 ## 🧹 Maintenance scripts
 
@@ -59,7 +59,7 @@ Recursively removes any distribution files generated in a build and any caches
 created by Webpack. 
 
 ### format
-Formats all files ending in `.js`, `.md`, and `.yaml` using Prettier, excluding
+Formats all files ending in `.js`, `.md`, and `.yml` with Prettier, excluding
 `node_modules` and `/public`
 
 ## 🌳 Things to know
