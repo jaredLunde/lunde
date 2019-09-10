@@ -1,6 +1,6 @@
 # <:PKG_NAME:>
 
-## Getting started
+## 🎬 Getting started
 
 ```shell script
 git clone https://github.com/jaredLunde/<:PKG_NAME:>.git
@@ -10,7 +10,7 @@ yarn install
 yarn dev -p 3000
 ```
 
-## Development scripts
+## 💻 Development scripts
 
 ### dev
 
@@ -30,16 +30,18 @@ for more information.
 ### analyze
 Runs Webpack bundle analyzer on your production build
 
-### lint
-Runs `eslint` on the `src` directory according to the local [`.eslintrc`](tree/master/.eslintrc)
+## ✅ QA scripts
 
 ### test
 Tests your application using `jest` according to the local [`jest.config.js`](tree/master/jest.config.js)
 
+### lint
+Runs `eslint` on the `src` directory according to the local [`.eslintrc`](tree/master/.eslintrc)
+
 ### validate
 Lints and tests your application using the `lint` and `test` scripts above
 
-## Maintenance scripts
+## 🧹 Maintenance scripts
 
 ### clean
 Recursively removes any distribution files generated in a build and any caches
@@ -49,7 +51,7 @@ created by Webpack.
 Formats all files ending in `.js`, `.md`, and `.yaml` using Prettier, excluding
 `node_modules` and `/public`
 
-## Application structures
+## 🌳 Application structures
 
 ### Entry files
 
