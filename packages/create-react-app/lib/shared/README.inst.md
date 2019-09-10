@@ -39,7 +39,7 @@ for more information.
 | --config <config> | -c  | `string` | The path to a Webpack config. Defaults to `webpack.config.js` |
 
 ### analyze
-Runs Webpack bundle analyzer on your production build
+Runs `webpack-bundle-analyzer` on your production build
 
 ## 🚥 QA scripts
 
@@ -65,8 +65,19 @@ Formats all files ending in `.js`, `.md`, and `.yaml` using Prettier, excluding
 ## 📒 Things to know
 
 ### Configuration files
+| File | Description |
+| --- | --- |
+| [webpack.config.js](tree/master/webpack.config.js) | Configures `webpack` |
+| [jest.config.js](tree/master/jest.config.js) | Configures `jest` |
+| [.prettierrc](tree/master/prettierrc) | Configures `prettier` |
+| [.eslintrc](tree/master/eslintrc) | Configures `eslint` |
+| [.babelrc](tree/master/babelrc) | Configures `babel` for the test environment only |
 
 ### Entry files
+| File | Description |
+| --- | --- |
+| [src/client.js](tree/master/src/client.js) | The entry file for building the app with a `web` target |
+| [src/server.js](tree/master/src/server.js) | The entry file for building the app with a `node` target |
 
 ### Pages
 
