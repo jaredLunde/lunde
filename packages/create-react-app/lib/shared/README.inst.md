@@ -38,9 +38,6 @@ for more information.
 | --stage | -s  | `string` | The stage to build your app in if utilizing stages. Defaults to `process.env.STAGE` |
 | --config | -c  | `string` | The path to a Webpack config. Defaults to `webpack.config.js` |
 
-### analyze
-Runs `webpack-bundle-analyzer` on your production build
-
 ## 🚥 QA scripts
 
 ### test
@@ -51,6 +48,9 @@ Runs `eslint` on the `src` directory according to the local [`.eslintrc`](tree/m
 
 ### validate
 Lints and tests your application with the `lint` and `test` scripts above
+
+### analyze
+Runs `webpack-bundle-analyzer` on your production build
 
 ## 🧹 Maintenance scripts
 
