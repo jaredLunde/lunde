@@ -19,11 +19,11 @@ Starts your React app in a development server at http://localhost:3000 by defaul
 | Argument | Alias | Type |  Description |
 | --- | --- | --- | --- |
 | --prod | -p | `boolean` | Serves the app in a `production` environment. Otherwise defaults to `process.env.NODE_ENV` or `"development"`. |  
-| --host \<host\> | -h | `string` | The hostname to run your server on. Defaults to `::` |
-| --port \<port\> | -p | `number` | The port number to run your server on. Defaults to `3000` |
-| --assets \<assets\> | -p | `string` | A path to public assets outside of and not handled by Webpack in your project |
-| --stage \<stage\> | -s  | `string` | The stage to build your app in if utilizing stages. Defaults to `process.env.STAGE` |
-| --config \<config\> | -c  | `string` | The path to a Webpack config. Defaults to `webpack.config.js` |
+| --host | -h | `string` | The hostname to run your server on. Defaults to `::` |
+| --port | -p | `number` | The port number to run your server on. Defaults to `3000` |
+| --assets | -p | `string` | A path to public assets outside of and not handled by Webpack in your project |
+| --stage | -s  | `string` | The stage to build your app in if utilizing stages. Defaults to `process.env.STAGE` |
+| --config | -c  | `string` | The path to a Webpack config. Defaults to `webpack.config.js` |
 
 ### build
 
@@ -34,9 +34,9 @@ for more information.
 | Argument | Alias | Type |  Description |
 | --- | --- | --- | --- |
 | --prod | -p | `boolean` | Builds in the `production` environment. Otherwise defaults to `process.env.NODE_ENV` or `"development"`. |  
-| --target \<target\> | -t | `string` | Sets a BUILD_ENV environment variable for your build target, either `"static"` or `"node"`. Defaults to `"static"`. |
-| --stage \<stage\> | -s  | `string` | The stage to build your app in if utilizing stages. Defaults to `process.env.STAGE` |
-| --config \<config\> | -c  | `string` | The path to a Webpack config. Defaults to `webpack.config.js` |
+| --target | -t | `string` | Sets a BUILD_ENV environment variable for your build target, either `"static"` or `"node"`. Defaults to `"static"`. |
+| --stage | -s  | `string` | The stage to build your app in if utilizing stages. Defaults to `process.env.STAGE` |
+| --config | -c  | `string` | The path to a Webpack config. Defaults to `webpack.config.js` |
 
 ### analyze
 Runs `webpack-bundle-analyzer` on your production build
