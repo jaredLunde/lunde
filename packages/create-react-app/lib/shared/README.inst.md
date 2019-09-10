@@ -1,6 +1,6 @@
 # <:PKG_NAME:>
 
-## 🎬 Getting started
+## Getting started
 
 ```shell script
 git clone https://github.com/jaredLunde/<:PKG_NAME:>.git
@@ -30,7 +30,7 @@ for more information.
 ### analyze
 Runs Webpack bundle analyzer on your production build
 
-## ✅ QA scripts
+## 🚥 QA scripts
 
 ### test
 Tests your application using `jest` according to the local [`jest.config.js`](tree/master/jest.config.js)
@@ -51,7 +51,9 @@ created by Webpack.
 Formats all files ending in `.js`, `.md`, and `.yaml` using Prettier, excluding
 `node_modules` and `/public`
 
-## 🌳 Application structures
+## 🌳 Things to know
+
+### Configuration files
 
 ### Entry files
 
