@@ -65,6 +65,24 @@ Formats all files ending in `.js`, `.md`, and `.yaml` using Prettier, excluding
 ## 🌳 Things to know
 And places to go
 
+### Routes and pages
+This app uses [`react-router-dom`](https://reacttraining.com/react-router/web/guides/quick-start) for routing. 
+Routes are configurable in [src/pages/index.js](tree/master/src/pages/index.js)
+
+### Styles and theming
+CSS styles are added to components with [`curls`](https://github.com/jaredLunde/curls) and [`style-hooks`](https://style-hooks.jaredlunde.com). 
+Its theme is configurable in [src/theme/index.js](tree/master/src/theme/index.js)
+
+### Code splitting
+Routes are code split by [`react-broker`](https://github.com/jaredLunde/react-broker) which
+is a great tool that also provides component preloading and SSR capability.
+
+### Static assets
+This app uses [`file-loader`](https://www.npmjs.com/package/file-loader) and [`responsive-loader`](https://www.npmjs.com/package/responsive-loader) 
+to include images, fonts, and other files in your bundle assets. When you import a file from your
+[`src/assets`](tree/master/src/pages/index.js) directory it will be loaded with `file-loader` when the
+extension doesn't match `(jpe?g|png|webm)` and `responsive-loader` when it does.
+
 ### Configuration files
 | File | Description |
 | --- | --- |
@@ -79,23 +97,6 @@ And places to go
 | --- | --- |
 | [src/client.js](tree/master/src/client.js) | The entry file for building the app with a `web` target |
 | [src/server.js](tree/master/src/server.js) | The entry file for building the app with a `node` target |
-
-### Routes and pages
-This app uses [`react-router`](https://reacttraining.com/react-router/web/guides/quick-start) for routing. 
-Routes are configurable in [src/pages/index.js](tree/master/src/pages/index.js)
-
-### Styles and theming
-This app uses [`curls`](https://github.com/jaredLunde/curls) and [`style-hooks`](https://style-hooks.jaredlunde.com) 
-to add CSS styles to components. The theme is configurable in [src/theme/index.js](tree/master/src/theme/index.js)
-
-### Code splitting
-This app uses [`react-broker`](https://github.com/jaredLunde/react-broker) for code splitting routes.
-
-### Static assets
-This app uses [`file-loader`](https://www.npmjs.com/package/file-loader) and [`responsive-loader`](https://www.npmjs.com/package/responsive-loader) 
-to include images, fonts, and other files in your bundle assets. When you import a file from your
-[`src/assets`](tree/master/src/pages/index.js) directory it will be loaded with `file-loader` when the
-extension doesn't match `(jpe?g|png|webm)` and `responsive-loader` when it does.
 
 ## LICENSE
 MIT
