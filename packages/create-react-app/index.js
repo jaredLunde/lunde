@@ -266,9 +266,9 @@ module.exports.editPackageJson = (
   packageJson.scripts = {
     analyze: 'ANALYZE=true build-react-app serve production',
     build: 'build-react-app build',
-    clean: 'rimraf dist && rimraf .cache-loader && rimraf node_modules/.cache',
+    clean: 'rimraf public && rimraf .cache-loader && rimraf node_modules/.cache',
     dev: 'build-react-app serve',
-    format: 'prettier --write "src/**/*.js"',
+    format: 'prettier --write "**/*.{js,md,yml}"',
     lint: 'eslint src',
     postinstall: 'npm run clean',
     test: 'jest --passWithNoTests',
