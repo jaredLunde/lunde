@@ -1,22 +1,25 @@
 # <:PKG_NAME:>
 
-  * [Getting started](#getting-started)
-  * [Scripts](#scripts)
-    + [analyze](#analyze)
-    + [build](#build)
-    + [clean](#clean)
-    + [dev](#dev)
-    + [format](#format)
-    + [lint](#lint)
-    + [test](#test)
-    + [validate](#validate)
-  * [Application](#application)
-    + [Entry files](#entry-files)
-    + [Pages](#pages)
-    + [Components](#components)
-    + [Theme](#theme)
-    + [Static assets](#static-assets)
-  * [LICENSE](#license)
+[Getting started](#getting-started)
+
+[Scripts](#scripts)
+  + [analyze](#analyze)
+  + [build](#build)
+  + [clean](#clean)
+  + [dev](#dev)
+  + [format](#format)
+  + [lint](#lint)
+  + [test](#test)
+  + [validate](#validate)
+
+[Application](#application)
+  + [Entry files](#entry-files)
+  + [Pages](#pages)
+  + [Components](#components)
+  + [Theme](#theme)
+  + [Static assets](#static-assets)
+
+[LICENSE](#license)
   
 ## Getting started
 ```shell script
