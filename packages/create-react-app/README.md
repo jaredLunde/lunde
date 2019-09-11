@@ -24,7 +24,7 @@ React applications.
 | [deploy-react-app](https://github.com/jaredLunde/lunde/tree/master/packages/deploy-react-app) | For deploying your app to the world | 
 
 ### Application structure
-[Have a taste of it](tree/master/packages/create-react-app/lib/shared)
+[Have a taste of it](lib/shared)
 
 ### Output targets
 You can configure your app for static and server rendered builds. By default, you're 
