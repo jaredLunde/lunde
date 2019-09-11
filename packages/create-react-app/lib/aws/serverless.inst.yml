@@ -137,14 +137,14 @@ custom:
       domains:
         <:(
           value +=
-            props.DOMAIN.split('.').length > 2
-              ? `- '*.${props.DOMAIN.split('.').slice(1).join('.')}'`
-              : `- ${props.DOMAIN}`
+            vars.DOMAIN.split('.').length > 2
+              ? `- '*.${vars.DOMAIN.split('.').slice(1).join('.')}'`
+              : `- ${vars.DOMAIN}`
         ):>
         <:(
           value +=
-            props.DOMAIN.split('.').length === 2
-              ? `- '*.${props.DOMAIN}'`
+            vars.DOMAIN.split('.').length === 2
+              ? `- '*.${vars.DOMAIN}'`
               : ''
         ):>
       # refFor:
