@@ -21,6 +21,7 @@ React applications.
 | ESLint | For linting the application |
 | Yarn | For deterministic builds and monorepos |
 | [build-react-app](https://github.com/jaredLunde/lunde/tree/master/packages/build-react-app) | For configuring, building, and serving your app with Webpack | 
+| [render-react-app](https://github.com/jaredLunde/lunde/tree/master/packages/render-react-app) | For server rendering and streaming your app | 
 | [deploy-react-app](https://github.com/jaredLunde/lunde/tree/master/packages/deploy-react-app) | For deploying your app to the world | 
 
 ### Application structure
