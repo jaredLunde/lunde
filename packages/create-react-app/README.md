@@ -7,7 +7,7 @@ stringent rules.
 
 ## 📦 What's in the ****ing box?
 
-This tools is packaged with a variety of tools necessary for production
+Apps are packaged with a variety of tools necessary for production
 React applications.
 
 ### Build tools
