@@ -5,10 +5,10 @@ module.exports = {
   moduleDirectories: [
     'node_modules',
     path.join(__dirname, 'src'),
-    path.join(__dirname, 'test')
+    path.join(__dirname, 'test'),
   ],
   transform: {
-    "^.+\\.tsx?$": "ts-jest"
+    '^.+\\.tsx?$': 'ts-jest',
   },
   // moduleNameMapper: {},
   setupFilesAfterEnv: [require.resolve('./test/setup.js')],
@@ -27,5 +27,5 @@ module.exports = {
     'ts-jest': {
       tsConfig: 'tsconfig.test.json',
     },
-  }
+  },
 }

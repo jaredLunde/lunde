@@ -1,6 +1,6 @@
 # @lunde/create-pkg
 
-This is an [`inst`](https://github.com/jaredLunde/inst-pkg) template for creating 
+This is an [`inst`](https://github.com/jaredLunde/inst-pkg) template for creating
 ES6 packages with or without TypeScript.
 
 ## 📦 What's in the \*\*\*\*ing box?
@@ -9,15 +9,15 @@ Packages are created with a variety of build tools that make your life easier
 
 ### Build tools
 
-| Library    | Description                                                  |
-| ---------- | ------------------------------------------------------------ |
-| Babel 7    | For compiling ES6 code to ES5                        |
-| Jest       | For testing components                                       |
-| Prettier   | For formatting code, READMEs, and configs                     |
-| ESLint     | For linting the application                                  |
-| Yarn       | For deterministic builds and monorepos                       |
-| Travis CI  | (Optional) For continuous integration                                   |
-| TypeScript | (Optional) For adding type definitions to your package                                |
+| Library    | Description                                            |
+| ---------- | ------------------------------------------------------ |
+| Babel 7    | For compiling ES6 code to ES5                          |
+| Jest       | For testing components                                 |
+| Prettier   | For formatting code, READMEs, and configs              |
+| ESLint     | For linting the application                            |
+| Yarn       | For deterministic builds and monorepos                 |
+| Travis CI  | (Optional) For continuous integration                  |
+| TypeScript | (Optional) For adding type definitions to your package |
 
 ## 🔧 Usage
 
@@ -34,11 +34,10 @@ create-pkg my-pkg --ts
 
 #### `create-pkg <name> [--ts]`
 
-| Argument | Type | Required | Description |
-| --- | --- | --- | --- |
-| name | `string` | `true` | The name of the package you're creating. This is also the name of the directory the package will be created in. |
-| --ts | `boolean` | `false` | Creates a TypeScript package
-
+| Argument | Type      | Required | Description                                                                                                     |
+| -------- | --------- | -------- | --------------------------------------------------------------------------------------------------------------- |
+| name     | `string`  | `true`   | The name of the package you're creating. This is also the name of the directory the package will be created in. |
+| --ts     | `boolean` | `false`  | Creates a TypeScript package                                                                                    |
 
 ## 📜 Package scripts
 

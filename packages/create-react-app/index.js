@@ -271,7 +271,7 @@ module.exports.editPackageJson = (
     dev: 'build-react-app serve',
     format: 'prettier --write "**/*.{js,md,yml}"',
     lint: 'eslint src',
-    postinstall: 'npm run clean',
+    postinstall: 'npm run clean && npm run format',
     test: 'jest --passWithNoTests',
     validate: 'npm run lint && npm run test -- --coverage',
   }
