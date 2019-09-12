@@ -8,9 +8,34 @@ cd <:PKG_NAME:>
 yarn install
 # Starts a development server at localhost:3000
 yarn dev -p 3000
-# Deploys your app to Now
+# Deploys your app to Lambda + API Gateway
 yarn up
 ```
+
+## 🚀 Deployment scripts
+
+### up
+
+Deploys the static React app to Lambda + API Gateway
+
+| Argument | Alias | Type |  Description |
+| --- | --- | --- | --- |
+| --prod | -p | `boolean` | Deploys the app to Lambda + API Gateway in a `production` stage |  
+| --stage | -s | `string` | Deploys the app to Lambda + API Gateway in the specified stage, defaults to `staging` |  
+
+### down
+
+Tears down  the app from Lambda + API Gateway
+
+| Argument | Alias | Type |  Description |
+| --- | --- | --- | --- |
+| --prod | -p | `boolean` | Removes the app to Lambda + API Gateway from its `production` stage |  
+| --stage | -s | `string` | Removes the app to Lambda + API Gateway from the specified stage, defaults to `staging` |  
+
+
+### sls
+
+The same as running `npx serverless`
 
 ## 💻 Development scripts
 

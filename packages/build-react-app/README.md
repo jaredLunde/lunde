@@ -4,7 +4,7 @@
 
 # @lunde/build-react-app
 
-Utilities for building and developing React apps
+Utilities for building, serving, and developing React apps
 
 ## Installation
 

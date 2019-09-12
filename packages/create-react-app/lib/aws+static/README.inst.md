@@ -8,9 +8,34 @@ cd <:PKG_NAME:>
 yarn install
 # Starts a development server at localhost:3000
 yarn dev -p 3000
-# Deploys your app to Now
+# Deploys your app to S3 + CloudFront
 yarn up
 ```
+
+## 🚀 Deployment scripts
+
+### up
+
+Deploys the static React app to S3 + CloudFront
+
+| Argument | Alias | Type |  Description |
+| --- | --- | --- | --- |
+| --prod | -p | `boolean` | Deploys the app to S3 in a `production` stage |  
+| --stage | -s | `string` | Deploys the app to S3 in the specified stage, defaults to `staging` |  
+
+### down
+
+Tears down  the app from S3 + CloudFront
+
+| Argument | Alias | Type |  Description |
+| --- | --- | --- | --- |
+| --prod | -p | `boolean` | Removes the app to S3 from its `production` stage |  
+| --stage | -s | `string` | Removes the app to S3 from the specified stage, defaults to `staging` |  
+
+
+### sls
+
+The same as running `npx serverless`
 
 ## 💻 Development scripts
 

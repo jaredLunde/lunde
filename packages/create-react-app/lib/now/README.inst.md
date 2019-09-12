@@ -12,6 +12,24 @@ yarn dev -p 3000
 yarn up
 ```
 
+## 🚀 Deployment scripts
+
+### up
+
+Deploys the static React app to Now
+
+| Argument | Alias | Type |  Description |
+| --- | --- | --- | --- |
+| --prod | -p | `boolean` | Deploys the app to Now in `production` |  
+
+### down
+
+Removes the app from Now
+
+### now
+
+The same as running `npx now`
+
 ## 💻 Development scripts
 
 ### dev
