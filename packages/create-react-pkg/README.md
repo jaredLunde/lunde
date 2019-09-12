@@ -35,7 +35,7 @@ create-react-pkg my-pkg --ts
 #### `create-react-pkg <name> [--ts]`
 
 | Argument | Type | Required | Description |
-| --- | --- | --- |
+| --- | --- | --- | --- |
 | name | `string` | `true` | The name of the package you're creating. This is also the name of the directory the package will be created in. |
 | --ts | `boolean` | `false` | Creates a TypeScript package
 
