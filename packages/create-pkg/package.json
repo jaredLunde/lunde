@@ -1,6 +1,6 @@
 {
   "name": "@lunde/create-pkg",
-  "version": "1.0.55",
+  "version": "1.0.56",
   "main": "index.js",
   "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
   "license": "MIT",
@@ -19,9 +19,7 @@
     "/bin"
   ],
   "scripts": {
-    "format": "npm run format:src && npm run format:lib",
-    "format:src": "prettier --write \"./*.{js,md}\"",
-    "format:lib": "prettier --write \"./lib/**/*.{yml,js,ts,md}\"",
+    "format": "prettier --write \"**/*.{js,md,ts,yml}\"",
     "prepublishOnly": "npm run format"
   },
   "devDependencies": {

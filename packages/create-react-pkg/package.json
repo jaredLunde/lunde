@@ -1,6 +1,6 @@
 {
   "name": "@lunde/create-react-pkg",
-  "version": "1.0.42",
+  "version": "1.0.43",
   "main": "index.js",
   "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
   "license": "MIT",
@@ -20,9 +20,7 @@
     "/bin"
   ],
   "scripts": {
-    "format": "npm run format:src && npm run format:lib",
-    "format:src": "prettier --write \"./*.{js,md}\"",
-    "format:lib": "prettier --write \"./lib/**/*.{yml,js,ts,tsx,md}\"",
+    "format": "prettier --write \"**/*.{js,ts,tsx,md,yml}\"",
     "prepublishOnly": "npm run format"
   },
   "devDependencies": {

@@ -22,9 +22,7 @@
     "prettier": "^1.18.2"
   },
   "scripts": {
-    "format": "npm run format:src && npm run format:lib",
-    "format:src": "prettier --write \"./*.{js,md}\"",
-    "format:lib": "prettier --write \"./lib/**/*.{yml,js,md}\"",
+    "format": "prettier --write \"**/*.{js,md,yml}\"",
     "prepublishOnly": "npm run format"
   }
 }

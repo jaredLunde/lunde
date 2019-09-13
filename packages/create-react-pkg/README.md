@@ -97,6 +97,10 @@ Used for calling commands on git staged files that match a glob pattern
 
 Calls `eslint` and `pretty-quick --staged` to lint and format the staged files
 
+### `**/*.{md,yml}`
+
+Calls `pretty-quick --staged` to format the staged files
+
 ## LICENSE
 
 MIT

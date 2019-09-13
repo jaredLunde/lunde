@@ -122,6 +122,7 @@ module.exports.editPackageJson = function editPackageJson(
     },
     'lint-staged': {
       'src/**/*.ts': ['eslint', 'pretty-quick --staged'],
+      '**/*.{md,yml}': ['pretty-quick --staged'],
     },
     homepage: `https://github.com/jaredLunde/${variables.PKG_NAME}#readme`,
     repository: {

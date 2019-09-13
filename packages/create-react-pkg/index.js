@@ -162,6 +162,7 @@ module.exports.editPackageJson = function editPackageJson(
     pkg.husky.hooks['pre-commit'] = 'lint-staged'
     pkg['lint-staged'] = {
       'src/**/*.js': ['eslint', 'pretty-quick --staged'],
+      '**/*.{md,yml}': ['pretty-quick --staged'],
     }
   }
 
