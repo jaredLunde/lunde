@@ -5,7 +5,7 @@ export default (
   // function which generates the HTML markup for the app
   render,
   // callback for returning error pages
-  renderError = defaultRenderError
+  renderError = (locals, err) => defaultRenderError(locals, null, err)
 ) =>
   async function handler(locals) {
     let html

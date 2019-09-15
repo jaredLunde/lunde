@@ -1,6 +1,6 @@
 {
   "name": "@lunde/render-react-app",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
   "license": "MIT",
   "main": "dist/index.js",

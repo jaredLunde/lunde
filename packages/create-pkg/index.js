@@ -107,7 +107,7 @@ module.exports.editPackageJson = function editPackageJson(
         'cross-env BABEL_ENV=es babel src -d dist/es -x .ts  --ignore "**/*.test.ts","**/test.ts" --delete-dir-on-start',
       'build:types': 'rimraf types && tsc -p tsconfig.json -d --outDir types',
       'check-types': 'tsc --noEmit -p tsconfig.json',
-      format: 'prettier --write "{dist,src}/**/*.{js,ts}"',
+      format: 'prettier --write "**/*.{js,ts,md,yml}"',
       lint: 'eslint src --ext .ts',
       prepublishOnly:
         'npm run lint && npm run test && npm run build && npm run format',
@@ -145,7 +145,7 @@ module.exports.editPackageJson = function editPackageJson(
     pkg.scripts['build:es'] =
       'cross-env BABEL_ENV=es babel src -d dist/es -x .js  --ignore "**/*.test.js","**/test.js" --delete-dir-on-start'
     pkg.scripts.lint = 'eslint src'
-    pkg.scripts.format = 'prettier --write "{dist,src}/**/*.js"'
+    pkg.scripts.format = 'prettier --write "**/*.{js,yml,md}"'
     pkg.scripts.validate = 'npm run lint && npm run test -- --coverage'
     pkg.husky.hooks['pre-commit'] = 'lint-staged'
     pkg['lint-staged'] = {
