@@ -42,7 +42,6 @@ module.exports.devDependencies = (variables, args) => {
     husky: 'latest',
     'lint-staged': 'latest',
     prettier: 'latest',
-    'pretty-quick': 'latest',
     react: 'latest',
     'react-dom': 'latest',
     'react-test-renderer': 'latest',
@@ -134,7 +133,7 @@ module.exports.editPackageJson = function editPackageJson(
       },
     },
     'lint-staged': {
-      'src/**/*.{ts,tsx}': ['eslint', 'pretty-quick --staged'],
+      'src/**/*.{ts,tsx}': ['eslint', 'prettier --write'],
     },
     homepage: `https://github.com/jaredLunde/${variables.PKG_NAME}#readme`,
     repository: {
@@ -161,8 +160,8 @@ module.exports.editPackageJson = function editPackageJson(
     pkg.scripts.validate = 'npm run lint && npm run test -- --coverage'
     pkg.husky.hooks['pre-commit'] = 'lint-staged'
     pkg['lint-staged'] = {
-      'src/**/*.js': ['eslint', 'pretty-quick --staged'],
-      '**/*.{md,yml}': ['pretty-quick --staged'],
+      'src/**/*.js': ['eslint', 'prettier --write'],
+      '**/*.{md,yml}': ['prettier --write'],
     }
   }
 

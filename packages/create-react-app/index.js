@@ -165,7 +165,6 @@ module.exports.dependencies = (variables, args) => {
     jest: 'latest',
     'lint-staged': 'latest',
     prettier: 'latest',
-    'pretty-quick': 'latest',
     'prop-types': 'latest',
     react: 'latest',
     'react-broker': 'latest',
@@ -302,8 +301,8 @@ module.exports.editPackageJson = (
   }
 
   packageJson['lint-staged'] = {
-    'src/**/*.js': ['eslint', 'pretty-quick --staged'],
-    '**/*.{md,yml}': ['pretty-quick --staged'],
+    'src/**/*.js': ['eslint', 'prettier --write'],
+    '**/*.{md,yml}': ['prettier --write'],
   }
 
   packageJson.homepage = `https://github.com/jaredLunde/${variables.PKG_NAME}#readme`

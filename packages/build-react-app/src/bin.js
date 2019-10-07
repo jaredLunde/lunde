@@ -92,9 +92,11 @@ switch (cmd) {
   case 'serve':
     serve(args)
     break
+
   case 'build':
     build(args).then(logDone)
     break
+
   default:
     log(
       flag('Error', 'red'),
