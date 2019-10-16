@@ -1,16 +1,13 @@
 {
   "presets": [
-    "@babel/preset-react",
-    [
-      "@lunde/es",
-      {
+    ["@lunde/react-app", {
+      "es": {
         "env": {
           "targets": {
             "node": "current"
           }
-        },
-        "typescript": false
+        }
       }
-    ]
+    }]
   ]
 }
