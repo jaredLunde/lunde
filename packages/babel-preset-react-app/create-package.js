@@ -9,7 +9,7 @@ const envDefaults = {
   corejs: 3,
   loose: true,
   modules: false,
-  ignoreBrowserslistConfig: true,
+  ignoreBrowserslistConfig: false,
   exclude: ["transform-typeof-symbol"]
 };
 
@@ -29,10 +29,7 @@ dependencies.development = {
     isBabelPreset: true,
     options: deepAssign(
       {
-        env: {
-          ...envDefaults,
-          targets: { browsers: "last 2 Chrome versions" }
-        },
+        env: envDefaults,
         closureElimination: false,
         devExpression: false,
         runtime: false,
@@ -62,10 +59,7 @@ extendProd(dependencies, {
     isBabelPreset: true,
     options: deepAssign(
       {
-        env: {
-          ...envDefaults,
-          targets: { browsers: "cover 95% in US, not IE < 12" }
-        },
+        env: envDefaults,
         closureElimination: true,
         devExpression: false,
         runtime: {

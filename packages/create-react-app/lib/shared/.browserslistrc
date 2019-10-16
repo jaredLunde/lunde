@@ -1,0 +1,6 @@
+[development]
+last 2 chrome versions
+
+[production]
+cover 95% in US
+not IE < 12
