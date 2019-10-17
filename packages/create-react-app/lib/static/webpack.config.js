@@ -25,7 +25,7 @@ module.exports = [
     output: {
       path: outputPath,
     },
-    staticSite: process.env.BUILD_ENV !== 'server',
+    staticSite: process.env.NODE_ENV === 'production',
     clean: false,
   }),
 ]

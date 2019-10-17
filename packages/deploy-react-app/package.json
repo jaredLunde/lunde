@@ -1,6 +1,6 @@
 {
   "name": "@lunde/deploy-react-app",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
   "license": "MIT",
   "main": "dist/index.js",

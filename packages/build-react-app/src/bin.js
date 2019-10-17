@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 import chalk from 'chalk'
 import yargs from 'yargs'
+import childProc from 'child_process'
 import {log, flag, pwd, getPkgJson} from '@inst-cli/template-utils'
 import path from 'path'
 import webpack from 'webpack'
 import ora from 'ora'
 import serve_ from './serve'
-
+import {StaticSitePlugin} from '@lunde/webpack'
 yargs.scriptName('build-react-app')
 
 yargs.command(
@@ -83,10 +84,6 @@ const args = yargs.argv
 // the command is the first argument
 const [cmd] = args._
 
-function logDone() {
-  log(chalk.grey('done'))
-}
-
 // routes the cmd
 switch (cmd) {
   case 'serve':
@@ -94,7 +91,7 @@ switch (cmd) {
     break
 
   case 'build':
-    build(args).then(logDone)
+    build(args)
     break
 
   default:
@@ -106,6 +103,10 @@ switch (cmd) {
     )
 }
 
+function isStaticSite(config) {
+  return config.plugins.some(plugin => plugin instanceof StaticSitePlugin)
+}
+
 function serve({prod, stage, host = '::', port, assets, config}) {
   const pkgJson = getPkgJson(pwd())
   process.env.BUILD_ENV = 'server'
@@ -113,14 +114,36 @@ function serve({prod, stage, host = '::', port, assets, config}) {
     ? 'production'
     : process.env.NODE_ENV || 'development'
   process.env.STAGE = stage || process.env.STAGE
-  config = require(config ||
-    path.join(path.dirname(pkgJson.__path), 'webpack.config.js'))
+  const configPath = config
+    ? path.isAbsolute(config)
+      ? config
+      : path.join(pwd(), config)
+    : path.join(path.dirname(pkgJson.__path), 'webpack.config.js')
+  const configFile = require(configPath)
+  const serverConfig = configFile.find(v => v.name === 'server')
+
+  if (isStaticSite(serverConfig)) {
+    let listen = `tcp://${host}:${port || 3000}`
+    const proc = childProc.spawn(
+      `
+        npm run build \
+          ${config ? `--config ${config}` : ''} \
+          ${stage ? `--stage ${stage}` : ''} \
+          ${prod ? '--prod' : ''}
+        npx serve@latest ${serverConfig.output.path} -l ${listen}
+      `,
+      [],
+      {stdio: 'inherit', shell: true}
+    )
+
+    return new Promise(resolve => proc.on('close', resolve))
+  }
 
   return serve_({
     // dev webpack client config
-    clientConfig: config.find(v => v.name === 'client'),
+    clientConfig: configFile.find(v => v.name === 'client'),
     // dev webpack server config
-    serverConfig: config.find(v => v.name === 'server'),
+    serverConfig,
     // path to local public assets
     publicAssets: assets,
     // micro-dev options
@@ -137,20 +160,29 @@ async function build({prod, stage, target, config}) {
     ? 'production'
     : process.env.NODE_ENV || 'development'
   process.env.STAGE = stage || process.env.STAGE
-  const configPath =
-    config || path.join(path.dirname(pkgJson.__path), 'webpack.config.js')
+  const analyze = process.env.ANALYZE
+  const configPath = config
+    ? path.isAbsolute(config)
+      ? config
+      : path.join(pwd(), config)
+    : path.join(path.dirname(pkgJson.__path), 'webpack.config.js')
   const configs = require(configPath)
   // find() below ensures the configs are compiled in the correct order so
   // server has access to the stats file of client
   for (let config of [
     configs.find(v => v.name === 'client'),
-    configs.find(v => v.name === 'server'),
-  ]) {
+    !analyze && configs.find(v => v.name === 'server'),
+  ].filter(Boolean)) {
     await new Promise(resolve => {
       const name = chalk.bold(config.name)
-      const spinner = ora({spinner: 'dots3', color: 'gray'}).start(
-        `${name} ${chalk.gray('building')}`
-      )
+      const spinner = analyze
+        ? {
+            start: msg => console.log('>', msg),
+            succeed: msg => console.log(chalk.green('✔'), msg),
+            fail: msg => console.log(chalk.red('✗'), msg),
+          }
+        : ora({spinner: 'dots3', color: 'gray'})
+      spinner.start(`${name} ${chalk.gray('building')}`)
 
       try {
         webpack([config]).run((err, stats) => {

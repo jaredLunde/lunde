@@ -68,7 +68,7 @@ switch (args._[0]) {
       })
     )
     cmd = `
-      now \
+      npx now@latest \
         ${args.down ? `rm ${nowJson.name}` : ''} \
         ${args.prod ? '--prod' : ''}
     `

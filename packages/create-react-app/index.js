@@ -263,14 +263,14 @@ module.exports.editPackageJson = (
 ) => {
   packageJson.private = true
   packageJson.scripts = {
-    analyze: 'ANALYZE=true build-react-app serve production',
+    analyze: 'ANALYZE=true build-react-app serve --prod',
     build: 'build-react-app build',
     clean:
       'rimraf public && rimraf .cache-loader && rimraf node_modules/.cache',
-    dev: 'build-react-app serve',
     format: 'prettier --write "**/*.{js,md,yml}"',
     lint: 'eslint src',
     postinstall: 'npm run clean && npm run format',
+    serve: 'build-react-app serve',
     test: 'jest --passWithNoTests',
     validate: 'npm run lint && npm run test -- --coverage',
   }
@@ -286,7 +286,7 @@ module.exports.editPackageJson = (
   } else if (args.now) {
     packageJson.scripts.up = 'deploy-react-app now'
     packageJson.scripts.down = 'deploy-react-app now --down'
-    packageJson.scripts.now = 'npx now'
+    packageJson.scripts.now = 'npx now@latest'
   } else if (args.github) {
     packageJson.scripts.up = 'deploy-react-app github'
     packageJson.scripts.down = 'deploy-react-app github --down'
