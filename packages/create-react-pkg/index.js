@@ -133,7 +133,8 @@ module.exports.editPackageJson = function editPackageJson(
       },
     },
     'lint-staged': {
-      'src/**/*.{ts,tsx}': ['eslint', 'prettier --write'],
+      '**/*.{ts,tsx}': ['eslint', 'prettier --write'],
+      '**/*.{md,yml}': ['prettier --write'],
     },
     homepage: `https://github.com/jaredLunde/${variables.PKG_NAME}#readme`,
     repository: {
@@ -160,7 +161,7 @@ module.exports.editPackageJson = function editPackageJson(
     pkg.scripts.validate = 'npm run lint && npm run test -- --coverage'
     pkg.husky.hooks['pre-commit'] = 'lint-staged'
     pkg['lint-staged'] = {
-      'src/**/*.js': ['eslint', 'prettier --write'],
+      '**/*.js': ['eslint', 'prettier --write'],
       '**/*.{md,yml}': ['prettier --write'],
     }
   }

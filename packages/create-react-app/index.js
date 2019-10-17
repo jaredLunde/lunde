@@ -301,7 +301,7 @@ module.exports.editPackageJson = (
   }
 
   packageJson['lint-staged'] = {
-    'src/**/*.js': ['eslint', 'prettier --write'],
+    '**/*.js': ['eslint', 'prettier --write'],
     '**/*.{md,yml}': ['prettier --write'],
   }
 

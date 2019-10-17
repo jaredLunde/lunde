@@ -7,7 +7,7 @@ git clone https://github.com/jaredLunde/<:PKG_NAME:>.git
 cd <:PKG_NAME:>
 yarn install
 # Starts a development server at localhost:3000
-yarn dev -p 3000
+yarn serve -p 3000
 # Deploys your app to S3 + CloudFront
 yarn up
 ```
@@ -39,7 +39,7 @@ The same as running `npx serverless`
 
 ## 💻 Development scripts
 
-### dev
+### serve
 
 Starts the React app in a development server at http://localhost:3000 by default
 
