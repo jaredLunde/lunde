@@ -267,7 +267,7 @@ module.exports.editPackageJson = (
     build: 'build-react-app build',
     clean:
       'rimraf public && rimraf .cache-loader && rimraf node_modules/.cache',
-    format: 'prettier --write "**/*.{js,md,yml}"',
+    format: 'prettier --write "**/*.{js,jsx,md,yml}"',
     lint: 'eslint src',
     postinstall: 'npm run clean && npm run format',
     serve: 'build-react-app serve',
@@ -301,7 +301,7 @@ module.exports.editPackageJson = (
   }
 
   packageJson['lint-staged'] = {
-    '**/*.js': ['eslint', 'prettier --write'],
+    '**/*.{js,jsx}': ['eslint', 'prettier --write'],
     '**/*.{md,yml}': ['prettier --write'],
   }
 
