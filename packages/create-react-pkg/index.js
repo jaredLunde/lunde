@@ -116,7 +116,7 @@ module.exports.editPackageJson = function editPackageJson(
       'build:cjs':
         'babel src -d dist/cjs -x .ts,.tsx --ignore "**/*.test.ts","**/test.ts","**/*.test.tsx","**/test.tsx" --delete-dir-on-start',
       'build:es':
-        'cross-env BABEL_ENV=es babel src -d dist/es -x .ts,.tsx  --ignore "**/*.test.ts","**/test.ts","**/*.test.tsx","**/test.tsx" --delete-dir-on-start',
+        'cross-env BABEL_ENV=es babel src -d dist/es -x .ts,.tsx --ignore "**/*.test.ts","**/test.ts","**/*.test.tsx","**/test.tsx" --delete-dir-on-start',
       'build:types': 'rimraf types && tsc -p tsconfig.json -d --outDir types',
       'check-types': 'tsc --noEmit -p tsconfig.json',
       format:
@@ -156,7 +156,7 @@ module.exports.editPackageJson = function editPackageJson(
     pkg.scripts['build:cjs'] =
       'babel src -d dist/cjs -x .js --ignore "**/*.test.js","**/test.js" --delete-dir-on-start'
     pkg.scripts['build:es'] =
-      'cross-env BABEL_ENV=es babel src -d dist/es -x .js  --ignore "**/*.test.js","**/test.js" --delete-dir-on-start'
+      'cross-env BABEL_ENV=es babel src -d dist/es -x .js --ignore "**/*.test.js","**/test.js" --delete-dir-on-start'
     pkg.scripts.lint = 'eslint .'
     pkg.scripts.format =
       'prettier --write "**/*.{js,jsx,md,yml,json,babelrc,eslintrc,prettierrc}"'
