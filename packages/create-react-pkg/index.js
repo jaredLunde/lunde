@@ -97,20 +97,22 @@ module.exports.editPackageJson = function editPackageJson(
   let pkg = {
     name: packageJson.name,
     version: packageJson.version,
+    homepage: `https://github.com/jaredLunde/${variables.PKG_NAME}#readme`,
+    repository: `github:jaredLunde/${variables.PKG_NAME}`,
+    bugs: `https://github.com/jaredLunde/${variables.PKG_NAME}/issues`,
     author: packageJson.author,
     license: packageJson.license,
-    main: 'dist/cjs/index.js',
-    module: 'dist/es/index.js',
-    types: 'types/index.d.ts',
-    files: ['/dist', '/types'],
     description: variables.DESCRIPTION || '',
     keywords: [
       'react',
       'react component',
       variables.PKG_NAME.replace(/-/g, ' '),
     ],
+    main: 'dist/cjs/index.js',
+    module: 'dist/es/index.js',
+    types: 'types/index.d.ts',
+    files: ['/dist', '/types'],
     sideEffects: false,
-    ...packageJson,
     scripts: {
       build: 'npm run build:types && npm run build:cjs && npm run build:es',
       'build:cjs':
@@ -137,14 +139,7 @@ module.exports.editPackageJson = function editPackageJson(
       '**/*.{ts,tsx,js,jsx}': ['eslint', 'prettier --write'],
       '**/*.{md,yml,json,babelrc,eslintrc,prettierrc}': ['prettier --write'],
     },
-    homepage: `https://github.com/jaredLunde/${variables.PKG_NAME}#readme`,
-    repository: {
-      type: 'git',
-      url: `https://github.com/jaredLunde/${variables.PKG_NAME}.git`,
-    },
-    bugs: {
-      url: `https://github.com/jaredLunde/${variables.PKG_NAME}/issues`,
-    },
+    ...packageJson
   }
 
   if (!args.ts) {

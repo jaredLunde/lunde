@@ -261,19 +261,36 @@ module.exports.editPackageJson = (
   variables /*from prompts() above*/,
   args
 ) => {
-  packageJson.private = true
-  packageJson.scripts = {
-    analyze: 'ANALYZE=true build-react-app serve --prod',
-    build: 'build-react-app build',
-    clean:
-      'rimraf public && rimraf .cache-loader && rimraf node_modules/.cache',
-    format:
-      'prettier --write "**/*.{js,jsx,html,md,yml,json,babelrc,eslintrc,prettierrc}"',
-    lint: 'eslint .',
-    postinstall: 'npm run clean && npm run format',
-    serve: 'build-react-app serve',
-    test: 'jest --passWithNoTests',
-    validate: 'npm run lint && npm run test -- --coverage',
+  packageJson = {
+    name: packageJson.name,
+    version: packageJson.version,
+    private: true,
+    scripts: {
+      analyze: 'ANALYZE=true build-react-app serve --prod',
+      build: 'build-react-app build',
+      clean:
+        'rimraf public && rimraf .cache-loader && rimraf node_modules/.cache',
+      format:
+        'prettier --write "**/*.{js,jsx,html,md,yml,json,babelrc,eslintrc,prettierrc}"',
+      lint: 'eslint .',
+      postinstall: 'npm run clean && npm run format',
+      serve: 'build-react-app serve',
+      test: 'jest --passWithNoTests',
+      validate: 'npm run lint && npm run test -- --coverage',
+    },
+    hooks: {
+      'pre-commit': 'lint-staged',
+    },
+    'lint-staged': {
+      '**/*.{js,jsx}': ['eslint', 'prettier --write'],
+      '**/*.{html,md,yml,json,babelrc,eslintrc,prettierrc}': ['prettier --write'],
+    },
+    homepage: `https://github.com/jaredLunde/${variables.PKG_NAME}#readme`,
+    repository: `github:jaredLunde/${variables.PKG_NAME}`,
+    bugs: `https://github.com/jaredLunde/${variables.PKG_NAME}/issues`,
+    author: packageJson.author,
+    license: packageJson.license,
+    ...packageJson,
   }
 
   if (args.aws) {
@@ -294,26 +311,5 @@ module.exports.editPackageJson = (
   }
 
   packageJson.scripts = sortByKeys(packageJson.scripts)
-
-  packageJson.husky = {
-    hooks: {
-      'pre-commit': 'lint-staged',
-    },
-  }
-
-  packageJson['lint-staged'] = {
-    '**/*.{js,jsx}': ['eslint', 'prettier --write'],
-    '**/*.{html,md,yml,json,babelrc,eslintrc,prettierrc}': ['prettier --write'],
-  }
-
-  packageJson.homepage = `https://github.com/jaredLunde/${variables.PKG_NAME}#readme`
-  packageJson.repository = {
-    type: 'git',
-    url: `https://github.com/jaredLunde/${variables.PKG_NAME}.git`,
-  }
-  packageJson.bugs = {
-    url: `https://github.com/jaredLunde/${variables.PKG_NAME}/issues`,
-  }
-  // this function must return a valid package.json object
   return packageJson
 }
