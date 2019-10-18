@@ -1,13 +1,16 @@
 {
   "presets": [
-    ["@lunde/react-app", {
-      "es": {
-        "env": {
-          "targets": {
-            "node": "current"
+    [
+      "@lunde/react-app",
+      {
+        "es": {
+          "env": {
+            "targets": {
+              "node": "current"
+            }
           }
         }
       }
-    }]
+    ]
   ]
 }

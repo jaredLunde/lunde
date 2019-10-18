@@ -119,7 +119,8 @@ module.exports.editPackageJson = function editPackageJson(
         'cross-env BABEL_ENV=es babel src -d dist/es -x .ts,.tsx  --ignore "**/*.test.ts","**/test.ts","**/*.test.tsx","**/test.tsx" --delete-dir-on-start',
       'build:types': 'rimraf types && tsc -p tsconfig.json -d --outDir types',
       'check-types': 'tsc --noEmit -p tsconfig.json',
-      format: 'prettier --write "**/*.{js,ts,tsx,yml,md}"',
+      format:
+        'prettier --write "**/*.{ts,tsx,js,jsx,md,yml,json,babelrc,eslintrc,prettierrc}"',
       lint: 'eslint src --ext .ts,.tsx',
       prepublishOnly:
         'npm run lint && npm run test && npm run build && npm run format',
@@ -133,8 +134,8 @@ module.exports.editPackageJson = function editPackageJson(
       },
     },
     'lint-staged': {
-      '**/*.{ts,tsx}': ['eslint', 'prettier --write'],
-      '**/*.{md,yml}': ['prettier --write'],
+      '**/*.{ts,tsx,js,jsx}': ['eslint', 'prettier --write'],
+      '**/*.{md,yml,json,babelrc,eslintrc,prettierrc}': ['prettier --write'],
     },
     homepage: `https://github.com/jaredLunde/${variables.PKG_NAME}#readme`,
     repository: {
@@ -157,12 +158,13 @@ module.exports.editPackageJson = function editPackageJson(
     pkg.scripts['build:es'] =
       'cross-env BABEL_ENV=es babel src -d dist/es -x .js  --ignore "**/*.test.js","**/test.js" --delete-dir-on-start'
     pkg.scripts.lint = 'eslint src'
-    pkg.scripts.format = 'prettier --write "**/*.{js,jsx,yml,md}"'
+    pkg.scripts.format =
+      'prettier --write "**/*.{js,jsx,md,yml,json,babelrc,eslintrc,prettierrc}"'
     pkg.scripts.validate = 'npm run lint && npm run test -- --coverage'
     pkg.husky.hooks['pre-commit'] = 'lint-staged'
     pkg['lint-staged'] = {
       '**/*.{js,jsx}': ['eslint', 'prettier --write'],
-      '**/*.{md,yml}': ['prettier --write'],
+      '**/*.{md,yml,json,babelrc,eslintrc,prettierrc}': ['prettier --write'],
     }
   }
 
