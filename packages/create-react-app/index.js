@@ -269,7 +269,7 @@ module.exports.editPackageJson = (
       'rimraf public && rimraf .cache-loader && rimraf node_modules/.cache',
     format:
       'prettier --write "**/*.{js,jsx,html,md,yml,json,babelrc,eslintrc,prettierrc}"',
-    lint: 'eslint src',
+    lint: 'eslint .',
     postinstall: 'npm run clean && npm run format',
     serve: 'build-react-app serve',
     test: 'jest --passWithNoTests',

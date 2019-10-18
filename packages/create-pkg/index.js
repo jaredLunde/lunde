@@ -108,7 +108,7 @@ module.exports.editPackageJson = function editPackageJson(
       'check-types': 'tsc --noEmit -p tsconfig.json',
       format:
         'prettier --write "**/*.{ts,js,md,yml,json,babelrc,eslintrc,prettierrc}"',
-      lint: 'eslint src --ext .ts',
+      lint: 'eslint . --ext .ts',
       prepublishOnly:
         'npm run lint && npm run test && npm run build && npm run format',
       test: 'jest',
@@ -144,7 +144,7 @@ module.exports.editPackageJson = function editPackageJson(
       'babel src -d dist/cjs -x .js --ignore "**/*.test.js","**/test.js" --delete-dir-on-start'
     pkg.scripts['build:es'] =
       'cross-env BABEL_ENV=es babel src -d dist/es -x .js  --ignore "**/*.test.js","**/test.js" --delete-dir-on-start'
-    pkg.scripts.lint = 'eslint src'
+    pkg.scripts.lint = 'eslint .'
     pkg.scripts.format =
       'prettier --write "**/*.{js,md,yml,json,babelrc,eslintrc,prettierrc}"'
     pkg.scripts.validate = 'npm run lint && npm run test -- --coverage'
