@@ -28,6 +28,12 @@ Adds all and commits with the user-provided message
 git config --global alias.c '!git add -A && git commit -m'
 ```
 
+### `pc`
+Adds commits with a message and then pushes them
+```shell script
+git config --global alias.pc '!pc() { git add -A && git commit -m $1; git push }; pc'
+```
+
 ### `up`
 Pulls changes from the remote and rebases any local commits after the pulled commits while
 removing any branches that no longer exist on the remote.
