@@ -31,7 +31,7 @@ git config --global alias.c '!git add -A && git commit -m'
 ### `pc`
 Adds commits with a message and then pushes them
 ```shell script
-git config --global alias.pc '!pc() { git add -A && git commit -m $1; git push }; pc'
+git config --global alias.pc '!pc() { git add -A && git commit -m "$1"; git push; }; pc''
 ```
 
 ### `up`
