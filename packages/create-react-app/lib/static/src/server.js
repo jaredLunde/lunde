@@ -31,7 +31,7 @@ const render = clientStats => async locals => {
       </head>
       <body ${helmet.bodyAttributes}>
         ${helmet.noscript}
-        <div id="⚛️">${page}</div>
+        <div id="⚛">${page}</div>
         ${chunks.scripts}
       </body>
     </html>

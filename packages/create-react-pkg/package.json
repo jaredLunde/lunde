@@ -1,13 +1,13 @@
 {
   "name": "@lunde/create-react-pkg",
-  "version": "1.0.52",
+  "version": "1.0.55",
   "main": "index.js",
   "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
   "license": "MIT",
   "description": "An @inst-pkg template for creating new TypeScript packages",
   "dependencies": {
     "@inst-cli/template-utils": "^1.0.0",
-    "@inst-pkg/template-utils": "^1.0.5"
+    "@lunde/inst-utils": "^1.0.4"
   },
   "repository": "https://github.com/jaredLunde/lunde/tree/master/packages/create-react-pkg",
   "homepage": "https://github.com/jaredLunde/lunde/tree/master/packages/create-react-pkg#readme",

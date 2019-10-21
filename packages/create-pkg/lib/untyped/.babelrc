@@ -24,6 +24,7 @@
                 "browsers": "> 2%"
               }
             },
+            "objectAssign": false,
             "typescript": false
           }
         ]

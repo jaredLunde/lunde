@@ -53,7 +53,7 @@ export const renderApp = clientStats => async (req, res) => {
       </head>
       <body ${helmet.bodyAttributes}>
         ${helmet.noscript}
-        <div id="⚛️">${html}</div>
+        <div id="⚛">${html}</div>
         ${chunks.scripts}
       </body>
     </html>

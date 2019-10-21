@@ -1,4 +1,5 @@
 const {trim} = require('@inst-cli/template-utils')
+const {getPackageName, getPackageRepoPages} = require('@lunde/inst-utils')
 
 module.exports = {}
 
@@ -89,17 +90,15 @@ module.exports.rename = (filename, variables, args) =>
 // used for adding scripts and whatnot
 //
 // this function must return a valid package.json object
-module.exports.editPackageJson = function editPackageJson(
-  {main, ...packageJson},
+module.exports.editPackageJson = async function editPackageJson(
+  {main, name, ...packageJson},
   variables /*from prompts() above*/,
   args
 ) {
   let pkg = {
-    name: packageJson.name,
+    name: getPackageName({name}, args),
     version: packageJson.version,
-    homepage: `https://github.com/jaredLunde/${variables.PKG_NAME}#readme`,
-    repository: `github:jaredLunde/${variables.PKG_NAME}`,
-    bugs: `https://github.com/jaredLunde/${variables.PKG_NAME}/issues`,
+    ...(await getPackageRepoPages({name}, args)),
     author: packageJson.author,
     license: packageJson.license,
     description: variables.DESCRIPTION || '',
@@ -139,7 +138,7 @@ module.exports.editPackageJson = function editPackageJson(
       '**/*.{ts,tsx,js,jsx}': ['eslint', 'prettier --write'],
       '**/*.{md,yml,json,babelrc,eslintrc,prettierrc}': ['prettier --write'],
     },
-    ...packageJson
+    ...packageJson,
   }
 
   if (!args.ts) {

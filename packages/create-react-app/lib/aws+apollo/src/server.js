@@ -103,7 +103,7 @@ export const renderApp = clientStats => async (req, res) => {
           Javascript must be enabled in order to view this website
         </div>
       </noscript>
-      <div id="⚛️">${html}</div>
+      <div id="⚛">${html}</div>
       <!-- Bundle scripts -->
       ${
         __STAGE__ === 'development' && !__DEV__

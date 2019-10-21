@@ -54,7 +54,7 @@ export const renderApp = clientStats =>
       </head>
       <body ${helmet.bodyAttributes}>
         ${helmet.noscript}
-        <div id="⚛️">${html}</div>
+        <div id="⚛">${html}</div>
         ${chunks.scripts}
       </body>
     </html>

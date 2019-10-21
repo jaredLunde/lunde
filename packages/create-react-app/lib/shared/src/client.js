@@ -6,7 +6,7 @@ import {loadInitial} from 'react-broker'
 import App from './index'
 
 const history = createBrowserHistory()
-const root = document.getElementById('⚛️')
+const root = document.getElementById('⚛')
 const hydrate = App =>
   ReactDOM.hydrate(<Router history={history} children={<App />} />, root)
 // Hydrates the app after Broker has loaded its chunks

@@ -13,7 +13,7 @@ import {
 } from './apollo'
 import App from './index'
 
-const root = document.getElementById('⚛️')
+const root = document.getElementById('⚛')
 const history = createBrowserHistory()
 const httpLink = createHttpLink({
   fetch,
