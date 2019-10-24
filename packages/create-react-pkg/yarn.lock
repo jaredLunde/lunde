@@ -21,10 +21,10 @@
     inquirer-autocomplete "^0.12.2"
     inquirer-checkbox-plus-prompt "^1.0.1"
 
-"@lunde/inst-utils@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@lunde/inst-utils/-/inst-utils-1.0.4.tgz#aded87fdcf49bd2d755f307efed433b70c01b47c"
-  integrity sha512-gZPhx9bZlQNOwpvlkwqIsYHzwnBw1EHuh+L4zy0wmmWYMZylxctUkcohI76LjM4rb7+QgEEfcj2OZ3PdN5KDUg==
+"@lunde/inst-utils@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@lunde/inst-utils/-/inst-utils-1.0.6.tgz#119c2391518f674aea08121d2e96c458563c5d65"
+  integrity sha512-Jcj1DW7XAL2jTeIk1D1LNk8P3i1x4JIGKr1JdKMYDzbuZib6bSH5eOTS3HsIE8vLRmJM5IHzlvVhLhOS7sixxg==
   dependencies:
     "@babel/runtime" "^7.5.5"
     fs-extra "^7.0.1"

@@ -14,7 +14,7 @@ module.exports.prompts = (
   return [
     {
       type: 'string',
-      name: 'DESCRIPTION',
+      name: 'description',
       message: 'Description:',
       filter: trim,
     },
@@ -86,6 +86,16 @@ module.exports.rename = (filename, variables, args) =>
     .replace(/(\/shared|typed|untyped\/)/, '/')
     .replace('.inst.', '.')
 
+module.exports.getDefaultVariables = async (variables, args, {name}) => {
+  const pages = await getPackageRepoPages({name}, args)
+
+  return {
+    packageName: getPackageName({name}, args),
+    repo: pages.repository.replace('github:', ''),
+    pages,
+  }
+}
+
 // runs after the package.json is created and deps are installed,
 // used for adding scripts and whatnot
 //
@@ -96,9 +106,9 @@ module.exports.editPackageJson = async function editPackageJson(
   args
 ) {
   let pkg = {
-    name: getPackageName({name}, args),
+    name: variables.packageName,
     version: packageJson.version,
-    ...(await getPackageRepoPages({name}, args)),
+    ...variables.pages,
     author: packageJson.author,
     license: packageJson.license,
     description: variables.DESCRIPTION || '',
