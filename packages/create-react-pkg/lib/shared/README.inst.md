@@ -30,17 +30,19 @@
 
 <:description:>
 
-## Usage
+## Quick Start
 
 ```jsx harmony
 import _ from '<:packageName:>'
 ```
 
+## API
+
 ### Props
 
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-|      |      |         |             |
+| Prop | Type | Default | Required? | Description |
+| ---- | ---- | ------- | --------- | ----------- |
+|      |      |         |           |             |
 
 ## LICENSE
 

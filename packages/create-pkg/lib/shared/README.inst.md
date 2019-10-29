@@ -30,6 +30,14 @@
 
 <:description:>
 
+## Quick Start
+
+```js
+import _ from '<:packageName:>'
+```
+
+## API
+
 ## LICENSE
 
 MIT
