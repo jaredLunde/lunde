@@ -23,9 +23,7 @@
   </a>
 </p>
 
-<pre align="center">
-  npm i <:packageName:>
-</pre>
+<pre align="center">npm i <:packageName:></pre>
 <hr>
 
 <:description:>
