@@ -1,5 +1,5 @@
 # @lunde
-Utilities Jared uses for maintaining his FOSS projects
+Utilities I use for maintaining and creating JavaScript projects
 
 ## Table of contents
 ## Babel
