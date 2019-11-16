@@ -5,6 +5,7 @@ import babelMerge from 'babel-merge'
 import TerserPlugin from 'terser-webpack-plugin'
 import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer'
 import {StatsWriterPlugin} from 'webpack-stats-plugin'
+const CopyPlugin = require('copy-webpack-plugin')
 import IgnoreEmitPlugin from 'ignore-emit-webpack-plugin'
 import ImageminPlugin from 'imagemin-webpack'
 import imageminMozJpeg from 'imagemin-mozjpeg'
@@ -118,12 +119,12 @@ export const createPublicLoader = publicLoader => {
       // Loads all files require()'d from /public/ folders
       {
         // Images get special treatment
-        test: /assets\/.*\.(?!(jpe?g|png|webm)$)([^.]+$)$/,
+        test: /static\/.*\.(?!(jpe?g|png|webm)$)([^.]+$)$/,
         use: [
           {
             loader: 'file',
             options: {
-              regExp: /assets\/(.*)\.([^.]+)$/,
+              regExp: /static\/(.*)\.([^.]+)$/,
               name: '[1]/[md4:hash:base62:12].[ext]',
             },
           },
@@ -262,7 +263,7 @@ export const configureReactClient = (...configs) => {
       target: 'web',
 
       output: {
-        publicPath: '/assets/',
+        publicPath: '/static/',
       },
 
       module: {
@@ -291,6 +292,7 @@ export const configureReactClient = (...configs) => {
           __SERVER__: JSON.stringify(false),
           __CLIENT__: JSON.stringify(true),
         }),
+        new CopyPlugin(['static']),
       ].filter(Boolean),
     },
     envConfig,
@@ -341,7 +343,7 @@ export const configureReactServer = (...configs) => {
       },
 
       output: {
-        publicPath: '/assets/',
+        publicPath: '/static/',
         filename: 'render.js',
         libraryTarget: 'commonjs2',
         ...output,
@@ -381,7 +383,7 @@ export const configureReactServer = (...configs) => {
       nextConfig,
       {
         output: {
-          publicPath: '/assets/',
+          publicPath: '/static/',
           ...output,
           filename: `.cache/render.js`,
         },
