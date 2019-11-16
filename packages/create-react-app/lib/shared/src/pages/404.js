@@ -11,8 +11,16 @@ const style = styles({
     width: 100%;
     justify-content: center;
     align-items: center;
+    background-color: #1a1a1f;
   `,
-  heading: system.font.css('fontSize=xl:phone', 'fontSize=2xl:tablet')
+  heading: css`
+    ${system.font.css(
+      'font=title-sm:phone',
+      'font=title:tablet',
+      'fontFamily=system'
+    )};
+    color: white;
+  `,
 })
 
 const NotFound = () => (
@@ -20,9 +28,7 @@ const NotFound = () => (
     <Helmet>
       <title>404: Not Found</title>
     </Helmet>
-    <div className={style('heading')}>
-      404: Not Found
-    </div>
+    <div className={style('heading')}>404: Not Found</div>
   </div>
 )
 

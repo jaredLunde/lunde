@@ -4,6 +4,8 @@ import {StaticRouter} from 'react-router-dom'
 import {ApolloProvider} from 'react-apollo'
 import {createHttpLink} from 'apollo-link-http'
 import {getDataFromTree} from '@apollo/react-ssr'
+import styles from '@-ui/react'
+import {createStyleTagFromString} from '@-ui/react/server'
 import fetch from 'node-fetch'
 import {
   createRenderer,
@@ -78,6 +80,7 @@ export const renderApp = clientStats => async (req, res) => {
       ${helmet.link}
       ${helmet.style}
       ${helmet.script}
+      ${createStyleTagFromString(page, styles)}
       <script>
         window.__APOLLO_STATE__ = ${JSON.stringify(
           apolloClient.extract()

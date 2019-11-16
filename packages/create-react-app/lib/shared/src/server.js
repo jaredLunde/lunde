@@ -2,6 +2,8 @@ import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import {StaticRouter} from 'react-router-dom'
 import * as Broker from 'react-broker'
+import styles from '@-ui/react'
+import {createStyleTagFromString} from '@-ui/react/server'
 import {
   createRenderer,
   redirect,
@@ -50,6 +52,7 @@ export const renderApp = clientStats => async (req, res) => {
         ${helmet.link}
         ${helmet.style}
         ${helmet.script}
+        ${createStyleTagFromString(html, styles)}
       </head>
       <body ${helmet.bodyAttributes}>
         ${helmet.noscript}

@@ -6,7 +6,7 @@ system.use({
   gap: gap(),
   font: font(),
   radius: radius(),
-  shadow: shadow()
+  shadow: shadow(),
 })
 
 export const variables = {}

@@ -11,8 +11,16 @@ const style = styles({
     width: 100%;
     justify-content: center;
     align-items: center;
+    background-color: #1a1a1f;
   `,
-  heading: system.font.css('fontSize=xl:phone', 'fontSize=2xl:tablet')
+  heading: css`
+    ${system.font.css(
+      'font=title-sm:phone',
+      'font=title:tablet',
+      'fontFamily=system'
+    )};
+    color: white;
+  `,
 })
 
 const Home = () => (
@@ -20,9 +28,7 @@ const Home = () => (
     <Helmet>
       <title>Hello world</title>
     </Helmet>
-    <h1 className={style('heading')}>
-      Hello world
-    </h1>
+    <h1 className={style('heading')}>Hello world</h1>
   </main>
 )
 
