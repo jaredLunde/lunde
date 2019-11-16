@@ -236,7 +236,7 @@ module.exports.include = (variables, args) => {
     if (isServerless) include.push('**/aws+apollo/**')
   }
   if (isStatic || args.now) {
-    include.push('**/static/**')
+    include.push('**/static-site/**')
     if (isServerless) include.push('**/aws+static/**')
   }
   if (args.now) {
@@ -251,7 +251,10 @@ module.exports.rename = (filename, variables, args) =>
     ? filename.replace('gitignore', '.gitignore')
     : filename
   )
-    .replace(/\/(aws|shared|static|apollo|now)(\+(apollo|static))?\//g, '/')
+    .replace(
+      /\/(aws|shared|static-site|apollo|now)(\+(apollo|static))?\//g,
+      '/'
+    )
     .replace('.inst.', '.')
 
 // runs after the package.json is created and deps are installed,
