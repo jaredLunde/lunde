@@ -12,7 +12,7 @@ import {
   withCookies,
   pipe,
 } from '@lunde/render-react-app'
-import App from './index'
+import App from '.'
 
 export const renderApp = clientStats => async (req, res) => {
   const chunkCache = Broker.createChunkCache()

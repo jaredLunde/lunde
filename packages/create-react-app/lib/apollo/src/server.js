@@ -21,7 +21,7 @@ import {
   createResponseHeadersLink,
   getCsrfHeaders,
 } from './apollo'
-import App from './index'
+import App from '.'
 
 export const renderApp = clientStats => async (req, res) => {
   const helmetContext = {}

@@ -11,9 +11,8 @@ import {
   createRequestHeadersLink,
   getCsrfHeaders,
 } from './apollo'
-import App from './index'
+import App from '.'
 
-const root = document.getElementById('⚛')
 const history = createBrowserHistory()
 const httpLink = createHttpLink({
   fetch,
@@ -39,7 +38,7 @@ const hydrate = App =>
         <App />
       </Router>
     </ApolloProvider>,
-    root
+    document.getElementById('⚛')
   )
 // Hydrates the app after Broker has loaded its chunks
 loadInitial().then(() => hydrate(App))

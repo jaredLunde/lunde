@@ -5,7 +5,7 @@ import * as Broker from 'react-broker'
 import styles from '@-ui/react'
 import {createStyleTagFromString} from '@-ui/react/server'
 import {createStaticRenderer} from '@lunde/render-react-app'
-import App from './index'
+import App from '.'
 
 const render = clientStats => async locals => {
   const chunkCache = Broker.createChunkCache()
