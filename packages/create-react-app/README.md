@@ -45,9 +45,7 @@ that `React.lazy` presently lacks.
 
 ### Styles and theming
 
-CSS styles and themes are added to components with [`curls`](https://github.com/jaredLunde/curls) and [`style-hooks`](https://style-hooks.jaredlunde.com).
-Both of these are small libraries on top of [`emotion`](https://emotion.sh), so you're getting
-that, too, at no cost.
+CSS styles and themes are added to components with [`-ui`](https://github.com/dash-ui/react) and [`-ui/system`](https://github.com/dash-ui/system).
 
 ### Static assets
 

@@ -68,6 +68,7 @@ export const createBabelLoadersForWeb = (target, override = {}) => {
         es: {
           runtime: isProd() && {absoluteRuntime: defaultAbsoluteRuntime},
         },
+        emotion: false,
       },
     ],
   ]
@@ -92,6 +93,7 @@ export const createBabelLoadersForNode = (target, override = {}) => {
           },
           runtime: isProd() && {absoluteRuntime: defaultAbsoluteRuntime},
         },
+        emotion: false,
       },
     ],
   ]

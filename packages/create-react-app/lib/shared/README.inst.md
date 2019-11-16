@@ -61,8 +61,7 @@ Recursively removes any distribution files generated in a build and any caches
 created by Webpack. 
 
 ### format
-Formats all files ending in `.js`, `.md`, and `.yml` with Prettier, excluding
-`node_modules` and `/public`
+Formats all source files ending in `.js`, `.md`, and `.yml` with Prettier
 
 ## 🌳 Things to know
 And places to go

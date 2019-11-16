@@ -1,9 +1,13 @@
-import {Link, NavLink} from 'react-router-dom'
+import system, {pad, gap, radius, shadow, font} from '@-ui/system'
 import {icons} from '../components'
 
-export const icon = {icons}
+system.use({
+  pad: pad(),
+  gap: gap(),
+  font: font(),
+  radius: radius(),
+  shadow: shadow()
+})
 
-export const link = {
-  component: Link,
-  navComponent: NavLink,
-}
+export const variables = {}
+export const icon = {icons}

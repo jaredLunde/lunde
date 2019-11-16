@@ -2,18 +2,12 @@ import React from 'react'
 import {Switch} from 'react-router-dom'
 import {HelmetProvider, Helmet} from 'react-helmet-async'
 import {Provider as BrokerProvider} from 'react-broker'
-import {
-  ThemeProvider,
-  css,
-  browserResets,
-  prettyText,
-  containmentAttrs,
-} from 'curls'
+import styles, {DashProvider, Global} from '@-ui/react'
+import {browserStyles} from '@-ui/system'
 import {ScrollToTop} from './components'
 import * as theme from './theme'
 import * as pages from './pages'
 
-const globalStyles = [browserResets, prettyText, containmentAttrs, css``]
 const Document = ({location}) => (
   <>
     <Helmet>
@@ -42,6 +36,7 @@ const Document = ({location}) => (
         `}
       </noscript>
     </Helmet>
+    <Global css={browserStyles}/>
     <div id='portals' />
     <Switch
       location={location}
@@ -52,10 +47,10 @@ const Document = ({location}) => (
 
 export default ({helmetContext = {}, chunkCache}) => (
   <HelmetProvider context={helmetContext}>
-    <ThemeProvider theme={theme} globalStyles={globalStyles}>
+    <DashProvider styles={styles} variables={theme.variables}>
       <BrokerProvider chunkCache={chunkCache}>
         <ScrollToTop path='*' children={Document} />
       </BrokerProvider>
-    </ThemeProvider>
+    </DashProvider>
   </HelmetProvider>
 )
