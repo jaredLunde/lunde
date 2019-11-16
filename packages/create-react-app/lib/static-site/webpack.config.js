@@ -9,7 +9,7 @@ module.exports = [
   configureReactClient({
     entry: [path.join(__dirname, 'src/client.js')],
     output: {
-      path: path.join(outputPath, 'assets'),
+      path: path.join(outputPath, 'static'),
     },
     stats: {
       filename: '../.cache/stats.json', // this is relative to output.path above
