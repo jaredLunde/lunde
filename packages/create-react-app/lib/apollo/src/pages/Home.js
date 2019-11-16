@@ -6,28 +6,6 @@ import styles from '@-ui/styles'
 import system from '@-ui/system'
 import css from 'minify-css.macro'
 
-const style = styles({
-  hero: css`
-    display: flex;
-    height: 100vh;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    background-color: #1a1a1f;
-  `,
-  heading: css`
-    ${system.font.css(
-      'font=title-sm:phone',
-      'font=title:tablet',
-      'fontFamily=system'
-    )};
-    color: white;
-  `,
-  response: css`
-    text-align: center;
-  `,
-})
-
 const Home = () => {
   const {loading, error, data} = useQuery(
     gql`
@@ -55,5 +33,27 @@ const Home = () => {
     </div>
   )
 }
+
+const style = styles({
+  hero: css`
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: #1a1a1f;
+  `,
+  heading: css`
+    ${system.font.css(
+      'font=title-sm:phone',
+      'font=title:tablet',
+      'fontFamily=system'
+    )};
+    color: white;
+  `,
+  response: css`
+    text-align: center;
+  `,
+})
 
 export default Home
