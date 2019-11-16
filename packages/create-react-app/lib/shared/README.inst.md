@@ -81,8 +81,11 @@ is a great tool that also provides component preloading and SSR capability.
 ### Static assets
 This app uses [`file-loader`](https://www.npmjs.com/package/file-loader) and [`responsive-loader`](https://www.npmjs.com/package/responsive-loader) 
 to include images, fonts, and other files in the bundle assets. When you import a file from the
-[`src/assets`](tree/master/src/pages/index.js) directory it will be loaded with `file-loader` when the
+[`src/static`](tree/master/src/pages/index.js) directory it will be loaded with `file-loader` when the
 extension doesn't match `(jpe?g|png|webm)` and `responsive-loader` when it does.
+
+You can also add files to the top-level `static` directory when you don't want them to be
+hashed, e.g. robots.txt. These files are copied to the client output path in `webpack.config.js`
 
 ### Entry files
 | File | Description |
