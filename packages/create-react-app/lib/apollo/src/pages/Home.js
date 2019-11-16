@@ -2,7 +2,7 @@ import React from 'react'
 import {Helmet} from 'react-helmet-async'
 import {useQuery} from 'react-apollo'
 import gql from 'graphql-tag'
-import styles from '@-ui/styles'
+import styles from '@-ui/react'
 import system from '@-ui/system'
 import css from 'minify-css.macro'
 
