@@ -349,7 +349,7 @@ export const configureReactServer = (...configs) => {
         ...output,
       },
 
-      externals: ['js-beautify', 'encoding'],
+      externals: ['encoding'],
 
       plugins: [
         clean &&
