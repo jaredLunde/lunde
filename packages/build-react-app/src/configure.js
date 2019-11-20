@@ -388,22 +388,6 @@ export const configureReactServer = (...configs) => {
           filename: `.cache/render.js`,
         },
 
-        module: {
-          rules: [
-            {
-              test: /robots(\.disallow)?.txt$/,
-              use: [
-                {
-                  loader: 'file',
-                  options: {
-                    name: 'robots.txt',
-                  },
-                },
-              ],
-            },
-          ],
-        },
-
         plugins: [
           new StaticSitePlugin({crawl, locals, paths}),
           isProd() &&
