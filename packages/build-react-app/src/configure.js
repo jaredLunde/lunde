@@ -5,7 +5,6 @@ import babelMerge from 'babel-merge'
 import TerserPlugin from 'terser-webpack-plugin'
 import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer'
 import {StatsWriterPlugin} from 'webpack-stats-plugin'
-const CopyPlugin = require('copy-webpack-plugin')
 import IgnoreEmitPlugin from 'ignore-emit-webpack-plugin'
 import ImageminPlugin from 'imagemin-webpack'
 import imageminMozJpeg from 'imagemin-mozjpeg'
@@ -292,7 +291,6 @@ export const configureReactClient = (...configs) => {
           __SERVER__: JSON.stringify(false),
           __CLIENT__: JSON.stringify(true),
         }),
-        new CopyPlugin(['static']),
       ].filter(Boolean),
     },
     envConfig,
