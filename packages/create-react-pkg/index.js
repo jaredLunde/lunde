@@ -124,7 +124,7 @@ module.exports.editPackageJson = async function editPackageJson(
     files: ['/dist'],
     sideEffects: false,
     scripts: {
-      build: 'npm run build:types && npm run build:cjs && npm run build:es',
+      build: 'npm run build:cjs && npm run build:es && npm run build:types',
       'build:cjs':
         'babel src -d dist/cjs -x .ts,.tsx --ignore "**/*.test.ts","**/test.ts","**/*.test.tsx","**/test.tsx" --delete-dir-on-start',
       'build:es':
