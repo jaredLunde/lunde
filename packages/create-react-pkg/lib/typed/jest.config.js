@@ -1,9 +1,6 @@
 const path = require('path')
 
 module.exports = {
-  transform: {
-    '^.+\\.tsx?$': 'ts-jest',
-  },
   // testEnvironment: 'jest-environment-jsdom',
   moduleDirectories: [
     'node_modules',
@@ -11,7 +8,7 @@ module.exports = {
     path.join(__dirname, 'test'),
   ],
   testMatch: ['<rootDir>/src/**/?(*.)test.{ts,tsx}'],
-  collectCoverageFrom: ['<rootDir>/src/**/?(*.)test.{ts,tsx}'],
+  collectCoverageFrom: ['**/src/**/*.{ts,tsx}'],
   // moduleNameMapper: {},
   setupFilesAfterEnv: [require.resolve('./test/setup.js')],
   snapshotResolver: require.resolve('./test/resolve-snapshot.js'),
@@ -25,8 +22,5 @@ module.exports = {
   // },
   globals: {
     __DEV__: true,
-    'ts-jest': {
-      tsConfig: 'tsconfig.test.json',
-    },
   },
 }

@@ -119,8 +119,9 @@ module.exports.editPackageJson = async function editPackageJson(
     ],
     main: 'dist/cjs/index.js',
     module: 'dist/es/index.js',
-    types: 'types/index.d.ts',
-    files: ['/dist', '/types'],
+    // types: 'types/index.d.ts',
+    // files: ['/dist', '/types'],
+    files: ['/dist'],
     sideEffects: false,
     scripts: {
       build: 'npm run build:types && npm run build:cjs && npm run build:es',
@@ -128,7 +129,8 @@ module.exports.editPackageJson = async function editPackageJson(
         'babel src -d dist/cjs -x .ts,.tsx --ignore "**/*.test.ts","**/test.ts","**/*.test.tsx","**/test.tsx" --delete-dir-on-start',
       'build:es':
         'cross-env BABEL_ENV=es babel src -d dist/es -x .ts,.tsx --ignore "**/*.test.ts","**/test.ts","**/*.test.tsx","**/test.tsx" --delete-dir-on-start',
-      'build:types': 'rimraf types && tsc -p tsconfig.json -d --outDir types',
+      'build:types':
+        'tsc -p tsconfig.json -d --outDir dist/es --emitDeclarationOnly && mkdir -p dist/cjs && cp -R dist/es/**.d.ts dist/cjs && rimraf dist/**/*.test.d.ts',
       'check-types': 'tsc --noEmit -p tsconfig.json',
       format:
         'prettier --write "**/*.{ts,tsx,js,jsx,md,yml,json,babelrc,eslintrc,prettierrc}"',
