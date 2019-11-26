@@ -21,9 +21,9 @@
               "modules": false,
               "targets": {
                 "browsers": "> 2%"
-              },
-              "objectAssign": false
-            }
+              }
+            },
+            "objectAssign": false
           }
         ]
       ]
