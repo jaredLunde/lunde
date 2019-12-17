@@ -69,7 +69,11 @@ module.exports.devDependencies = (variables, args) => {
 }
 
 // package.json peer dependencies
-module.exports.peerDependencies = {}
+module.exports.peerDependencies = {
+  react: '>=16.8',
+  'react-dom': '>=16.8',
+  'prop-types': '>=15.6',
+}
 
 module.exports.include = (variables, args) => {
   const include = ['**/shared/**']
