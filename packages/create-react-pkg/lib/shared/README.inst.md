@@ -9,6 +9,9 @@
   <a href="https://bundlephobia.com/result?p=<:packageName:>">
     <img alt="Bundlephobia" src="https://img.shields.io/bundlephobia/minzip/<:packageName:>?style=for-the-badge&labelColor=24292e">
   </a>
+  <a aria-label="Types" href="https://www.npmjs.com/package/<:packageName:>">
+    <img alt="Types" src="https://img.shields.io/npm/types/<:packageName:>?style=for-the-badge&labelColor=24292e">
+  </a>
   <a aria-label="Code coverage report" href="https://codecov.io/gh/<:repo:>">
     <img alt="Code coverage" src="https://img.shields.io/codecov/c/gh/<:repo:>?style=for-the-badge&labelColor=24292e">
   </a>

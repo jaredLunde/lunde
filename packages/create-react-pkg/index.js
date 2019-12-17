@@ -34,6 +34,7 @@ module.exports.devDependencies = (variables, args) => {
     '@testing-library/react-hooks': 'latest',
     jest: 'latest',
     'babel-eslint': 'latest',
+    'babel-plugin-optimize-react': 'latest',
     'cross-env': 'latest',
     eslint: 'latest',
     'eslint-import-resolver-jest': 'latest',
@@ -58,6 +59,7 @@ module.exports.devDependencies = (variables, args) => {
       '@types/react-dom': 'latest',
       '@typescript-eslint/eslint-plugin': 'latest',
       '@typescript-eslint/parser': 'latest',
+      'babel-plugin-typescript-to-proptypes': 'latest',
       'ts-jest': 'latest',
       typescript: 'latest',
     }
@@ -101,7 +103,7 @@ module.exports.getDefaultVariables = async (variables, args, {name}) => {
 //
 // this function must return a valid package.json object
 module.exports.editPackageJson = async function editPackageJson(
-  {main, name, ...packageJson},
+  {main, name, description, ...packageJson},
   variables /*from prompts() above*/,
   args
 ) {

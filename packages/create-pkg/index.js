@@ -90,7 +90,7 @@ module.exports.getDefaultVariables = async (variables, args, {name}) => {
 //
 // this function must return a valid package.json object
 module.exports.editPackageJson = async function editPackageJson(
-  {main, name, ...packageJson},
+  {main, name, description, ...packageJson},
   variables /*from prompts() above*/,
   args
 ) {
