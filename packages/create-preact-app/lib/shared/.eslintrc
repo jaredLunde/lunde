@@ -1,0 +1,57 @@
+{
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:jest/recommended"
+  ],
+  "plugins": ["jest", "react", "react-hooks"],
+  "rules": {
+    "no-console": "off",
+    "no-prototype-builtins": "off",
+    "react/no-children-prop": "off",
+    "react/display-name": "off",
+    "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
+  },
+  "settings": {
+    "react": {
+      "pragma": "h",
+      "version": "latest"
+    }
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "jest/globals": true
+  },
+  "globals": {
+    "__DEV__": true,
+    "__CLIENT__": true,
+    "__SERVER__": true,
+    "__webpack_public_path__": true
+  },
+  "overrides": [
+    {
+      "files": ["**/test.js", "**/*.test.js"],
+      "settings": {
+        "import/resolver": {
+          "jest": {
+            "jestConfigFile": "./jest.config.js"
+          }
+        }
+      }
+    }
+  ]
+}

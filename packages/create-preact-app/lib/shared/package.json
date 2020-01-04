@@ -1,0 +1,34 @@
+{
+  "private": true,
+  "name": "<:name:>",
+  "version": "0.0.0",
+  "license": "MIT",
+  "browserslist": [
+    "last 2 versions",
+    "cover 95% in US, not IE <12"
+  ],
+  "scripts": {
+    "build": "NODE_ENV=production preact build --preload --no-sw --prerenderUrls prerender-urls.json --no-inline-css",
+    "dev": "preact watch -p 3000",
+    "serve": "npm run build && npx serve@latest build",
+    "up": "npx now@latest",
+    "down": "npx now@latest rm nimbly",
+    "analyze": "npm run build -- --analyze",
+    "lint": "eslint .",
+    "test": "jest --passWithNoTests",
+    "format": "prettier --write \"**/*.{js,jsx,html,md,yml,json,babelrc,eslintrc,prettierrc}\""
+  },
+  "hooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx}": [
+      "eslint",
+      "prettier --write"
+    ],
+    "**/*.{html,md,yml,json,babelrc,eslintrc,prettierrc}": [
+      "prettier --write"
+    ]
+  },
+  "sideEffects": "false"
+}

@@ -1,0 +1,29 @@
+{
+  "name": "@lunde/create-preact-app",
+  "version": "1.0.5",
+  "main": "index.js",
+  "author": "Jared Lunde <jared.lunde@gmail.com> (https://jaredLunde.com)",
+  "license": "MIT",
+  "dependencies": {
+    "@inst-cli/template-utils": "^1.0.7",
+    "@lunde/inst-utils": "^1.0.6"
+  },
+  "devDependencies": {
+    "prettier": "^1.19.1"
+  },
+  "bin": {
+    "create-preact-app": "bin/index.js"
+  },
+  "files": [
+    "/lib",
+    "/bin",
+    "index.js",
+    ".instignore"
+  ],
+  "scripts": {
+    "format": "npm run format:src && npm run format:lib",
+    "format:src": "prettier --write ./index.js",
+    "format:lib": "prettier --write \"./lib/**/*.{js,jsx,ts,tsx,css,scss,less,yml,md}\"",
+    "prepublishOnly": "npm run format"
+  }
+}
