@@ -10,6 +10,14 @@ export default {
     config.plugins = [
       ...config.plugins,
       new webpack.DefinePlugin({
+        process: {
+          cwd: function() {},
+          env: Object.keys(process.env).reduce(
+            (p, key) =>
+              Object.assign(p, {[key]: JSON.stringify(process.env[key])}),
+            {}
+          ),
+        },
         __SERVER__: JSON.stringify(env.isServer),
         __CLIENT__: JSON.stringify(!env.isServer),
         __DEV__: JSON.stringify(!env.isProd),
