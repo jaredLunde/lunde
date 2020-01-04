@@ -10,6 +10,11 @@ import Profile from './pages/Profile'
 const App = () => {
   const app = (
     <DashProvider styles={styles}>
+      <noscript>
+        <div style='font-family: sans-serif; padding: 2rem; text-align: center;'>
+          Javascript must be enabled in order to view this website
+        </div>
+      </noscript>
       <div id='portals' />
       <Header />
       <Router>
