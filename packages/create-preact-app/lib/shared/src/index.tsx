@@ -1,5 +1,5 @@
 import {h, JSX} from 'preact'
-import {Route} from 'react-router-dom'
+import {StaticRouter, BrowserRouter, Route} from 'react-router-dom'
 import {Styles} from '@-ui/react'
 import {BodyUsingKeyboard} from '@accessible/using-keyboard'
 import {Provider as PrerenderProvider} from '@preact/prerender-data-provider'
@@ -13,23 +13,15 @@ interface StaticRouterProps {
   location: string
   context?: Record<string, any>
 }
-let Router: FC<StaticRouterProps>
+let Router: FC<StaticRouterProps> | typeof BrowserRouter = BrowserRouter
 
 if (__SERVER__) {
-  const StaticRouter = require('react-router-dom').StaticRouter
   Router = ({context = {}, location, children}) => (
     <StaticRouter context={context} location={location} children={children} />
   )
   const renderer = require('preact-render-to-string').default
   extractStyles = (app, styles) =>
     require('@-ui/react/server').toComponent(renderer(app), styles)
-} else {
-  const createBrowserHistory = require('history').createBrowserHistory
-  const BrowserRouter = require('react-router-dom').Router
-  const history = createBrowserHistory()
-  Router = ({children}) => (
-    <BrowserRouter history={history} children={children} />
-  )
 }
 
 interface FooProps {

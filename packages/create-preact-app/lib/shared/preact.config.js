@@ -52,12 +52,6 @@ export default {
       require.resolve('@babel/plugin-proposal-nullish-coalescing-operator')
     )
 
-    if (env.isProd) {
-      babelConfig.plugins.push(
-        require.resolve('babel-plugin-closure-elimination')
-      )
-    }
-
     return config
   },
 }
