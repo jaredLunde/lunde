@@ -1,7 +1,26 @@
 const webpack = require('webpack')
+import {resolve} from 'path'
 
 export default {
   webpack(config, env, helpers) {
+    // Switch css-loader for typings-for-css-modules-loader, which is a wrapper
+    // that automatically generates .d.ts files for loaded CSS
+    helpers.getLoadersByName(config, 'css-loader').forEach(({loader}) => {
+      loader.loader = 'typings-for-css-modules-loader'
+      loader.options = Object.assign(loader.options, {
+        camelCase: true,
+        namedExport: true,
+        silent: true,
+      })
+    })
+
+    // Use any `index` file, not just index.js
+    config.resolve.alias['preact-cli-entrypoint'] = resolve(
+      process.cwd(),
+      'src',
+      'index'
+    )
+
     config.node = {
       ...config.node,
       fs: 'empty',
@@ -24,7 +43,7 @@ export default {
       }),
     ]
 
-    let {
+    const {
       rule: {options: babelConfig},
     } = helpers.getLoadersByName(config, 'babel-loader')[0]
 

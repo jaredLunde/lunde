@@ -16,7 +16,7 @@ module.exports = {
       '<rootDir>/__mocks__/fileMock.js',
   },
   snapshotResolver: require.resolve('./test/resolve-snapshot.js'),
-  collectCoverageFrom: ['**/src/**/*.{js,jsx}'],
+  collectCoverageFrom: ['**/src/**/*.{ts,tsx}'],
   globals: {
     __DEV__: true,
     __CLIENT__: true,
