@@ -1,4 +1,4 @@
-import {h, JSX} from 'preact'
+import {h} from 'preact'
 import {StaticRouter, BrowserRouter, Route} from 'react-router-dom'
 import {Styles} from '@-ui/react'
 import {BodyUsingKeyboard} from '@accessible/using-keyboard'
@@ -6,7 +6,7 @@ import {Provider as PrerenderProvider} from '@preact/prerender-data-provider'
 import {DesignSystem} from './components'
 import {styles} from './styles'
 // Routes are automagically code split
-import Home from './pages/Home'
+import * as pages from './pages'
 
 let extractStyles: (app: JSX.Element, styles: Styles) => JSX.Element
 interface StaticRouterProps {
@@ -24,11 +24,9 @@ if (__SERVER__) {
     require('@-ui/react/server').toComponent(renderer(app), styles)
 }
 
-interface FooProps {
-  fish: string
-}
-
 const App = (props: any) => {
+  const Home = pages.Home
+
   const app = (
     <PrerenderProvider props={props}>
       <DesignSystem>

@@ -52,6 +52,8 @@ module.exports.dependencies = (variables, args) => {
     'babel-eslint': 'latest',
     'babel-plugin-closure-elimination': 'latest',
     clsx: 'latest',
+    'code-split.macro': 'latest',
+    'create-async-component': 'latest',
     eslint: 'latest',
     'eslint-import-resolver-jest': 'latest',
     'eslint-plugin-jest': 'latest',
@@ -68,13 +70,12 @@ module.exports.dependencies = (variables, args) => {
     'postinstall-postinstall': 'latest',
     preact: 'latest',
     'preact-cli': 'rc',
-    'preact-helmet': 'latest',
     'preact-render-spy': 'latest',
     'preact-render-to-string': 'latest',
     prettier: 'latest',
     'react-router-dom': 'latest',
     'ts-loader': 'latest',
-    typescript: '^3.7.5',
+    typescript: 'latest',
   }
 
   return sortByKeys(deps)
@@ -126,11 +127,13 @@ module.exports.editPackageJson = async (
         'prettier --write "**/*.{js,jsx,html,md,yml,json,babelrc,eslintrc,prettierrc}"',
       validate: 'npm run lint && npm run test -- --coverage',
     },
-    hooks: {
-      'pre-commit': 'lint-staged',
+    husky: {
+      hooks: {
+        'pre-commit': 'lint-staged && npm run check-types',
+      },
     },
     'lint-staged': {
-      '**/*.{js,jsx}': ['eslint', 'prettier --write'],
+      '**/*.{js,ts,tsx}': ['eslint', 'prettier --write'],
       '**/*.{html,md,yml,json,babelrc,eslintrc,prettierrc}': [
         'prettier --write',
       ],

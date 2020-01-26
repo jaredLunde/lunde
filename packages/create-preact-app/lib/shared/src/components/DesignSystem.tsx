@@ -7,7 +7,7 @@ import {styles} from '../styles'
 export interface DesignSystemContextValue {
   variables?: Variables
   themes?: Themes
-  icons: Record<string, React.ComponentType<any>>
+  icons: Record<string, FC<any>>
 }
 
 const DesignSystemContext = createContext<DesignSystemContextValue>({
