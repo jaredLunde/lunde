@@ -22,6 +22,7 @@ export interface TextProps {
   as?: any
   sx?: Variants<typeof text.styles>
   className?: string | string[]
+  [name: string]: any
 }
 
 export const Text: FC<TextProps> = forwardRef<HTMLElement, Props<TextProps>>(

@@ -7,6 +7,7 @@ import AccessibleButton from '@accessible/button'
 import Link from '@accessible/link'
 import {styles, ds, variables} from '../styles'
 import {Variants} from '../types'
+import {AsyncRouteType} from './AsyncRoute'
 
 export const button = styles<
   'default' | 'primary' | 'outline' | keyof typeof ds.bg.styles
@@ -138,18 +139,24 @@ export interface ButtonLinkProps extends ButtonProps, LinkProps {
   className?: string | string[]
   state: Record<string, any>
   children?: JSX.Element | string | false | number | null
+  preload?: AsyncRouteType<any>
+  [name: string]: any
 }
 
 export const ButtonLink: FC<ButtonLinkProps> = forwardRef<
   HTMLElement,
   ButtonLinkProps
->(({to, replace = false, state, ...props}, ref) => {
+>(({to, replace = false, state, preload, onMouseEnter, ...props}, ref) => {
   const history = useHistory()
 
   return (
     <Link>
       <Button
         as='a'
+        onMouseEnter={e => {
+          onMouseEnter?.(e)
+          preload?.load()
+        }}
         onClick={(e: MouseEvent) => {
           if (
             e.ctrlKey ||

@@ -26,6 +26,7 @@ export interface HeroProps {
   sx?: Variants<typeof hero.styles>
   className?: string | string[]
   style?: React.CSSProperties
+  [name: string]: any
 }
 
 export const Hero: FC<HeroProps> = forwardRef<HTMLElement, HeroProps>(

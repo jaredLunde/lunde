@@ -78,6 +78,12 @@ module.exports.dependencies = (variables, args) => {
     typescript: 'latest',
   }
 
+  if (args.mdx) {
+    deps = {
+      ...deps,
+      '@mdx-js/loader': 'latest',
+    }
+  }
   return sortByKeys(deps)
 }
 
@@ -124,7 +130,7 @@ module.exports.editPackageJson = async (
       postinstall: 'patch-package',
       test: 'jest --passWithNoTests',
       format:
-        'prettier --write "**/*.{js,jsx,html,md,yml,json,babelrc,eslintrc,prettierrc}"',
+        'prettier --write "**/*.{js,jsx,html,mdx?,yml,json,babelrc,eslintrc,prettierrc}"',
       validate: 'npm run lint && npm run test -- --coverage',
     },
     husky: {
@@ -134,7 +140,7 @@ module.exports.editPackageJson = async (
     },
     'lint-staged': {
       '**/*.{js,ts,tsx}': ['eslint', 'prettier --write'],
-      '**/*.{html,md,yml,json,babelrc,eslintrc,prettierrc}': [
+      '**/*.{html,mdx?,yml,json,babelrc,eslintrc,prettierrc}': [
         'prettier --write',
       ],
     },

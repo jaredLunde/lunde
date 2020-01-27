@@ -11,6 +11,7 @@ import css from 'minify-css.macro'
 import clsx from 'clsx'
 import {Variants} from '../types'
 import {styles} from '../styles'
+import {AsyncRouteType} from './AsyncRoute'
 
 export const link: Style = styles({
   default: ({color, font}) => css`
@@ -25,7 +26,8 @@ export const link: Style = styles({
   `,
   secondary: ({font}) => css`
     color: ${font.color.important};
-    font-weight: 700;
+    font-weight: 700;import { AsyncRouteType } from './AsyncRoute';
+
     border-bottom: 1px solid currentColor;
   `,
 })
@@ -34,10 +36,11 @@ export const link: Style = styles({
 export interface LinkProps extends RouterLinkProps {
   sx?: Variants<typeof link.styles>
   className?: string | string[]
+  preload?: AsyncRouteType<any>
 }
 
 export const Link: FC<LinkProps> = forwardRef<any, Props<LinkProps>>(
-  ({sx, ...props}, ref) =>
+  ({sx, preload, onMouseEnter, ...props}, ref) =>
     h(
       LinkBase,
       Object.assign(props, {
@@ -45,6 +48,10 @@ export const Link: FC<LinkProps> = forwardRef<any, Props<LinkProps>>(
           props.className,
           Array.isArray(sx) ? link(...sx) : link(sx)
         ),
+        onMouseEnter: e => {
+          onMouseEnter?.(e)
+          preload?.load()
+        },
         ref,
       })
     )
@@ -54,10 +61,11 @@ export const Link: FC<LinkProps> = forwardRef<any, Props<LinkProps>>(
 export interface NavLinkProps extends RouterNavLinkProps {
   sx?: Variants<typeof link.styles>
   className?: string | string[]
+  preload?: AsyncRouteType<any>
 }
 
 export const NavLink: FC<NavLinkProps> = forwardRef<any, Props<NavLinkProps>>(
-  ({sx, ...props}, ref) =>
+  ({sx, preload, onMouseEnter, ...props}, ref) =>
     h(
       NavLinkBase,
       Object.assign(props, {
@@ -66,6 +74,10 @@ export const NavLink: FC<NavLinkProps> = forwardRef<any, Props<NavLinkProps>>(
           props.className,
           Array.isArray(sx) ? link(...sx) : link(sx)
         ),
+        onMouseEnter: e => {
+          onMouseEnter?.(e)
+          preload?.load()
+        },
         ref,
       })
     )

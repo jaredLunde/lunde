@@ -1,12 +1,12 @@
 import {h} from 'preact'
-import {StaticRouter, BrowserRouter, Route} from 'react-router-dom'
+import {StaticRouter, BrowserRouter, Switch} from 'react-router-dom'
 import {Styles} from '@-ui/react'
 import {BodyUsingKeyboard} from '@accessible/using-keyboard'
 import {Provider as PrerenderProvider} from '@preact/prerender-data-provider'
 import {DesignSystem} from './components'
 import {styles} from './styles'
 // Routes are automagically code split
-import * as pages from './pages'
+import pages from './pages'
 
 let extractStyles: (app: JSX.Element, styles: Styles) => JSX.Element
 interface StaticRouterProps {
@@ -25,8 +25,6 @@ if (__SERVER__) {
 }
 
 const App = (props: any) => {
-  const Home = pages.Home
-
   const app = (
     <PrerenderProvider props={props}>
       <DesignSystem>
@@ -39,9 +37,11 @@ const App = (props: any) => {
         </noscript>
 
         <Router location={props.CLI_DATA.preRenderData.url}>
-          <Route path='/'>
-            <Home />
-          </Route>
+          <Switch>
+            {Object.keys(pages).map((path, i) =>
+              h(pages[path][0], {path, key: `${path}:${i}`, ...pages[path][1]})
+            )}
+          </Switch>
         </Router>
       </DesignSystem>
     </PrerenderProvider>

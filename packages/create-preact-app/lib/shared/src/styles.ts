@@ -272,8 +272,7 @@ styles.global(
 
     p {
       ${ds.font.css('body')};
-      margin-bottom: 0.5em;
-      line-height: 1.4;
+      margin-bottom: 1em;
     }
 
     a {
