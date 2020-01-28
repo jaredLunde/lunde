@@ -5,10 +5,7 @@
   "build": {
     "env": {
       "NODE_ENV": "production",
-      "BUILD_ENV": "client"
+      "BUILD_ENV": "static"
     }
-  },
-  "routes": [
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
+  }
 }

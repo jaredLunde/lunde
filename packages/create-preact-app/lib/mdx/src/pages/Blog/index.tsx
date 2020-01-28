@@ -6,9 +6,11 @@ import {Link} from '../../components'
 import {styles} from '../../styles'
 import {Home} from '../'
 
-const HelloWorld = createAsyncComponent(
-  codeSplit('./HelloWorld.mdx', __SERVER__)
-)
+const posts = {
+  'hello-world': createAsyncComponent(
+    codeSplit('./hello-world.mdx', __SERVER__)
+  ),
+}
 
 export default () => {
   return (
@@ -19,7 +21,7 @@ export default () => {
         </Link>
       </div>
 
-      <HelloWorld />
+      {h(posts['hello-world'], {})}
     </div>
   )
 }

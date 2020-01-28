@@ -92,7 +92,12 @@ module.exports.peerDependencies = {}
 
 module.exports.include = (variables, args) => {
   const include = ['**/shared/**']
-  if (args.now) include.push('**/now/**')
+  if (args.static) include.push('**/static/**')
+  if (args.now) {
+    include.push('**/now/**')
+    if (args.static) include.push('**/now+static/**')
+  }
+  if (args.mdx) include.push('**/mdx/**')
   return include
 }
 
@@ -102,7 +107,7 @@ module.exports.rename = (filename, variables, args) =>
     ? filename.replace('gitignore', '.gitignore')
     : filename
   )
-    .replace(/\/(aws|shared|now)\//g, '/')
+    .replace(/\/(shared|now|now\+static|mdx|static)\//g, '/')
     .replace('.inst.', '.')
 
 // runs after the package.json is created and deps are installed,
@@ -121,16 +126,16 @@ module.exports.editPackageJson = async (
     browserslist: ['cover 95% in US', 'not IE < 12', 'last 2 versions'],
     scripts: {
       build:
-        'NODE_ENV=production preact build --preload --no-sw --prerenderUrls prerender-urls.js --no-inline-css',
+        'NODE_ENV=production preact build --preload --no-sw --no-inline-css',
       dev: 'NODE_ENV=development preact watch -p 3000',
       serve: 'npm run build && npx serve@latest build',
       analyze: 'npm run build -- --analyze',
-      'check-types': 'tsc --noEmit',
+      'check-types': 'node_modules/typescript/bin/tsc --noEmit',
       lint: 'eslint . --ext .js,.ts,.tsx',
       postinstall: 'patch-package',
       test: 'jest --passWithNoTests',
       format:
-        'prettier --write "**/*.{js,jsx,html,mdx?,yml,json,babelrc,eslintrc,prettierrc}"',
+        'prettier --write "**/*.{js,jsx,ts,tsx,html,md,mdx,yml,json,babelrc,eslintrc,prettierrc}"',
       validate: 'npm run lint && npm run test -- --coverage',
     },
     husky: {
@@ -139,8 +144,8 @@ module.exports.editPackageJson = async (
       },
     },
     'lint-staged': {
-      '**/*.{js,ts,tsx}': ['eslint', 'prettier --write'],
-      '**/*.{html,mdx?,yml,json,babelrc,eslintrc,prettierrc}': [
+      '**/*.{js,jsx,ts,tsx}': ['eslint', 'prettier --write'],
+      '**/*.{html,md,mdx,yml,json,babelrc,eslintrc,prettierrc}': [
         'prettier --write',
       ],
     },
@@ -148,6 +153,11 @@ module.exports.editPackageJson = async (
     author: packageJson.author,
     license: packageJson.license,
     ...packageJson,
+  }
+
+  if (args.static) {
+    packageJson.scripts.build =
+      'NODE_ENV=production preact build --preload --no-sw --prerenderUrls prerender-urls.js --no-inline-css'
   }
 
   if (args.now) {

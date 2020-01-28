@@ -3,8 +3,8 @@ module.exports = () => [
     title: 'Home',
     url: '/',
   },
-  {
-    title: 'Blog',
-    url: '/blog',
-  },
+  // {
+  //   title: 'Blog',
+  //   url: '/blog',
+  // },
 ]
