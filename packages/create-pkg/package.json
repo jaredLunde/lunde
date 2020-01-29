@@ -1,6 +1,6 @@
 {
   "name": "@lunde/create-pkg",
-  "version": "1.0.85",
+  "version": "1.0.86",
   "main": "index.js",
   "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
   "license": "MIT",
