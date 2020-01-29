@@ -133,7 +133,7 @@ export interface ButtonLinkProps extends ButtonProps, LinkProps {}
 export const ButtonLink: FC<ButtonLinkProps> = forwardRef<
   HTMLElement,
   ButtonLinkProps
->(({sx, ...props}, ref: HTMLAnchorElement) =>
+>(({sx, ...props}, ref: any) =>
   h(
     Link,
     Object.assign(props, {

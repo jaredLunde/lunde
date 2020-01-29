@@ -6,8 +6,8 @@ import clsx from 'clsx'
 import {
   Link as AsyncLink,
   NavLink as AsyncNavLink,
-  AsyncLinkProps,
-  AsyncNavLinkProps,
+  LinkProps as AsyncLinkProps,
+  NavLinkProps as AsyncNavLinkProps,
 } from 'create-async-route'
 import {Variants} from '../types'
 import {styles} from '../styles'
@@ -25,7 +25,7 @@ export const link: Style = styles({
   `,
   secondary: ({font}) => css`
     color: ${font.color.important};
-    font-weight: 700;import { AsyncRouteType } from './AsyncRoute';
+    font-weight: 700;
 
     border-bottom: 1px solid currentColor;
   `,
@@ -38,7 +38,7 @@ export interface LinkProps extends AsyncLinkProps {
 }
 
 export const Link: FC<LinkProps> = forwardRef<any, Props<LinkProps>>(
-  ({sx, ...props}, ref: HTMLAnchorElement) =>
+  ({sx, ...props}, ref: any) =>
     h(
       AsyncLink,
       Object.assign(props, {
@@ -58,7 +58,7 @@ export interface NavLinkProps extends AsyncNavLinkProps {
 }
 
 export const NavLink: FC<NavLinkProps> = forwardRef<any, Props<NavLinkProps>>(
-  ({sx, ...props}, ref: HTMLAnchorElement) =>
+  ({sx, ...props}, ref: any) =>
     h(
       AsyncNavLink,
       Object.assign(props, {
