@@ -72,7 +72,7 @@ module.exports.rename = (filename, variables, args) =>
     ? filename.replace('gitignore', '.gitignore')
     : filename
   )
-    .replace(/(\/shared|typed|untyped\/)/, '/')
+    .replace(/(\/(shared|typed|untyped)\/)/, '/')
     .replace('.inst.', '.')
 
 module.exports.getDefaultVariables = async (variables, args, {name}) => {
