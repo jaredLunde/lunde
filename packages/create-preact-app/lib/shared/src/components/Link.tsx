@@ -1,17 +1,16 @@
 import {h} from 'preact'
 import {forwardRef} from 'preact/compat'
-import {
-  Link as LinkBase,
-  NavLink as NavLinkBase,
-  LinkProps as RouterLinkProps,
-  NavLinkProps as RouterNavLinkProps,
-} from 'react-router-dom'
 import {Style} from '@-ui/react'
 import css from 'minify-css.macro'
 import clsx from 'clsx'
+import {
+  Link as AsyncLink,
+  NavLink as AsyncNavLink,
+  AsyncLinkProps,
+  AsyncNavLinkProps,
+} from 'create-async-route'
 import {Variants} from '../types'
 import {styles} from '../styles'
-import {AsyncRouteType} from './AsyncRoute'
 
 export const link: Style = styles({
   default: ({color, font}) => css`
@@ -33,51 +32,41 @@ export const link: Style = styles({
 })
 
 // @ts-ignore
-export interface LinkProps extends RouterLinkProps {
+export interface LinkProps extends AsyncLinkProps {
   sx?: Variants<typeof link.styles>
   className?: string | string[]
-  preload?: AsyncRouteType<any>
 }
 
 export const Link: FC<LinkProps> = forwardRef<any, Props<LinkProps>>(
-  ({sx, preload, onMouseEnter, ...props}, ref) =>
+  ({sx, ...props}, ref: HTMLAnchorElement) =>
     h(
-      LinkBase,
+      AsyncLink,
       Object.assign(props, {
         className: clsx(
           props.className,
           Array.isArray(sx) ? link(...sx) : link(sx)
         ),
-        onMouseEnter: e => {
-          onMouseEnter?.(e)
-          preload?.load()
-        },
         ref,
       })
     )
 )
 
 // @ts-ignore
-export interface NavLinkProps extends RouterNavLinkProps {
+export interface NavLinkProps extends AsyncNavLinkProps {
   sx?: Variants<typeof link.styles>
   className?: string | string[]
-  preload?: AsyncRouteType<any>
 }
 
 export const NavLink: FC<NavLinkProps> = forwardRef<any, Props<NavLinkProps>>(
-  ({sx, preload, onMouseEnter, ...props}, ref) =>
+  ({sx, ...props}, ref: HTMLAnchorElement) =>
     h(
-      NavLinkBase,
+      AsyncNavLink,
       Object.assign(props, {
         activeClassName: 'active',
         className: clsx(
           props.className,
           Array.isArray(sx) ? link(...sx) : link(sx)
         ),
-        onMouseEnter: e => {
-          onMouseEnter?.(e)
-          preload?.load()
-        },
         ref,
       })
     )

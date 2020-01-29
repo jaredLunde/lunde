@@ -2,12 +2,10 @@ import {h} from 'preact'
 import {forwardRef} from 'preact/compat'
 import css from 'minify-css.macro'
 import clsx from 'clsx'
-import {useHistory, LinkProps} from 'react-router-dom'
 import AccessibleButton from '@accessible/button'
-import Link from '@accessible/link'
+import {Link, LinkProps} from 'create-async-route'
 import {styles, ds, variables} from '../styles'
 import {Variants} from '../types'
-import {AsyncRouteType} from './AsyncRoute'
 
 export const button = styles<
   'default' | 'primary' | 'outline' | keyof typeof ds.bg.styles
@@ -58,7 +56,7 @@ export const button = styles<
 })
 
 export const buttonOutline = styles<
-  'default' | 'primary' | 'outline' | keyof typeof ds.bg.styles
+  'default' | 'primary' | 'outline' | keyof typeof ds.color.styles
 >({
   default: ds.mq({
     default: ({color, radius, font, gap}) => css`
@@ -106,13 +104,12 @@ export const buttonOutline = styles<
 export interface ButtonProps {
   as?: any
   sx?: Variants<typeof button.styles | typeof buttonOutline.styles>
-  color?: keyof typeof variables.color
   className?: string | string[]
   [props: string]: any
 }
 
 export const Button: FC<ButtonProps> = forwardRef<HTMLElement, ButtonProps>(
-  ({as = 'button', sx = 'primary', color = 'primary', ...props}, ref) => (
+  ({as = 'button', sx = 'primary', ...props}, ref) => (
     <AccessibleButton>
       {h(
         as,
@@ -120,11 +117,8 @@ export const Button: FC<ButtonProps> = forwardRef<HTMLElement, ButtonProps>(
           className: clsx(
             props.className,
             Array.isArray(sx)
-              ? (sx && sx.indexOf('outline') ? buttonOutline : button)(
-                  color,
-                  ...sx
-                )
-              : (sx && sx === 'outline' ? buttonOutline : button)(color, sx)
+              ? (sx && sx.indexOf('outline') ? buttonOutline : button)(...sx)
+              : (sx && sx === 'outline' ? buttonOutline : button)(sx)
           ),
           ref,
         })
@@ -134,44 +128,22 @@ export const Button: FC<ButtonProps> = forwardRef<HTMLElement, ButtonProps>(
 )
 
 // @ts-ignore
-export interface ButtonLinkProps extends ButtonProps, LinkProps {
-  to: string
-  className?: string | string[]
-  state: Record<string, any>
-  children?: JSX.Element | string | false | number | null
-  preload?: AsyncRouteType<any>
-  [name: string]: any
-}
+export interface ButtonLinkProps extends ButtonProps, LinkProps {}
 
 export const ButtonLink: FC<ButtonLinkProps> = forwardRef<
   HTMLElement,
   ButtonLinkProps
->(({to, replace = false, state, preload, onMouseEnter, ...props}, ref) => {
-  const history = useHistory()
-
-  return (
-    <Link>
-      <Button
-        as='a'
-        onMouseEnter={e => {
-          onMouseEnter?.(e)
-          preload?.load()
-        }}
-        onClick={(e: MouseEvent) => {
-          if (
-            e.ctrlKey ||
-            e.metaKey ||
-            e.altKey ||
-            e.shiftKey ||
-            e.button !== 0
-          )
-            return
-          history[replace ? 'replace' : 'push'](to, state)
-          e.preventDefault()
-        }}
-        ref={ref}
-        {...props}
-      />
-    </Link>
+>(({sx, ...props}, ref: HTMLAnchorElement) =>
+  h(
+    Link,
+    Object.assign(props, {
+      className: clsx(
+        props.className,
+        Array.isArray(sx)
+          ? (sx && sx.indexOf('outline') ? buttonOutline : button)(...sx)
+          : (sx && sx === 'outline' ? buttonOutline : button)(sx)
+      ),
+      ref,
+    })
   )
-})
+)

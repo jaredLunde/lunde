@@ -1,7 +1,7 @@
 import codeSplit from 'code-split.macro'
-import {asyncRoute} from '../components'
+import {createAsyncRoute} from 'create-async-route'
 
-export const Home = asyncRoute(codeSplit('./Home', __SERVER__))
+export const Home = createAsyncRoute(codeSplit('./Home', __SERVER__))
 
 export default {
   '/': [Home],

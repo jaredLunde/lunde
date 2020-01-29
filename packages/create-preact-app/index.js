@@ -54,6 +54,7 @@ module.exports.dependencies = (variables, args) => {
     clsx: 'latest',
     'code-split.macro': 'latest',
     'create-async-component': 'latest',
+    'create-async-route': 'latest',
     eslint: 'latest',
     'eslint-import-resolver-jest': 'latest',
     'eslint-plugin-jest': 'latest',
@@ -126,7 +127,7 @@ module.exports.editPackageJson = async (
     browserslist: ['cover 95% in US', 'not IE < 12', 'last 2 versions'],
     scripts: {
       build:
-        'NODE_ENV=production preact build --preload --no-sw --no-inline-css',
+        'NODE_ENV=production preact build --preload --no-sw --no-prerender --no-inline-css',
       dev: 'NODE_ENV=development preact watch -p 3000',
       serve: 'npm run build && npx serve@latest build',
       analyze: 'npm run build -- --analyze',

@@ -1,7 +1,6 @@
 {
   "name": "<:PKG_NAME:>",
   "version": 2,
-  "alias": ["<:PKG_NAME:>"],
   "build": {
     "env": {
       "NODE_ENV": "production",
