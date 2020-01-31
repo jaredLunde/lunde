@@ -3,8 +3,8 @@ import {forwardRef} from 'preact/compat'
 import css from 'minify-css.macro'
 import clsx from 'clsx'
 import AccessibleButton from '@accessible/button'
-import {LinkProps} from 'react-router-typed'
-import {Link} from '../router'
+import {LinkProps} from './Link'
+import {Link, RouteMap} from '../router'
 import {styles, ds} from '../styles'
 import {Variants} from '../types'
 
@@ -129,12 +129,13 @@ export const Button: FC<ButtonProps> = forwardRef<HTMLElement, ButtonProps>(
 )
 
 // @ts-ignore
-export type ButtonLinkProps = ButtonProps & LinkProps
+export type ButtonLinkProps<To extends Extract<keyof RouteMap>> = ButtonProps &
+  LinkProps<To>
 
-export const ButtonLink: FC<ButtonLinkProps> = forwardRef<
-  HTMLAnchorElement,
-  ButtonLinkProps
->(({sx, ...props}, ref: React.Ref<HTMLAnchorElement>) =>
+export const ButtonLink = <To extends Extract<keyof RouteMap, string>>({
+  sx,
+  ...props
+}: ButtonLinkProps<To>) =>
   h(
     Link,
     Object.assign(props, {
@@ -144,7 +145,5 @@ export const ButtonLink: FC<ButtonLinkProps> = forwardRef<
           ? (sx && sx.indexOf('outline') ? buttonOutline : button)(...sx)
           : (sx && sx === 'outline' ? buttonOutline : button)(sx)
       ),
-      ref,
     })
   )
-)

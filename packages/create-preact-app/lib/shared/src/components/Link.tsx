@@ -30,19 +30,17 @@ export const link: Style = styles({
   `,
 })
 
-// @ts-ignore
-export type LinkProps = AsyncLinkProps<
-  RouteMap,
-  Extract<keyof RouteMap, string>
-> & {
+export type LinkProps<
+  To extends Extract<keyof RouteMap, string>
+> = AsyncLinkProps<RouteMap, To> & {
   sx?: Variants<typeof link.styles>
   className?: string | string[]
 }
 
-export const Link: FC<LinkProps> = forwardRef<
-  HTMLAnchorElement,
-  Props<LinkProps>
->(({sx, ...props}, ref: React.Ref<HTMLAnchorElement>) =>
+export const Link = <To extends Extract<keyof RouteMap, string>>({
+  sx,
+  ...props
+}: LinkProps<To>) =>
   h(
     AsyncLink,
     Object.assign(props, {
@@ -50,24 +48,20 @@ export const Link: FC<LinkProps> = forwardRef<
         props.className,
         Array.isArray(sx) ? link(...sx) : link(sx)
       ),
-      ref,
     })
   )
-)
 
-// @ts-ignore
-export type NavLinkProps = AsyncNavLinkProps<
-  RouteMap,
-  Extract<keyof RouteMap, string>
-> & {
+export type NavLinkProps<
+  To extends Extract<keyof RouteMap, string>
+> = AsyncNavLinkProps<RouteMap, To> & {
   sx?: Variants<typeof link.styles>
   className?: string | string[]
 }
 
-export const NavLink: FC<NavLinkProps> = forwardRef<
-  HTMLAnchorElement,
-  Props<NavLinkProps>
->(({sx, ...props}, ref: React.Ref<HTMLAnchorElement>) =>
+export const NavLink = <To extends Extract<keyof RouteMap, string>>({
+  sx,
+  ...props
+}: NavLinkProps<To>) =>
   h(
     AsyncNavLink,
     Object.assign(props, {
@@ -76,7 +70,5 @@ export const NavLink: FC<NavLinkProps> = forwardRef<
         props.className,
         Array.isArray(sx) ? link(...sx) : link(sx)
       ),
-      ref,
     })
   )
-)
