@@ -74,7 +74,7 @@ module.exports.dependencies = (variables, args) => {
     'preact-render-spy': 'latest',
     'preact-render-to-string': 'latest',
     prettier: 'latest',
-    'react-router-dom': 'latest',
+    'react-router-typed': 'latest',
     'ts-loader': 'latest',
     typescript: 'latest',
   }

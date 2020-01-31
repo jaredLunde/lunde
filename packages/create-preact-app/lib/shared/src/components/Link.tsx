@@ -4,11 +4,10 @@ import {Style} from '@-ui/react'
 import css from 'minify-css.macro'
 import clsx from 'clsx'
 import {
-  Link as AsyncLink,
-  NavLink as AsyncNavLink,
   LinkProps as AsyncLinkProps,
   NavLinkProps as AsyncNavLinkProps,
-} from 'create-async-route'
+} from 'react-router-typed'
+import {Link as AsyncLink, NavLink as AsyncNavLink, RouteMap} from '../router'
 import {Variants} from '../types'
 import {styles} from '../styles'
 
@@ -32,42 +31,52 @@ export const link: Style = styles({
 })
 
 // @ts-ignore
-export interface LinkProps extends AsyncLinkProps {
+export type LinkProps = AsyncLinkProps<
+  RouteMap,
+  Extract<keyof RouteMap, string>
+> & {
   sx?: Variants<typeof link.styles>
   className?: string | string[]
 }
 
-export const Link: FC<LinkProps> = forwardRef<any, Props<LinkProps>>(
-  ({sx, ...props}, ref: any) =>
-    h(
-      AsyncLink,
-      Object.assign(props, {
-        className: clsx(
-          props.className,
-          Array.isArray(sx) ? link(...sx) : link(sx)
-        ),
-        ref,
-      })
-    )
+export const Link: FC<LinkProps> = forwardRef<
+  HTMLAnchorElement,
+  Props<LinkProps>
+>(({sx, ...props}, ref: React.Ref<HTMLAnchorElement>) =>
+  h(
+    AsyncLink,
+    Object.assign(props, {
+      className: clsx(
+        props.className,
+        Array.isArray(sx) ? link(...sx) : link(sx)
+      ),
+      ref,
+    })
+  )
 )
 
 // @ts-ignore
-export interface NavLinkProps extends AsyncNavLinkProps {
+export type NavLinkProps = AsyncNavLinkProps<
+  RouteMap,
+  Extract<keyof RouteMap, string>
+> & {
   sx?: Variants<typeof link.styles>
   className?: string | string[]
 }
 
-export const NavLink: FC<NavLinkProps> = forwardRef<any, Props<NavLinkProps>>(
-  ({sx, ...props}, ref: any) =>
-    h(
-      AsyncNavLink,
-      Object.assign(props, {
-        activeClassName: 'active',
-        className: clsx(
-          props.className,
-          Array.isArray(sx) ? link(...sx) : link(sx)
-        ),
-        ref,
-      })
-    )
+export const NavLink: FC<NavLinkProps> = forwardRef<
+  HTMLAnchorElement,
+  Props<NavLinkProps>
+>(({sx, ...props}, ref: React.Ref<HTMLAnchorElement>) =>
+  h(
+    AsyncNavLink,
+    Object.assign(props, {
+      activeClassName: 'active',
+      className: clsx(
+        props.className,
+        Array.isArray(sx) ? link(...sx) : link(sx)
+      ),
+      ref,
+    })
+  )
 )

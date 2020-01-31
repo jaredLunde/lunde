@@ -3,8 +3,9 @@ import {forwardRef} from 'preact/compat'
 import css from 'minify-css.macro'
 import clsx from 'clsx'
 import AccessibleButton from '@accessible/button'
-import {Link, LinkProps} from 'create-async-route'
-import {styles, ds, variables} from '../styles'
+import {LinkProps} from 'react-router-typed'
+import {Link} from '../router'
+import {styles, ds} from '../styles'
 import {Variants} from '../types'
 
 export const button = styles<
@@ -128,12 +129,12 @@ export const Button: FC<ButtonProps> = forwardRef<HTMLElement, ButtonProps>(
 )
 
 // @ts-ignore
-export interface ButtonLinkProps extends ButtonProps, LinkProps {}
+export type ButtonLinkProps = ButtonProps & LinkProps
 
 export const ButtonLink: FC<ButtonLinkProps> = forwardRef<
-  HTMLElement,
+  HTMLAnchorElement,
   ButtonLinkProps
->(({sx, ...props}, ref: any) =>
+>(({sx, ...props}, ref: React.Ref<HTMLAnchorElement>) =>
   h(
     Link,
     Object.assign(props, {

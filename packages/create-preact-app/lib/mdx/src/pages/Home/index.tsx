@@ -6,7 +6,7 @@ const Home = () => (
   <Hero>
     <Text sx='heading'>Home</Text>
     <p>This is the Home component.</p>
-    <Link to='/blog' preload={Blog}>
+    <Link to='blog' preload={Blog}>
       Blog
     </Link>
   </Hero>

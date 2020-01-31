@@ -4,5 +4,5 @@ import {createAsyncRoute} from 'create-async-route'
 export const Home = createAsyncRoute(codeSplit('./Home', __SERVER__))
 
 export default {
-  '/': [Home],
+  home: [Home],
 }

@@ -16,7 +16,7 @@ export default () => {
   return (
     <div className={blog()}>
       <div className={blogHeader()}>
-        <Link to='/' preload={Home}>
+        <Link to='home' preload={Home}>
           &larr; Home
         </Link>
       </div>
