@@ -1,4 +1,4 @@
-import {h, cloneElement} from 'preact'
+import {h} from 'preact'
 import {Styles} from '@-ui/react'
 import {BodyUsingKeyboard} from '@accessible/using-keyboard'
 import {Provider as PrerenderProvider} from '@preact/prerender-data-provider'

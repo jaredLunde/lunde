@@ -5,7 +5,7 @@ import dashGrid, {Grid12} from '@-ui/grid'
 import {gap as dashGap, pad as dashPad} from '@-ui/spacing'
 import css from 'minify-css.macro'
 
-export const variables: AppVariables = {
+export const variables = {
   contentWidth: '960px',
   color: {
     primary: '#0070F3',
@@ -17,14 +17,14 @@ export const variables: AppVariables = {
   font: {
     family: {
       brand:
-        '"Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+        ' -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
       system:
         '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
     },
     size: {},
     color: {
-      important: '#2D333A',
-      primary: '#33464d',
+      important: '#F8F9FC',
+      primary: '#B8BAB8',
     },
   },
   radius: {
@@ -43,7 +43,7 @@ export const variables: AppVariables = {
   },
   pad: {
     xs: `0.2rem`,
-    sm: `0.rem`,
+    sm: `0.5rem`,
     md: `1rem`,
     lg: `2rem`,
     xl: `4rem`,
@@ -73,86 +73,12 @@ export const styles = dashStyles.create({
 })
 
 //
-// CSS scales/themes/variables
-export type AppShared = {
-  font: {
-    family: {
-      brand: '"Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
-      system: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
-    }
-    size: {}
-    color: {
-      important: '#2D333A'
-      primary: '#33464d'
-    }
-  }
-  radius: {
-    sm: '4px'
-    md: '8px'
-    lg: '16px'
-    max: '1000px'
-  }
-  shadow: {
-    xs: `0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)`
-    sm: `0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) `
-    md: `0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)`
-    lg: `0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)`
-    xl: `0 25px 50px -12px rgba(0, 0, 0, 0.25)`
-    inner: `inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)`
-  }
-  pad: {
-    xs: `0.2rem`
-    sm: `0.rem`
-    md: `1rem`
-    lg: `2rem`
-    xl: `4rem`
-  }
-  gap: {
-    xxs: `0.0625rem`
-    xs: `0.125rem`
-    sm: `0.25rem`
-    md: `0.5rem`
-    lg: `1rem`
-    xl: `2rem`
-    xxl: `4rem`
-  }
-}
-
-export type AppLight = {
-  contentWidth: '960px'
-  color: {
-    primary: '#0070F3'
-    green: '#6ADAAB'
-    red: '#D96269'
-    yellow: '#F2E399'
-    white: '#F8F9FC'
-  }
-}
-
-export type AppDark = {
-  color: {}
-}
-
-export type AppVariables = AppLight & AppDark & AppShared
-
-//
 // Grid
 export const grid = dashGrid<Grid12>(styles, 12)
 
 //
 // Breakpoints and media queries
-export type MediaQueries = {
-  // 0px
-  phone: 'only screen and (min-width: 0em)'
-  // 560px
-  tablet: 'only screen and (min-width: 35em)'
-  // 1280px
-  desktop: 'only screen and (min-width: 80em)'
-  'hi-dpi': string
-  hover: '(hover: hover)'
-}
-
-export const mq = dashMq<keyof MediaQueries, AppVariables>({
+export const mq = dashMq({
   // 0px
   phone: 'only screen and (min-width: 0em)',
   // 560px
@@ -175,7 +101,7 @@ export const gap = dashGap(styles, variables.gap)
 export const pad = dashPad(styles, variables.pad)
 
 // Coloring
-export const bg = styles<keyof AppVariables['color']>(
+export const bg = styles<keyof typeof variables.color>(
   Object.keys(variables.color).reduce((prev, key) => {
     prev[key] = ({color}) =>
       css`
@@ -185,7 +111,7 @@ export const bg = styles<keyof AppVariables['color']>(
   }, {})
 )
 
-export const color = styles<keyof AppVariables['color']>(
+export const color = styles<keyof typeof variables.color>(
   Object.keys(variables.color).reduce((prev, key) => {
     prev[key] = ({color}) =>
       css`
@@ -197,11 +123,12 @@ export const color = styles<keyof AppVariables['color']>(
 
 // Typography
 export const font = styles({
-  heading: ({font}) => css`
+  heading: ({font, gap}) => css`
     font-family: ${font.family.brand};
-    font-weight: 400;
+    font-weight: 900;
     font-size: 2rem;
     letter-spacing: -0.0275em;
+    margin-bottom: ${gap.md};
     color: ${font.color.important};
   `,
   heroHeading: mq({
@@ -223,6 +150,7 @@ export const font = styles({
       font-weight: 400;
       font-size: 1.25rem;
       letter-spacing: -0.0125em;
+      line-height: 1.125;
       color: ${font.color.primary};
     `,
     tablet: css`
