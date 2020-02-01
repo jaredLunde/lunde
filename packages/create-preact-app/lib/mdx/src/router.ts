@@ -1,4 +1,5 @@
 import createRouter from 'react-router-typed'
+import {posts} from './pages/Blog'
 
 export type RouteMap = {
   home: {
@@ -7,14 +8,12 @@ export type RouteMap = {
   }
   blog: {
     path: '/blog'
-    params: {
-      id: 0
-    }
+    params: null
   }
   'blog/post': {
     path: '/blog/:slug'
     params: {
-      slug: string
+      slug: keyof typeof posts
     }
   }
 }
