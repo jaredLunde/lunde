@@ -3,7 +3,7 @@ import {forwardRef} from 'preact/compat'
 import css from 'minify-css.macro'
 import clsx from 'clsx'
 import AccessibleButton from '@accessible/button'
-import {LinkProps} from './Link'
+import {LinkProps} from 'react-router-typed'
 import {Link, RouteMap} from '../router'
 import {styles, ds} from '../styles'
 import {Variants} from '../types'
@@ -118,7 +118,9 @@ export const Button: FC<ButtonProps> = forwardRef<HTMLElement, ButtonProps>(
           className: clsx(
             props.className,
             Array.isArray(sx)
-              ? (sx && sx.indexOf('outline') ? buttonOutline : button)(...sx)
+              ? (sx && sx.indexOf('outline') > -1 ? buttonOutline : button)(
+                  ...sx
+                )
               : (sx && sx === 'outline' ? buttonOutline : button)(sx)
           ),
           ref,
@@ -129,11 +131,14 @@ export const Button: FC<ButtonProps> = forwardRef<HTMLElement, ButtonProps>(
 )
 
 // @ts-ignore
-export type ButtonLinkProps<To extends Extract<keyof RouteMap>> = ButtonProps &
-  LinkProps<To>
+export type ButtonLinkProps<To extends Extract<keyof RouteMap>> = LinkProps<
+  To
+> &
+  ButtonProps
 
 export const ButtonLink = <To extends Extract<keyof RouteMap, string>>({
   sx,
+  innerRef,
   ...props
 }: ButtonLinkProps<To>) =>
   h(
@@ -142,8 +147,9 @@ export const ButtonLink = <To extends Extract<keyof RouteMap, string>>({
       className: clsx(
         props.className,
         Array.isArray(sx)
-          ? (sx && sx.indexOf('outline') ? buttonOutline : button)(...sx)
+          ? (sx && sx.indexOf('outline') > -1 ? buttonOutline : button)(...sx)
           : (sx && sx === 'outline' ? buttonOutline : button)(sx)
       ),
+      innerRef,
     })
   )
