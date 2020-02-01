@@ -10,7 +10,7 @@ export type RouteTypes = {
     path: '/blog'
     params: null
   }
-  'blog/post': {
+  'blog.post': {
     path: '/blog/:slug'
     params: {
       slug: keyof typeof posts
@@ -21,7 +21,7 @@ export type RouteTypes = {
 const router = createRouter<RouteTypes>({
   home: '/',
   blog: '/blog',
-  'blog/post': '/blog/:slug',
+  'blog.post': '/blog/:slug',
 })
 
 export const {
