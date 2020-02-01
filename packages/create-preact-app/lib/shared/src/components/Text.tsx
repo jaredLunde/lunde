@@ -10,9 +10,9 @@ export const text = styles<
 >({
   ...ds.font.styles,
   ...Object.keys(variables.font.color).reduce((prev, key) => {
-    prev[key] = ({color}) =>
+    prev[key] = ({font}) =>
       css`
-        color: ${color[key]};
+        color: ${font.color[key]}!important;
       `
     return prev
   }, {}),
