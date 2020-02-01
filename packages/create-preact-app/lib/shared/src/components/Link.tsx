@@ -1,5 +1,4 @@
 import {h} from 'preact'
-import {forwardRef} from 'preact/compat'
 import {Style} from '@-ui/react'
 import css from 'minify-css.macro'
 import clsx from 'clsx'

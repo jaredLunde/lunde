@@ -1,4 +1,4 @@
-import {h} from 'preact'
+import {h, cloneElement} from 'preact'
 import {Styles} from '@-ui/react'
 import {BodyUsingKeyboard} from '@accessible/using-keyboard'
 import {Provider as PrerenderProvider} from '@preact/prerender-data-provider'
@@ -37,11 +37,7 @@ const App = (props: any) => {
         </noscript>
 
         <Router location={props.CLI_DATA.preRenderData.url}>
-          <Switch>
-            {Object.keys(pages).map((to, i) =>
-              h(pages[to][0], {to, key: to, ...pages[to][1]})
-            )}
-          </Switch>
+          <Switch>{pages}</Switch>
         </Router>
       </DesignSystem>
     </PrerenderProvider>
