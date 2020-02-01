@@ -130,14 +130,12 @@ export const Button: FC<ButtonProps> = forwardRef<HTMLElement, ButtonProps>(
   )
 )
 
-// @ts-ignore
-export type ButtonLinkProps<To extends Extract<keyof RouteMap>> = LinkProps<
-  To
-> &
-  ButtonProps
+export type ButtonLinkProps<
+  To extends Extract<keyof RouteMap, string>
+> = LinkProps<RouteMap, To> & ButtonProps
 
 export const ButtonLink = <To extends Extract<keyof RouteMap, string>>({
-  sx,
+  sx = 'primary',
   innerRef,
   ...props
 }: ButtonLinkProps<To>) =>
