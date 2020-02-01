@@ -17,14 +17,14 @@ export const variables = {
   font: {
     family: {
       brand:
-        ' -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+        'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
       system:
-        '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+        'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
     },
     size: {},
     color: {
-      important: '#1a1a1a',
-      primary: '#444444',
+      important: '#000',
+      primary: '#B8BAB8',
     },
   },
   radius: {
@@ -78,7 +78,10 @@ export const grid = dashGrid<Grid12>(styles, 12)
 
 //
 // Breakpoints and media queries
-export const mq = dashMq({
+export const mq = dashMq<
+  'phone' | 'tablet' | 'desktop' | 'hi-dpi' | 'hover',
+  typeof variables
+>({
   // 0px
   phone: 'only screen and (min-width: 0em)',
   // 560px
@@ -115,7 +118,7 @@ export const color = styles<keyof typeof variables.color>(
   Object.keys(variables.color).reduce((prev, key) => {
     prev[key] = ({color}) =>
       css`
-        color: ${color[key]};
+        color: ${color[key]}!important;
       `
     return prev
   }, {})
@@ -126,7 +129,7 @@ export const font = styles({
   heading: ({font, gap}) => css`
     font-family: ${font.family.brand};
     font-weight: 900;
-    font-size: 2rem;
+    font-size: 1rem;
     letter-spacing: -0.0275em;
     margin-bottom: ${gap.md};
     color: ${font.color.important};
@@ -136,12 +139,16 @@ export const font = styles({
       font-family: ${font.family.brand};
       font-weight: 900;
       letter-spacing: -0.0275em;
-      font-size: 2.25rem;
+      font-size: 2.67rem;
+      line-height: 1.1;
       color: ${font.color.important};
       margin-bottom: ${gap.sm};
     `,
     tablet: css`
-      font-size: 4rem;
+      font-size: 6rem;
+    `,
+    desktop: css`
+      font-size: 8rem;
     `,
   }),
   headingSm: mq({
@@ -173,9 +180,6 @@ export const font = styles({
   `,
 })
 
-// Resets the browser styles that are annoying
-styles.global(reset)
-
 // Design system group to avoid css variable/system name collisions
 // in CSS callbacks
 export const ds = {
@@ -188,6 +192,9 @@ export const ds = {
   color,
   styles,
 }
+
+// Resets the browser styles that are annoying
+styles.global(reset)
 
 //
 // Creates global styles
