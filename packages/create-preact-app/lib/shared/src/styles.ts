@@ -23,8 +23,8 @@ export const variables = {
     },
     size: {},
     color: {
-      important: '#F8F9FC',
-      primary: '#B8BAB8',
+      important: '#1a1a1a',
+      primary: '#444444',
     },
   },
   radius: {
