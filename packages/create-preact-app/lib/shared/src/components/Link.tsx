@@ -6,7 +6,7 @@ import {
   LinkProps as AsyncLinkProps,
   NavLinkProps as AsyncNavLinkProps,
 } from 'react-router-typed'
-import {Link as AsyncLink, NavLink as AsyncNavLink, RouteMap} from '../router'
+import {Link as AsyncLink, NavLink as AsyncNavLink, RouteTypes} from '../router'
 import {Variants} from '../types'
 import {styles} from '../styles'
 
@@ -30,13 +30,13 @@ export const link: Style = styles({
 })
 
 export type LinkProps<
-  To extends Extract<keyof RouteMap, string>
-> = AsyncLinkProps<RouteMap, To> & {
+  To extends Extract<keyof RouteTypes, string>
+> = AsyncLinkProps<RouteTypes, To> & {
   sx?: Variants<typeof link.styles>
   className?: string | string[]
 }
 
-export const Link = <To extends Extract<keyof RouteMap, string>>({
+export const Link = <To extends Extract<keyof RouteTypes, string>>({
   sx,
   ...props
 }: LinkProps<To>) =>
@@ -51,13 +51,13 @@ export const Link = <To extends Extract<keyof RouteMap, string>>({
   )
 
 export type NavLinkProps<
-  To extends Extract<keyof RouteMap, string>
-> = AsyncNavLinkProps<RouteMap, To> & {
+  To extends Extract<keyof RouteTypes, string>
+> = AsyncNavLinkProps<RouteTypes, To> & {
   sx?: Variants<typeof link.styles>
   className?: string | string[]
 }
 
-export const NavLink = <To extends Extract<keyof RouteMap, string>>({
+export const NavLink = <To extends Extract<keyof RouteTypes, string>>({
   sx,
   ...props
 }: NavLinkProps<To>) =>

@@ -4,7 +4,7 @@ import css from 'minify-css.macro'
 import clsx from 'clsx'
 import AccessibleButton from '@accessible/button'
 import {LinkProps} from 'react-router-typed'
-import {Link, RouteMap} from '../router'
+import {Link, RouteTypes} from '../router'
 import {styles, ds} from '../styles'
 import {Variants} from '../types'
 
@@ -131,10 +131,10 @@ export const Button: FC<ButtonProps> = forwardRef<HTMLElement, ButtonProps>(
 )
 
 export type ButtonLinkProps<
-  To extends Extract<keyof RouteMap, string>
-> = LinkProps<RouteMap, To> & ButtonProps
+  To extends Extract<keyof RouteTypes, string>
+> = LinkProps<RouteTypes, To> & ButtonProps
 
-export const ButtonLink = <To extends Extract<keyof RouteMap, string>>({
+export const ButtonLink = <To extends Extract<keyof RouteTypes, string>>({
   sx = 'primary',
   innerRef,
   ...props

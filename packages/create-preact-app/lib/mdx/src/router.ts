@@ -1,7 +1,7 @@
 import createRouter from 'react-router-typed'
 import {posts} from './pages/Blog'
 
-export type RouteMap = {
+export type RouteTypes = {
   home: {
     path: '/'
     params: null
@@ -18,7 +18,7 @@ export type RouteMap = {
   }
 }
 
-const router = createRouter<RouteMap>({
+const router = createRouter<RouteTypes>({
   home: '/',
   blog: '/blog',
   'blog/post': '/blog/:slug',

@@ -1,13 +1,13 @@
 import createRouter from 'react-router-typed'
 
-export type RouteMap = {
+export type RouteTypes = {
   home: {
     path: '/'
     params: null
   }
 }
 
-const router = createRouter<RouteMap>({
+const router = createRouter<RouteTypes>({
   home: '/',
 })
 
