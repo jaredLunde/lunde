@@ -21,7 +21,7 @@ below.
 ```yaml
 # serverless.yml
 plugins:
-  - @stellar-apps/serverless-dotenv
+  - '@lunde/serverless-dotenv'
 
 custom:
   dotenv:
