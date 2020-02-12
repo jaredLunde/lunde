@@ -52,7 +52,7 @@ Excludes all environment variables that start with `SERVERLESS` from all functio
 ```yaml
 # serverless.yml
 plugins:
-  - @stellar-apps/serverless-dotenv
+  - @lunde/serverless-dotenv
 
 custom:
   dotenv:
@@ -65,7 +65,7 @@ Excludes all environment variables that start with `SERVERLESS` from the `main` 
 ```yaml
 # serverless.yml
 plugins:
-  - @stellar-apps/serverless-dotenv
+  - @lunde/serverless-dotenv
 
 custom:
   dotenv:
@@ -81,7 +81,7 @@ Includes all environment variables that start with `APP` in all functions
 ```yaml
 # serverless.yml
 plugins:
-  - @stellar-apps/serverless-dotenv
+  - @lunde/serverless-dotenv
 
 custom:
   dotenv:
@@ -94,7 +94,7 @@ Includes all environment variables that start with `APP` in the `main` function
 ```yaml
 # serverless.yml
 plugins:
-  - @stellar-apps/serverless-dotenv
+  - @lunde/serverless-dotenv
 
 custom:
   dotenv:
@@ -108,7 +108,7 @@ custom:
 ```yaml
 # serverless.yml
 plugins:
-  - @stellar-apps/serverless-dotenv
+  - @lunde/serverless-dotenv
 
 functions:
   main:
