@@ -45,11 +45,11 @@ create-react-pkg my-pkg --ts
 
 Builds types (if `--ts`), commonjs, and ECMAScript distributions
 
-### `build:cjs`
+### `build:main`
 
 Builds the commonjs distribution
 
-### `build:es`
+### `build:module`
 
 Builds the ECMAScript distribution
 
@@ -93,13 +93,13 @@ Runs `lint-staged` and the `build:types` script
 
 Used for calling commands on git staged files that match a glob pattern
 
-### `src/**/*.{js,jsx,ts,tsx}`
+### `**/*.{ts,tsx,js,jsx}`
 
-Calls `eslint` and `pretty-quick --staged` to lint and format the staged files
+Calls `eslint` and `prettier --write` to lint and format the staged files
 
-### `**/*.{md,yml}`
+### `**/*.{md,yml,json,eslintrc,prettierrc}`
 
-Calls `pretty-quick --staged` to format the staged files
+Calls `prettier --write` to format the staged files
 
 ## LICENSE
 

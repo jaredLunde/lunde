@@ -35,7 +35,6 @@ module.exports.devDependencies = (variables, args) => {
     jest: 'latest',
     'babel-eslint': 'latest',
     'babel-plugin-optimize-react': 'latest',
-    'cross-env': 'latest',
     eslint: 'latest',
     'eslint-import-resolver-jest': 'latest',
     'eslint-plugin-react': 'latest',
@@ -47,7 +46,6 @@ module.exports.devDependencies = (variables, args) => {
     react: 'latest',
     'react-dom': 'latest',
     'react-test-renderer': 'latest',
-    rimraf: '^2.6.3',
   }
 
   if (args.ts) {
@@ -123,23 +121,23 @@ module.exports.editPackageJson = async function editPackageJson(
       'react component',
       variables.PKG_NAME.replace(/-/g, ' '),
     ],
-    main: 'dist/cjs/index.js',
-    module: 'dist/es/index.js',
-    // types: 'types/index.d.ts',
-    // files: ['/dist', '/types'],
-    files: ['/dist'],
+    main: 'dist/main/index.js',
+    module: 'dist/module/index.js',
+    types: 'types/index.d.ts',
+    files: ['/dist', '/types'],
     sideEffects: false,
     scripts: {
-      build: 'npm run build:cjs && npm run build:es && npm run build:types',
-      'build:cjs':
-        'babel src -d dist/cjs -x .ts,.tsx --ignore "**/*.test.ts","**/test.ts","**/*.test.tsx","**/test.tsx" --delete-dir-on-start',
-      'build:es':
-        'cross-env BABEL_ENV=es babel src -d dist/es -x .ts,.tsx --ignore "**/*.test.ts","**/test.ts","**/*.test.tsx","**/test.tsx" --delete-dir-on-start',
+      build:
+        'npm run build:main && npm run build:module && npm run build:types',
+      'build:main':
+        'babel src -d dist/main -x .ts,.tsx --env-name main --ignore "**/*.test.ts","**/test.ts","**/*.test.tsx","**/test.tsx" --delete-dir-on-start',
+      'build:module':
+        'babel src -d dist/module -x .ts,.tsx --env-name module --ignore "**/*.test.ts","**/test.ts","**/*.test.tsx","**/test.tsx" --delete-dir-on-start',
       'build:types':
-        'tsc -p tsconfig.json -d --outDir dist/es --emitDeclarationOnly && mkdir -p dist/cjs && cp -R dist/es/**.d.ts dist/cjs && rimraf dist/**/*.test.d.ts',
+        'tsc -p tsconfig.json -d --outDir types --emitDeclarationOnly',
       'check-types': 'tsc --noEmit -p tsconfig.json',
       format:
-        'prettier --write "**/*.{ts,tsx,js,jsx,md,yml,json,babelrc,eslintrc,prettierrc}"',
+        'prettier --write "**/*.{ts,tsx,js,jsx,md,yml,json,eslintrc,prettierrc}"',
       lint: 'eslint . --ext .ts,.tsx',
       prepublishOnly:
         'npm run lint && npm run test && npm run build && npm run format',
@@ -154,7 +152,7 @@ module.exports.editPackageJson = async function editPackageJson(
     },
     'lint-staged': {
       '**/*.{ts,tsx,js,jsx}': ['eslint', 'prettier --write'],
-      '**/*.{md,yml,json,babelrc,eslintrc,prettierrc}': ['prettier --write'],
+      '**/*.{md,yml,json,eslintrc,prettierrc}': ['prettier --write'],
     },
     ...packageJson,
   }
@@ -164,19 +162,19 @@ module.exports.editPackageJson = async function editPackageJson(
     delete pkg.types
     delete pkg.scripts['build:types']
     delete pkg.scripts['check-types']
-    pkg.scripts.build = 'npm run build:cjs && npm run build:es'
-    pkg.scripts['build:cjs'] =
-      'babel src -d dist/cjs -x .js --ignore "**/*.test.js","**/test.js" --delete-dir-on-start'
-    pkg.scripts['build:es'] =
-      'cross-env BABEL_ENV=es babel src -d dist/es -x .js --ignore "**/*.test.js","**/test.js" --delete-dir-on-start'
+    pkg.scripts.build = 'npm run build:main && npm run build:module'
+    pkg.scripts['build:main'] =
+      'babel src -d dist/main -x .js --env-name main --ignore "**/*.test.js","**/test.js" --delete-dir-on-start'
+    pkg.scripts['build:module'] =
+      'babel src -d dist/module -x .js --env-name module --ignore "**/*.test.js","**/test.js" --delete-dir-on-start'
     pkg.scripts.lint = 'eslint .'
     pkg.scripts.format =
-      'prettier --write "**/*.{js,jsx,md,yml,json,babelrc,eslintrc,prettierrc}"'
+      'prettier --write "**/*.{js,jsx,md,yml,json,eslintrc,prettierrc}"'
     pkg.scripts.validate = 'npm run lint && npm run test -- --coverage'
     pkg.husky.hooks['pre-commit'] = 'lint-staged'
     pkg['lint-staged'] = {
       '**/*.{js,jsx}': ['eslint', 'prettier --write'],
-      '**/*.{md,yml,json,babelrc,eslintrc,prettierrc}': ['prettier --write'],
+      '**/*.{md,yml,json,eslintrc,prettierrc}': ['prettier --write'],
     }
   }
 

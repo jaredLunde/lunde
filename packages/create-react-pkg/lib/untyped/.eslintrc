@@ -13,17 +13,15 @@
     "plugin:react/recommended",
     "plugin:jest/recommended"
   ],
-  "plugins": [
-    "jest",
-    "react",
-    "react-hooks"
-  ],
+  "plugins": ["jest", "react", "react-hooks"],
   "rules": {
     "no-console": "off",
     "no-prototype-builtins": "off",
     "react/no-children-prop": "off",
     "react/display-name": "off",
-    "react/prop-types": [2, {"ignore": ["children"]}]
+    "react/prop-types": [2, {"ignore": ["children"]}],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   },
   "settings": {
     "react": {
