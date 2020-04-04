@@ -128,12 +128,12 @@ module.exports.editPackageJson = async function editPackageJson(
     sideEffects: false,
     scripts: {
       build:
-        'npm run build:main && npm run build:module && npm run build:types',
-      'build:main':
+        'npm run build-main && npm run build-module && npm run build-types',
+      'build-main':
         'babel src -d dist/main -x .ts,.tsx --env-name main --ignore "**/*.test.ts","**/test.ts","**/*.test.tsx","**/test.tsx" --delete-dir-on-start',
-      'build:module':
+      'build-module':
         'babel src -d dist/module -x .ts,.tsx --env-name module --ignore "**/*.test.ts","**/test.ts","**/*.test.tsx","**/test.tsx" --delete-dir-on-start',
-      'build:types':
+      'build-types':
         'tsc -p tsconfig.json -d --outDir types --emitDeclarationOnly',
       'check-types': 'tsc --noEmit -p tsconfig.json',
       format:
@@ -147,7 +147,7 @@ module.exports.editPackageJson = async function editPackageJson(
     },
     husky: {
       hooks: {
-        'pre-commit': 'lint-staged && npm run build:types',
+        'pre-commit': 'lint-staged && npm run build-types && git add types',
       },
     },
     'lint-staged': {
@@ -160,12 +160,12 @@ module.exports.editPackageJson = async function editPackageJson(
   if (!args.ts) {
     pkg.files = ['/dist']
     delete pkg.types
-    delete pkg.scripts['build:types']
+    delete pkg.scripts['build-types']
     delete pkg.scripts['check-types']
-    pkg.scripts.build = 'npm run build:main && npm run build:module'
-    pkg.scripts['build:main'] =
+    pkg.scripts.build = 'npm run build-main && npm run build-module'
+    pkg.scripts['build-main'] =
       'babel src -d dist/main -x .js --env-name main --ignore "**/*.test.js","**/test.js" --delete-dir-on-start'
-    pkg.scripts['build:module'] =
+    pkg.scripts['build-module'] =
       'babel src -d dist/module -x .js --env-name module --ignore "**/*.test.js","**/test.js" --delete-dir-on-start'
     pkg.scripts.lint = 'eslint .'
     pkg.scripts.format =

@@ -45,11 +45,11 @@ create-react-pkg my-pkg --ts
 
 Builds types (if `--ts`), commonjs, and ECMAScript distributions
 
-### `build:main`
+### `build-main`
 
 Builds the commonjs distribution
 
-### `build:module`
+### `build-module`
 
 Builds the ECMAScript distribution
 
@@ -75,7 +75,7 @@ Runs `check-types` (if `--ts`), `lint`, `test`, and `format` scripts
 
 ## 🚨 TypeScript-specific scripts
 
-### `build:types`
+### `build-types`
 
 Builds the TypeScript type definitions
 
@@ -87,7 +87,7 @@ Runs a type check on the project using the local `tsconfig.json`
 
 ### `pre-commit`
 
-Runs `lint-staged` and the `build:types` script
+Runs `lint-staged` and the `build-types` script
 
 ## 💨 Lint staged
 
