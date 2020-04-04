@@ -125,7 +125,7 @@ module.exports.editPackageJson = async function editPackageJson(
     },
     husky: {
       hooks: {
-        'pre-commit': 'lint-staged && npm run build-types && git add types',
+        'pre-commit': 'npm run build-types && git add types && lint-staged',
       },
     },
     'lint-staged': {
