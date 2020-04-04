@@ -108,13 +108,13 @@ module.exports.editPackageJson = async function editPackageJson(
     scripts: {
       build:
         'npm run build-main && npm run build-module && npm run build-types',
-      'build-main':
-        'babel src -d dist/main -x .ts --env-name main --ignore "**/*.test.ts","**/test.ts" --delete-dir-on-start',
-      'build-module':
-        'babel src -d dist/module -x .ts --env-name module --ignore "**/*.test.ts","**/test.ts" --delete-dir-on-start',
+      'build-main': 'npm run compile -- -d dist/main --env-name main',
+      'build-module': 'npm run compile -- -d dist/module --env-name module',
       'build-types':
         'tsc -p tsconfig.json -d --outDir types --emitDeclarationOnly',
       'check-types': 'tsc --noEmit -p tsconfig.json',
+      compile:
+        'babel src -x .ts --ignore "**/*.test.ts","**/test.ts" --delete-dir-on-start',
       format: 'prettier --write "**/*.{ts,js,md,yml,json,eslintrc,prettierrc}"',
       lint: 'eslint . --ext .ts',
       prepublishOnly:
@@ -140,11 +140,9 @@ module.exports.editPackageJson = async function editPackageJson(
     delete pkg.types
     delete pkg.scripts['build-types']
     delete pkg.scripts['check-types']
+    pkg.scripts.compile =
+      'babel src -x .js --ignore "**/*.test.js","**/test.js" --delete-dir-on-start'
     pkg.scripts.build = 'npm run build-main && npm run build-module'
-    pkg.scripts['build-main'] =
-      'babel src -d dist/main -x .js --env-name main --ignore "**/*.test.js","**/test.js" --delete-dir-on-start'
-    pkg.scripts['build-module'] =
-      'babel src -d dist/module -x .js --env-name module --ignore "**/*.test.js","**/test.js" --delete-dir-on-start'
     pkg.scripts.lint = 'eslint .'
     pkg.scripts.format =
       'prettier --write "**/*.{js,md,yml,json,eslintrc,prettierrc}"'
