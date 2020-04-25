@@ -3,10 +3,49 @@ import {forwardRef} from 'preact/compat'
 import css from 'minify-css.macro'
 import clsx from 'clsx'
 import AccessibleButton from '@accessible/button'
-import {LinkProps} from 'react-router-typed'
 import {Link, RouteTypes} from '../router'
 import {styles, ds} from '../styles'
 import {Variants} from '../types'
+import type {LinkProps} from 'react-router-typed/dom'
+import type {LayoutAttributes} from '@-ui/react-layout'
+
+export const Button: React.FC<ButtonProps> = forwardRef<
+  HTMLElement,
+  ButtonProps
+>(({as = 'button', sx = 'primary', ...props}, ref) => (
+  <AccessibleButton>
+    {h(
+      as,
+      Object.assign(props, {
+        className: clsx(
+          props.className,
+          Array.isArray(sx)
+            ? (sx && sx.indexOf('outline') > -1 ? buttonOutline : button)(...sx)
+            : (sx && sx === 'outline' ? buttonOutline : button)(sx)
+        ),
+        ref,
+      })
+    )}
+  </AccessibleButton>
+))
+
+export const ButtonLink = <To extends Extract<keyof RouteTypes, string>>({
+  sx = 'primary',
+  innerRef,
+  ...props
+}: ButtonLinkProps<To>) =>
+  h(
+    Link,
+    Object.assign(props, {
+      className: clsx(
+        props.className,
+        Array.isArray(sx)
+          ? (sx && sx.indexOf('outline') > -1 ? buttonOutline : button)(...sx)
+          : (sx && sx === 'outline' ? buttonOutline : button)(sx)
+      ),
+      innerRef,
+    })
+  )
 
 export const button = styles<
   'default' | 'primary' | 'outline' | keyof typeof ds.bg.styles
@@ -102,52 +141,12 @@ export const buttonOutline = styles<
   ...ds.color.styles,
 })
 
-export interface ButtonProps {
+export interface ButtonProps extends LayoutAttributes {
   as?: any
   sx?: Variants<typeof button.styles | typeof buttonOutline.styles>
   className?: string | string[]
-  [props: string]: any
 }
-
-export const Button: FC<ButtonProps> = forwardRef<HTMLElement, ButtonProps>(
-  ({as = 'button', sx = 'primary', ...props}, ref) => (
-    <AccessibleButton>
-      {h(
-        as,
-        Object.assign(props, {
-          className: clsx(
-            props.className,
-            Array.isArray(sx)
-              ? (sx && sx.indexOf('outline') > -1 ? buttonOutline : button)(
-                  ...sx
-                )
-              : (sx && sx === 'outline' ? buttonOutline : button)(sx)
-          ),
-          ref,
-        })
-      )}
-    </AccessibleButton>
-  )
-)
 
 export type ButtonLinkProps<
   To extends Extract<keyof RouteTypes, string>
 > = LinkProps<RouteTypes, To> & ButtonProps
-
-export const ButtonLink = <To extends Extract<keyof RouteTypes, string>>({
-  sx = 'primary',
-  innerRef,
-  ...props
-}: ButtonLinkProps<To>) =>
-  h(
-    Link,
-    Object.assign(props, {
-      className: clsx(
-        props.className,
-        Array.isArray(sx)
-          ? (sx && sx.indexOf('outline') > -1 ? buttonOutline : button)(...sx)
-          : (sx && sx === 'outline' ? buttonOutline : button)(sx)
-      ),
-      innerRef,
-    })
-  )

@@ -1,4 +1,4 @@
-export {DesignSystem, useDesignSystem} from './DesignSystem'
+export {DesignSystem} from './DesignSystem'
 
 export {button, buttonOutline, Button, ButtonLink} from './Button'
 export {icon, Icon} from './Icon'

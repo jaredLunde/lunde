@@ -2,7 +2,7 @@ import {h} from 'preact'
 import {Styles} from '@-ui/react'
 import {BodyUsingKeyboard} from '@accessible/using-keyboard'
 import {Provider as PrerenderProvider} from '@preact/prerender-data-provider'
-import {StaticRouter, BrowserRouter, Switch} from './router'
+import {StaticRouter, BrowserRouter, Routes} from './router'
 import {DesignSystem} from './components'
 import {styles} from './styles'
 // Routes are automagically code split
@@ -13,7 +13,7 @@ interface StaticRouterProps {
   location: string
   context?: Record<string, any>
 }
-let Router: FC<StaticRouterProps> | typeof BrowserRouter = BrowserRouter
+let Router: React.FC<StaticRouterProps> | typeof BrowserRouter = BrowserRouter
 
 if (__SERVER__) {
   Router = ({context = {}, location, children}) => (
@@ -37,7 +37,7 @@ const App = (props: any) => {
         </noscript>
 
         <Router location={props.CLI_DATA.preRenderData.url}>
-          <Switch>{pages}</Switch>
+          <Routes>{pages}</Routes>
         </Router>
       </DesignSystem>
     </PrerenderProvider>

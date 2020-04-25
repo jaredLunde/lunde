@@ -5,6 +5,7 @@ import css from 'minify-css.macro'
 import {useWindowHeight} from '@react-hook/window-size'
 import {styles, ds} from '../styles'
 import {Variants} from '../types'
+import type {LayoutAttributes} from '@-ui/react-layout'
 
 export const hero = styles({
   default: ds.mq({
@@ -21,15 +22,13 @@ export const hero = styles({
   }),
 })
 
-export interface HeroProps {
+export interface HeroProps extends LayoutAttributes {
   as?: any
   sx?: Variants<typeof hero.styles>
   className?: string | string[]
-  style?: React.CSSProperties
-  [name: string]: any
 }
 
-export const Hero: FC<HeroProps> = forwardRef<HTMLElement, HeroProps>(
+export const Hero: React.FC<HeroProps> = forwardRef<HTMLElement, HeroProps>(
   ({as = 'div', sx, className, ...props}, ref) => {
     const height = useWindowHeight()
     const [mountStatus, setMountStatus] = useState<'unmounted' | 'mounted'>(

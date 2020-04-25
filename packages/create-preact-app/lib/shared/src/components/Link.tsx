@@ -2,13 +2,13 @@ import {h} from 'preact'
 import {Style} from '@-ui/react'
 import css from 'minify-css.macro'
 import clsx from 'clsx'
-import {
-  LinkProps as AsyncLinkProps,
-  NavLinkProps as AsyncNavLinkProps,
-} from 'react-router-typed'
 import {Link as AsyncLink, NavLink as AsyncNavLink, RouteTypes} from '../router'
 import {Variants} from '../types'
 import {styles} from '../styles'
+import type {
+  LinkProps as AsyncLinkProps,
+  NavLinkProps as AsyncNavLinkProps,
+} from 'react-router-typed/dom'
 
 export const link: Style = styles({
   default: ({color, font}) => css`

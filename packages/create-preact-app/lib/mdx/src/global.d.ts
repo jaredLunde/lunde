@@ -7,7 +7,6 @@ declare type Props<P> = {[Name in keyof P]: P[Name]} & {
     | (JSX.Element | string | false | number | null)
     | (JSX.Element | string | false | number | null)[]
 }
-declare type FC<P = {}> = preact.FunctionComponent<P>
 // MDX
 declare module '*.mdx' {
   const MDXComponent: (props) => JSX.Element

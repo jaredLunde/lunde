@@ -1,10 +1,13 @@
+import css from 'minify-css.macro'
 import dashStyles from '@-ui/react'
 import reset from '@-ui/reset'
 import dashMq from '@-ui/mq'
 import dashGrid, {Grid12} from '@-ui/grid'
 import {gap as dashGap, pad as dashPad} from '@-ui/spacing'
-import css from 'minify-css.macro'
+import type {MediaQueries} from '@-ui/react-layout'
 
+//
+// CSS variables
 export const variables = {
   contentWidth: '960px',
   color: {
@@ -12,7 +15,7 @@ export const variables = {
     green: '#6ADAAB',
     red: '#D96269',
     yellow: '#F2E399',
-    white: '#F8F9FC',
+    white: '#F8F9React.FC',
   },
   font: {
     family: {
@@ -33,7 +36,7 @@ export const variables = {
     lg: '16px',
     max: '1000px',
   },
-  shadow: {
+  elevation: {
     xs: `0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)`,
     sm: `0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) `,
     md: `0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)`,
@@ -59,17 +62,13 @@ export const variables = {
   },
 }
 
+export type AppVariables = typeof variables
+
+//
+// Dash
 export const styles = dashStyles.create({
   key: '',
-  variables,
-  themes: {
-    light: {
-      ...variables,
-    },
-    dark: {
-      ...variables,
-    },
-  },
+  variables
 })
 
 //
@@ -78,10 +77,7 @@ export const grid = dashGrid<Grid12>(styles, 12)
 
 //
 // Breakpoints and media queries
-export const mq = dashMq<
-  'phone' | 'tablet' | 'desktop' | 'hi-dpi' | 'hover',
-  typeof variables
->({
+export const mediaQueries = {
   // 0px
   phone: 'only screen and (min-width: 0em)',
   // 560px
@@ -96,7 +92,10 @@ export const mq = dashMq<
      only screen and (min-resolution: 1.5dppx)
   `,
   hover: '(hover: hover)',
-})
+}
+
+type AppMediaQueries = typeof mediaQueries
+export const mq = dashMq<keyof AppMediaQueries, typeof variables>(mediaQueries)
 
 //
 // Spacing scale
@@ -124,6 +123,7 @@ export const color = styles<keyof typeof variables.color>(
   }, {})
 )
 
+//
 // Typography
 export const font = styles({
   heading: ({font, gap}) => css`
@@ -180,6 +180,7 @@ export const font = styles({
   `,
 })
 
+//
 // Design system group to avoid css variable/system name collisions
 // in CSS callbacks
 export const ds = {
@@ -193,6 +194,7 @@ export const ds = {
   styles,
 }
 
+//
 // Resets the browser styles that are annoying
 styles.global(reset)
 
@@ -225,3 +227,13 @@ styles.global(
     }
   `
 )
+
+//
+// Type definitions for dash
+declare module '@-ui/react' {
+  export interface DefaultVars extends AppVariables {}
+}
+
+declare module '@-ui/react-layout' {
+  export interface MediaQueries extends AppMediaQueries {}
+}
