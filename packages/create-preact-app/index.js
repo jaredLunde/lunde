@@ -55,7 +55,6 @@ module.exports.dependencies = (variables, args) => {
     clsx: 'latest',
     'code-split.macro': 'latest',
     'create-async-component': 'latest',
-    'create-async-route': 'latest',
     eslint: 'latest',
     'eslint-import-resolver-jest': 'latest',
     'eslint-plugin-jest': 'latest',
