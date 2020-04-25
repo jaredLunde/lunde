@@ -15,7 +15,7 @@ export const variables = {
     green: '#6ADAAB',
     red: '#D96269',
     yellow: '#F2E399',
-    white: '#F8F9React.FC',
+    white: '#F8F9FC',
   },
   font: {
     family: {
