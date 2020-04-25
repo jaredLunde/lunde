@@ -18,12 +18,12 @@ export const Icon: React.FC<IconProps> = memo(
       props.style = {
         ...style,
         width: !sizeArr[0]
-          ? 'auto'
+          ? '1em'
           : isNaN(sizeArr[0] as any)
           ? sizeArr[0]
           : Number(sizeArr[0]),
         height: !sizeArr[1]
-          ? 'auto'
+          ? '1em'
           : isNaN(sizeArr[1] as any)
           ? sizeArr[1]
           : Number(sizeArr[1]),
