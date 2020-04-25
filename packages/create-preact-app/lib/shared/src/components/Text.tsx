@@ -6,17 +6,15 @@ import {Variants} from '../types'
 import {styles, ds, variables} from '../styles'
 import type {LayoutAttributes} from '@-ui/react-layout'
 
-export const Text: React.FC<TextProps> = forwardRef<
-  HTMLElement,
-  TextProps
->(({as = 'span', sx, className, ...props}, ref) =>
-  h(
-    as,
-    Object.assign(props, {
-      ref,
-      className: clsx(className, Array.isArray(sx) ? text(...sx) : text(sx)),
-    })
-  )
+export const Text: React.FC<TextProps> = forwardRef<HTMLElement, TextProps>(
+  ({as = 'span', sx, className, ...props}, ref) =>
+    h(
+      as,
+      Object.assign(props, {
+        ref,
+        className: clsx(className, Array.isArray(sx) ? text(...sx) : text(sx)),
+      })
+    )
 )
 
 export const text = styles<

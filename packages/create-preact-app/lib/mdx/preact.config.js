@@ -30,7 +30,7 @@ export default {
       ...config.plugins,
       new webpack.DefinePlugin({
         process: {
-          cwd: function() {},
+          cwd: function () {},
           env: Object.keys(process.env).reduce(
             (p, key) =>
               Object.assign(p, {[key]: JSON.stringify(process.env[key])}),

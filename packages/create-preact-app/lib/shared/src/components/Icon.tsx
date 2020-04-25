@@ -8,7 +8,7 @@ import type {LayoutAttributes} from '@-ui/react-layout'
 
 export const Icon: React.FC<IconProps> = memo(
   forwardRef<SVGElement, IconProps>(
-    ({render, color, name, sx, className, size = 'md', style, ...props}, ref) => {
+    ({render, color, sx, className, size = 'md', style, ...props}, ref) => {
       props.className = clsx(
         className,
         Array.isArray(sx) ? icon(color, ...sx) : icon(color, sx)
@@ -26,7 +26,7 @@ export const Icon: React.FC<IconProps> = memo(
           ? 'auto'
           : isNaN(sizeArr[1] as any)
           ? sizeArr[1]
-          : Number(sizeArr[1])
+          : Number(sizeArr[1]),
       }
       props.role = props.hasOwnProperty('role') ? props.role : 'img'
       props['data-icon'] = true
@@ -57,6 +57,6 @@ export interface IconProps extends LayoutAttributes {
   size?: string | number
   sx?: Variants<typeof icon.styles>
   className?: string | string[]
-  render: preact.ComponentType<any>;
+  render: preact.ComponentType<any>
   [prop: string]: any
 }

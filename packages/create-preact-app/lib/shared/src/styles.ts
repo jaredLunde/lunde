@@ -68,7 +68,7 @@ export type AppVariables = typeof variables
 // Dash
 export const styles = dashStyles.create({
   key: '',
-  variables
+  variables,
 })
 
 //
