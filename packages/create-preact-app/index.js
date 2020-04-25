@@ -3,7 +3,7 @@ const path = require('path')
 const {required, error, trim} = require('@inst-cli/template-utils')
 const {getPackageName, getPackageRepoPages} = require('@lunde/inst-utils')
 
-const sortByKeys = obj =>
+const sortByKeys = (obj) =>
   Object.keys(obj)
     .sort()
     .reduce((acc, key) => {
