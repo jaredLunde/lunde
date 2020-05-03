@@ -33,6 +33,4 @@ export const {
   useRoutes,
   usePrompt,
   useSearchParams,
-  useHistory,
-  createAsyncRoute,
 } = router
