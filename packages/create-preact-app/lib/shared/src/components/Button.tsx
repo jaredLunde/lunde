@@ -7,7 +7,7 @@ import {Link, RouteTypes} from '../router'
 import {styles, ds} from '../styles'
 import {Variants} from '../types'
 import type {LinkProps} from 'react-router-typed/dom'
-import type {LayoutAttributes} from '@-ui/react-layout'
+import type {LayoutAttributes} from '@dash-ui/react-layout'
 
 export const Button: React.FC<ButtonProps> = forwardRef<
   HTMLElement,

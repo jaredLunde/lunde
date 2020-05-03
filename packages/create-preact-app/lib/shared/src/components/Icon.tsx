@@ -4,7 +4,7 @@ import css from 'minify-css.macro'
 import clsx from 'clsx'
 import {Variants} from '../types'
 import {styles, ds, AppVariables} from '../styles'
-import type {LayoutAttributes} from '@-ui/react-layout'
+import type {LayoutAttributes} from '@dash-ui/react-layout'
 
 export const Icon: React.FC<IconProps> = memo(
   forwardRef<SVGElement, IconProps>(
