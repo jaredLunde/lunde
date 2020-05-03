@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import css from 'minify-css.macro'
 import {Variants} from '../types'
 import {styles, ds, variables} from '../styles'
-import type {LayoutAttributes} from '@dash-ui/react-layout'
+import type {LayoutAttributes} from '@-ui/react-layout'
 
 export const Text: React.FC<TextProps> = forwardRef<HTMLElement, TextProps>(
   ({as = 'span', sx, className, ...props}, ref) =>

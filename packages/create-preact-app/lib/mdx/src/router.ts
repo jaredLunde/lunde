@@ -1,4 +1,5 @@
-import {createRouter} from 'react-router-typed/dom'
+import createRouter from 'react-router-typed/dom'
+import {posts} from './pages/Blog'
 
 export type RouteTypes = {
   home: {
@@ -6,10 +7,24 @@ export type RouteTypes = {
     params: null
     state: null
   }
+  blog: {
+    path: '/blog'
+    params: null
+    state: null
+  }
+  'blog.post': {
+    path: '/blog/:slug'
+    params: {
+      slug: keyof typeof posts
+    }
+    state: null
+  }
 }
 
 const router = createRouter<RouteTypes>({
   home: '/',
+  blog: '/blog',
+  'blog.post': '/blog/:slug',
 })
 
 export const {

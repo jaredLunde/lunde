@@ -5,7 +5,7 @@ import css from 'minify-css.macro'
 import {useWindowHeight} from '@react-hook/window-size'
 import {styles, ds} from '../styles'
 import {Variants} from '../types'
-import type {LayoutAttributes} from '@dash-ui/react-layout'
+import type {LayoutAttributes} from '@-ui/react-layout'
 
 export const hero = styles({
   default: ds.mq({

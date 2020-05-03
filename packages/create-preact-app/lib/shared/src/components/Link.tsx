@@ -1,16 +1,11 @@
 import {h} from 'preact'
-import {Style} from '@dash-ui/react'
+import {Style} from '@-ui/react'
 import css from 'minify-css.macro'
 import clsx from 'clsx'
-import {
-  Link as AsyncLink,
-  NavLink as AsyncNavLink,
-} from 'react-router-typed/dom'
+import {Link as AsyncLink, NavLink as AsyncNavLink, RouteTypes} from '../router'
 import {Variants} from '../types'
 import {styles} from '../styles'
 import type {
-  RouteTypes,
-  RouteTo,
   LinkProps as AsyncLinkProps,
   NavLinkProps as AsyncNavLinkProps,
 } from 'react-router-typed/dom'
@@ -34,15 +29,14 @@ export const link: Style = styles({
   `,
 })
 
-export type LinkProps<To extends RouteTo = RouteTo> = AsyncLinkProps<
-  RouteTypes,
-  To
-> & {
+export type LinkProps<
+  To extends Extract<keyof RouteTypes, string>
+> = AsyncLinkProps<RouteTypes, To> & {
   sx?: Variants<typeof link.styles>
   className?: string | string[]
 }
 
-export const Link = <To extends RouteTo = RouteTo>({
+export const Link = <To extends Extract<keyof RouteTypes, string>>({
   sx,
   ...props
 }: LinkProps<To>) =>
@@ -56,15 +50,14 @@ export const Link = <To extends RouteTo = RouteTo>({
     })
   )
 
-export type NavLinkProps<To extends RouteTo = RouteTo> = AsyncNavLinkProps<
-  RouteTypes,
-  To
-> & {
+export type NavLinkProps<
+  To extends Extract<keyof RouteTypes, string>
+> = AsyncNavLinkProps<RouteTypes, To> & {
   sx?: Variants<typeof link.styles>
   className?: string | string[]
 }
 
-export const NavLink = <To extends RouteTo = RouteTo>({
+export const NavLink = <To extends Extract<keyof RouteTypes, string>>({
   sx,
   ...props
 }: NavLinkProps<To>) =>

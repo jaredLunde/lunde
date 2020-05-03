@@ -1,4 +1,4 @@
-import {StyleObjectArgument} from '@dash-ui/react'
+import {StyleObjectArgument} from '@-ui/react'
 // -ui variants
 export type Variant<VariantNames extends string> =
   | false

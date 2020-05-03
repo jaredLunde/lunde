@@ -1,6 +1,6 @@
 {
   "name": "@lunde/create-preact-app",
-  "version": "1.2.0",
+  "version": "1.1.1",
   "main": "index.js",
   "author": "Jared Lunde <jared.lunde@gmail.com> (https://jaredLunde.com)",
   "license": "MIT",

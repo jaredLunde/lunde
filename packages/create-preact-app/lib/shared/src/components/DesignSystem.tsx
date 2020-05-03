@@ -1,6 +1,6 @@
 import {h} from 'preact'
-import {DashProvider, Themes, Variables} from '@dash-ui/react'
-import {LayoutProvider} from '@dash-ui/react-layout'
+import {DashProvider, Themes, Variables} from '@-ui/react'
+import {LayoutProvider} from '@-ui/react-layout'
 import {styles, mediaQueries} from '../styles'
 
 export const DesignSystem: React.FC<DesignSystemProps> = ({
