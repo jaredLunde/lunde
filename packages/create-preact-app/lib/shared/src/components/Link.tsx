@@ -1,5 +1,5 @@
 import {h} from 'preact'
-import {Style} from '@-ui/react'
+import {Style} from '@dash-ui/react'
 import css from 'minify-css.macro'
 import clsx from 'clsx'
 import {Link as AsyncLink, NavLink as AsyncNavLink, RouteTypes} from '../router'

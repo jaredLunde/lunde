@@ -1,10 +1,10 @@
 import css from 'minify-css.macro'
-import dashStyles from '@-ui/react'
-import reset from '@-ui/reset'
-import dashMq from '@-ui/mq'
-import dashGrid, {Grid12} from '@-ui/grid'
-import {gap as dashGap, pad as dashPad} from '@-ui/spacing'
-import type {MediaQueries} from '@-ui/react-layout'
+import dashStyles from '@dash-ui/react'
+import reset from '@dash-ui/reset'
+import dashMq from '@dash-ui/mq'
+import dashGrid, {Grid12} from '@dash-ui/grid'
+import {gap as dashGap, pad as dashPad} from '@dash-ui/spacing'
+import type {MediaQueries} from '@dash-ui/react-layout'
 
 //
 // CSS variables
@@ -230,10 +230,10 @@ styles.global(
 
 //
 // Type definitions for dash
-declare module '@-ui/react' {
+declare module '@dash-ui/react' {
   export interface DefaultVars extends AppVariables {}
 }
 
-declare module '@-ui/react-layout' {
+declare module '@dash-ui/react-layout' {
   export interface MediaQueries extends AppMediaQueries {}
 }

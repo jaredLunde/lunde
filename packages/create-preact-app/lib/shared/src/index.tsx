@@ -1,5 +1,5 @@
 import {h} from 'preact'
-import {Styles} from '@-ui/react'
+import {Styles} from '@dash-ui/react'
 import {BodyUsingKeyboard} from '@accessible/using-keyboard'
 import {Provider as PrerenderProvider} from '@preact/prerender-data-provider'
 import {StaticRouter, BrowserRouter, Routes} from './router'
@@ -21,7 +21,7 @@ if (__SERVER__) {
   )
   const renderer = require('preact-render-to-string').default
   extractStyles = (app, styles) =>
-    require('@-ui/react/server').toComponent(renderer(app), styles)
+    require('@dash-ui/react/server').toComponent(renderer(app), styles)
 }
 
 const App = (props: any) => {

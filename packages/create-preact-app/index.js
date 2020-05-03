@@ -28,12 +28,12 @@ module.exports.prompts = (
 module.exports.dependencies = (variables, args) => {
   // everything is a regular dependency for the sake of shit like Now
   let deps = {
-    '@-ui/grid': 'latest',
-    '@-ui/mq': 'latest',
-    '@-ui/react': 'latest',
-    '@-ui/react-layout': 'latest',
-    '@-ui/reset': 'latest',
-    '@-ui/spacing': 'latest',
+    '@dash-ui/grid': 'latest',
+    '@dash-ui/mq': 'latest',
+    '@dash-ui/react': 'latest',
+    '@dash-ui/react-layout': 'latest',
+    '@dash-ui/reset': 'latest',
+    '@dash-ui/spacing': 'latest',
     '@accessible/button': 'latest',
     '@accessible/link': 'latest',
     '@accessible/use-id': 'latest',
