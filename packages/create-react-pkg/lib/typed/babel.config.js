@@ -14,13 +14,14 @@ module.exports = api => {
               node: esm ? '12' : '10',
             },
       },
+      restSpread: false,
       devExpression: false,
       objectAssign: false,
     },
   ]
 
   return {
-    presets: ['@babel/preset-react', presetEnv],
+    presets: [['@babel/preset-react', {useSpread: true}], presetEnv],
     plugins: ['optimize-react', 'annotate-pure-calls'],
   }
 }

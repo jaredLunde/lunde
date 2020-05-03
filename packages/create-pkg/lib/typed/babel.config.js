@@ -14,6 +14,7 @@ module.exports = api => {
               node: esm ? '12' : '10',
             },
       },
+      restSpread: false,
       objectAssign: false,
     },
   ]
