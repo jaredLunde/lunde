@@ -30,6 +30,7 @@ module.exports.devDependencies = (variables, args) => {
     '@lunde/babel-preset-es': 'latest',
     jest: 'latest',
     'babel-eslint': 'latest',
+    'babel-plugin-annotate-pure-calls': 'latest',
     eslint: 'latest',
     'eslint-import-resolver-jest': 'latest',
     'eslint-plugin-jest': 'latest',
@@ -38,7 +39,7 @@ module.exports.devDependencies = (variables, args) => {
     prettier: 'latest',
   }
 
-  if (args.ts) {
+  if (!args.js) {
     delete deps['babel-eslint']
     deps = {
       ...deps,
@@ -59,8 +60,8 @@ module.exports.peerDependencies = {}
 module.exports.include = (variables, args) => {
   const include = ['**/shared/**']
 
-  if (args.ts) include.push('**/typed/**')
-  else include.push('**/untyped/**')
+  if (args.js) include.push('**/untyped/**')
+  else include.push('**/typed/**')
 
   return include
 }
@@ -102,19 +103,30 @@ module.exports.editPackageJson = async function editPackageJson(
     keywords: [variables.PKG_NAME.replace(/-/g, ' ')],
     main: 'dist/main/index.js',
     module: 'dist/module/index.js',
+    source: 'src/index.ts',
     types: 'types/index.d.ts',
-    files: ['/dist', '/types'],
+    files: ['/dist', '/src', '/types'],
+    exports: {
+      '.': {
+        browser: './dist/module/index.js',
+        import: './dist/esm/index.mjs',
+        require: './dist/main/index.js',
+      },
+      './package.json': './package.json',
+      './': './',
+    },
     sideEffects: false,
     scripts: {
       build:
-        'npm run build-main && npm run build-module && npm run build-types',
+        'npm run build-esm && npm run build-main && npm run build-module && npm run build-types',
+      'build-esm':
+        'npm run compile -- -d dist/esm --env-name esm --out-file-extension .mjs',
       'build-main': 'npm run compile -- -d dist/main --env-name main',
       'build-module': 'npm run compile -- -d dist/module --env-name module',
       'build-types':
         'tsc -p tsconfig.json -d --outDir types --emitDeclarationOnly',
       'check-types': 'tsc --noEmit -p tsconfig.json',
-      compile:
-        'babel src -x .ts --ignore "**/*.test.ts","**/test.ts" --delete-dir-on-start',
+      compile: 'babel src -x .ts --ignore "**/*.test.ts" --delete-dir-on-start',
       format: 'prettier --write "**/*.{ts,js,md,yml,json,eslintrc,prettierrc}"',
       lint: 'eslint . --ext .ts',
       prepublishOnly:
@@ -135,14 +147,16 @@ module.exports.editPackageJson = async function editPackageJson(
     ...packageJson,
   }
 
-  if (!args.ts) {
+  if (args.js) {
     pkg.files = ['/dist']
     delete pkg.types
     delete pkg.scripts['build-types']
     delete pkg.scripts['check-types']
+    pkg.source = 'src/index.js'
     pkg.scripts.compile =
-      'babel src -x .js --ignore "**/*.test.js","**/test.js" --delete-dir-on-start'
-    pkg.scripts.build = 'npm run build-main && npm run build-module'
+      'babel src -x .js --ignore "**/*.test.js" --delete-dir-on-start'
+    pkg.scripts.build =
+      'npm run build-esm && npm run build-main && npm run build-module'
     pkg.scripts.lint = 'eslint .'
     pkg.scripts.format =
       'prettier --write "**/*.{js,md,yml,json,eslintrc,prettierrc}"'

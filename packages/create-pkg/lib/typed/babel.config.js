@@ -1,16 +1,17 @@
 module.exports = api => {
   const module = api.env('module')
+  const esm = api.env('esm')
   const presetEnv = [
     '@lunde/es',
     {
       env: {
-        modules: module ? false : 'commonjs',
+        modules: esm || module ? false : 'commonjs',
         targets: module
           ? {
               browsers: '> 2%',
             }
           : {
-              node: '8',
+              node: esm ? '12' : '10',
             },
       },
       objectAssign: false,
@@ -19,5 +20,6 @@ module.exports = api => {
 
   return {
     presets: [presetEnv],
+    plugins: ['annotate-pure-calls'],
   }
 }
