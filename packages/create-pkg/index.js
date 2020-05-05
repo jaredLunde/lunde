@@ -111,6 +111,9 @@ module.exports.editPackageJson = async function editPackageJson(
         browser: './dist/module/index.js',
         import: './dist/esm/index.mjs',
         require: './dist/main/index.js',
+        source: './src/index.ts',
+        types: './types/index.d.ts',
+        default: './dist/main/index.js',
       },
       './package.json': './package.json',
       './': './',
@@ -152,7 +155,9 @@ module.exports.editPackageJson = async function editPackageJson(
     delete pkg.types
     delete pkg.scripts['build-types']
     delete pkg.scripts['check-types']
+    delete pkg.exports['.'].types
     pkg.source = 'src/index.js'
+    pkg.exports['.'].source = './src/index.js'
     pkg.scripts.compile =
       'babel src -x .js --ignore "**/*.test.js" --delete-dir-on-start'
     pkg.scripts.build =
