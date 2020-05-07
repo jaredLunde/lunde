@@ -39,8 +39,8 @@ const App = (props: any) => {
 
   return (
     <div id='app'>
-      {app}
       {extractStyles?.(app, styles)}
+      {app}
     </div>
   )
 }

@@ -68,7 +68,6 @@ module.exports.dependencies = (variables, args) => {
     'lint-staged': 'latest',
     'minify-css.macro': 'latest',
     preact: 'latest',
-    'preact-async-route': 'latest',
     'preact-cli': 'rc',
     'preact-render-spy': 'latest',
     'preact-render-to-string': 'latest',
