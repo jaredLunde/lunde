@@ -17,17 +17,22 @@ export const Icon: React.FC<IconProps> = memo(
       const sizeArr: string[] = String(sizes[size] || size).split('x')
       props.style = {
         ...style,
-        width: !sizeArr[0]
-          ? 'auto'
-          : isNaN(sizeArr[0] as any)
-          ? sizeArr[0]
-          : Number(sizeArr[0]),
-        height: !sizeArr[1]
-          ? 'auto'
-          : isNaN(sizeArr[1] as any)
-          ? sizeArr[1]
-          : Number(sizeArr[1]),
+        width:
+          sizeArr.length === 1 || !sizeArr[0]
+            ? 'auto'
+            : isNaN(sizeArr[0] as any)
+            ? sizeArr[0]
+            : Number(sizeArr[0]),
+        height:
+          sizeArr.length === 1
+            ? sizeArr[0]
+            : !sizeArr[1]
+            ? 'auto'
+            : isNaN(sizeArr[1] as any)
+            ? sizeArr[1]
+            : Number(sizeArr[1]),
       }
+      console.log('Render', render)
       props.role = props.hasOwnProperty('role') ? props.role : 'img'
       props['data-icon'] = true
       return h(render, props)
@@ -52,7 +57,6 @@ const sizes = {
 }
 
 export interface IconProps extends LayoutAttributes {
-  name: string
   color?: keyof AppVariables['color']
   size?: string | number
   sx?: Variants<typeof icon.styles>
