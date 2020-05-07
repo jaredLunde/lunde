@@ -1,6 +1,10 @@
 import {h} from 'preact'
-import {Route} from '../router'
-import Home from './Home'
+import Route from 'preact-async-route'
 
-// NOTE: order matters here. These are children of a <Switch>
-export default [<Route to='home' key='home' element={<Home />} />]
+export default [
+  <Route
+    path='/'
+    key='home'
+    getComponent={() => import('./Home').then((module) => module.Home)}
+  />,
+]

@@ -2,9 +2,8 @@ import {h} from 'preact'
 import createAsyncComponent from 'create-async-component'
 import css from 'minify-css.macro'
 import codeSplit from 'code-split.macro'
-import {Link} from '../../components'
+import {Link} from 'preact-router'
 import {styles} from '../../styles'
-import {Home} from '../'
 
 const posts = {
   'hello-world': createAsyncComponent(
@@ -16,9 +15,7 @@ export default () => {
   return (
     <div className={blog()}>
       <div className={blogHeader()}>
-        <Link to='home' preload={Home}>
-          &larr; Home
-        </Link>
+        <Link href='/'>&larr; Home</Link>
       </div>
 
       {h(posts['hello-world'], {})}

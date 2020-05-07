@@ -230,8 +230,8 @@ styles.global(
 
 //
 // Type definitions for dash
-declare module '@dash-ui/react' {
-  export interface DefaultVars extends AppVariables {}
+declare module '@dash-ui/styles' {
+  export interface DashVariables extends AppVariables {}
 }
 
 declare module '@dash-ui/react-layout' {

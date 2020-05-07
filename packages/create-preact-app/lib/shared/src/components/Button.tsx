@@ -3,10 +3,8 @@ import {forwardRef} from 'preact/compat'
 import css from 'minify-css.macro'
 import clsx from 'clsx'
 import AccessibleButton from '@accessible/button'
-import {Link, RouteTypes} from '../router'
 import {styles, ds} from '../styles'
 import {Variants} from '../types'
-import type {LinkProps} from 'react-router-typed/dom'
 import type {LayoutAttributes} from '@dash-ui/react-layout'
 
 export const Button: React.FC<ButtonProps> = forwardRef<
@@ -28,24 +26,6 @@ export const Button: React.FC<ButtonProps> = forwardRef<
     )}
   </AccessibleButton>
 ))
-
-export const ButtonLink = <To extends Extract<keyof RouteTypes, string>>({
-  sx = 'primary',
-  innerRef,
-  ...props
-}: ButtonLinkProps<To>) =>
-  h(
-    Link,
-    Object.assign(props, {
-      className: clsx(
-        props.className,
-        Array.isArray(sx)
-          ? (sx && sx.indexOf('outline') > -1 ? buttonOutline : button)(...sx)
-          : (sx && sx === 'outline' ? buttonOutline : button)(sx)
-      ),
-      innerRef,
-    })
-  )
 
 export const button = styles<
   'default' | 'primary' | 'outline' | keyof typeof ds.bg.styles
@@ -146,7 +126,3 @@ export interface ButtonProps extends LayoutAttributes {
   sx?: Variants<typeof button.styles | typeof buttonOutline.styles>
   className?: string | string[]
 }
-
-export type ButtonLinkProps<
-  To extends Extract<keyof RouteTypes, string>
-> = LinkProps<RouteTypes, To> & ButtonProps

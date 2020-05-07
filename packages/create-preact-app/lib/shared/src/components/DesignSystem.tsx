@@ -1,7 +1,8 @@
 import {h} from 'preact'
-import {DashProvider, Themes, Variables} from '@dash-ui/react'
+import {DashProvider} from '@dash-ui/react'
 import {LayoutProvider} from '@dash-ui/react-layout'
 import {styles, mediaQueries} from '../styles'
+import type {DashVariables, DashThemes} from '@dash-ui/styles'
 
 export const DesignSystem: React.FC<DesignSystemProps> = ({
   variables,
@@ -14,6 +15,6 @@ export const DesignSystem: React.FC<DesignSystemProps> = ({
 )
 
 export interface DesignSystemProps {
-  variables?: Variables
-  themes?: Themes
+  variables?: DashVariables
+  themes?: DashThemes
 }

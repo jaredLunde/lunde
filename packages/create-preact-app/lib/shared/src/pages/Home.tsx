@@ -1,11 +1,9 @@
 import {h} from 'preact'
-import {Hero, Text} from '../../components'
+import {Hero, Text} from '../components'
 
-const Home = () => (
+export const Home = () => (
   <Hero>
     <Text sx='heading'>Home</Text>
     <p>This is the Home component.</p>
   </Hero>
 )
-
-export default Home

@@ -1,9 +1,14 @@
 import {h} from 'preact'
-import {Route} from '../router'
+import Route from 'preact-async-route'
 
-// NOTE: order matters here. These are children of a <Switch>
+const Blog = () => import('./Blog').then((module) => module.default)
+
 export default [
-  <Route key='blog.post' to='blog.post' element={<Blog />} />,
-  <Route key='blog' to='blog' element={<Blog />} />,
-  <Route key='home' to='home' element={<Home />} />,
+  <Route key='blog.post' path='/blog/:post' getComponent={Blog} />,
+  <Route key='blog' path='/blog' getComponent={Blog} />,
+  <Route
+    key='home'
+    path='/'
+    getComponent={() => import('./Home').then((module) => module.Home)}
+  />,
 ]

@@ -2,7 +2,7 @@ import {h} from 'preact'
 import {Styles} from '@dash-ui/react'
 import {BodyUsingKeyboard} from '@accessible/using-keyboard'
 import {Provider as PrerenderProvider} from '@preact/prerender-data-provider'
-import {StaticRouter, BrowserRouter, Routes} from './router'
+import {Router} from 'preact-router'
 import {DesignSystem} from './components'
 import {styles} from './styles'
 // Routes are automagically code split
@@ -13,12 +13,8 @@ interface StaticRouterProps {
   location: string
   context?: Record<string, any>
 }
-let Router: React.FC<StaticRouterProps> | typeof BrowserRouter = BrowserRouter
 
 if (__SERVER__) {
-  Router = ({context = {}, location, children}) => (
-    <StaticRouter context={context} location={location} children={children} />
-  )
   const renderer = require('preact-render-to-string').default
   extractStyles = (app, styles) =>
     require('@dash-ui/react/server').toComponent(renderer(app), styles)
@@ -36,9 +32,7 @@ const App = (props: any) => {
           </div>
         </noscript>
 
-        <Router location={props.CLI_DATA.preRenderData.url}>
-          <Routes>{pages}</Routes>
-        </Router>
+        <Router url={props.CLI_DATA.preRenderData.url}>{pages}</Router>
       </DesignSystem>
     </PrerenderProvider>
   )
