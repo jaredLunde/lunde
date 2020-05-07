@@ -1,10 +1,9 @@
 import css from 'minify-css.macro'
-import dashStyles from '@dash-ui/react'
+import styles from '@dash-ui/styles'
 import reset from '@dash-ui/reset'
 import dashMq from '@dash-ui/mq'
 import dashGrid, {Grid12} from '@dash-ui/grid'
 import {gap as dashGap, pad as dashPad} from '@dash-ui/spacing'
-import type {MediaQueries} from '@dash-ui/react-layout'
 
 //
 // CSS variables
@@ -27,7 +26,7 @@ export const variables = {
     size: {},
     color: {
       important: '#000',
-      primary: '#B8BAB8',
+      primary: '#1b2b40',
     },
   },
   radius: {
@@ -63,13 +62,7 @@ export const variables = {
 }
 
 export type AppVariables = typeof variables
-
-//
-// Dash
-export const styles = dashStyles.create({
-  key: '',
-  variables,
-})
+styles.variables(variables)
 
 //
 // Grid
@@ -228,6 +221,7 @@ styles.global(
   `
 )
 
+export {styles}
 //
 // Type definitions for dash
 declare module '@dash-ui/styles' {
