@@ -6,4 +6,6 @@ import asyncComponent from 'create-async-component'
 export const Home = asyncComponent(codeSplit('./Home', __SERVER__), {
   property: 'Home',
 })
-export const pages = [<Route key='home' path='/' component={Home} />]
+export const pages: JSX.Element[] = [
+  <Route key='home' path='/' component={Home} />,
+]

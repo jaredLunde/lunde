@@ -10,7 +10,7 @@ export const Home = asyncComponent(codeSplit('./Home', __SERVER__), {
   property: 'Home',
 })
 
-export const pages = [
+export const pages: JSX.Element[] = [
   <Route key='blog.post' path='/blog/:post' component={Blog} />,
   <Route key='blog' path='/blog' component={Blog} />,
   <Route key='home' path='/' component={Home} />,
