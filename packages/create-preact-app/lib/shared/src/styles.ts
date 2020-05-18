@@ -7,7 +7,6 @@ import css from 'minify-css.macro'
 //
 // CSS variables
 export const variables = {
-  vh: '100vh',
   color: {
     brand: '#202E3B',
     'ui/primary': '#FDFDFD',
@@ -166,9 +165,6 @@ export const font = styles({
       letter-spacing: ${font.tracking.heading};
       line-height: ${font.leading.heading};
       font-weight: 700;
-      color: ${color['text/primary']};
-      text-decoration: underline;
-      text-decoration-color: ${color['intention/infoInverse']};
     `,
     desktop: ({font}) => css`
       font-family: ${font.family.content};
@@ -182,7 +178,6 @@ export const font = styles({
       font-family: ${font.family.content};
       font-weight: 700;
       font-size: ${font.size.headingPhone};
-      color: ${color['text/primary']};
     `,
     desktop: ({font}) => css`
       font-family: ${font.family.content};
@@ -197,21 +192,18 @@ export const font = styles({
     font-size: ${font.size.subheading};
     letter-spacing: ${font.tracking.subheading};
     line-height: ${font.leading.subheading};
-    color: ${color['text/primary']};
   `,
   content: ({font}) => css`
     font-family: ${font.family.content};
     font-size: ${font.size.content};
     letter-spacing: ${font.tracking.content};
     line-height: ${font.leading.content};
-    color: currentColor;
   `,
   contentSm: ({font}) => css`
     font-family: ${font.family.content};
     font-size: ${font.size.contentSm};
     letter-spacing: ${font.tracking.contentSm};
     line-height: ${font.leading.contentSm};
-    color: currentColor;
   `,
   label: ({font}) => css`
     font-family: ${font.family.content};
@@ -219,7 +211,6 @@ export const font = styles({
     letter-spacing: ${font.tracking.label};
     line-height: ${font.leading.label};
     text-transform: uppercase;
-    color: currentColor;
   `,
   badge: ({font}) => css`
     font-family: ${font.family.brand};
@@ -247,7 +238,7 @@ styles.global(
       ${font.css('content')};
       color: ${color['text/primary']};
       font-weight: 400;
-      background: ${color['intention/info']};
+      background: ${color['ui/primary']};
     }
 
     p {
