@@ -1,18 +1,12 @@
-const webpack = require('webpack')
 import {resolve} from 'path'
+import webpack from 'webpack'
 
 export default {
   webpack(config, env, helpers) {
-    // Switch css-loader for typings-for-css-modules-loader, which is a wrapper
-    // that automatically generates .d.ts files for loaded CSS
-    helpers.getLoadersByName(config, 'css-loader').forEach(({loader}) => {
-      loader.loader = 'typings-for-css-modules-loader'
-      loader.options = Object.assign(loader.options, {
-        camelCase: true,
-        namedExport: true,
-        silent: true,
-      })
-    })
+    // Turns off hmr
+    if (!env.isProd) {
+      config.devServer.hot = false
+    }
 
     // Use any `index` file, not just index.js
     config.resolve.alias['preact-cli-entrypoint'] = resolve(
@@ -20,9 +14,6 @@ export default {
       'src',
       'index'
     )
-    config.resolve.alias['react'] = 'preact/compat'
-    config.resolve.alias['react-dom'] = 'preact/compat'
-    config.resolve.alias['react-dom/test-utils'] = 'preact/test-utils'
 
     config.node = {
       ...config.node,
@@ -44,6 +35,18 @@ export default {
         __CLIENT__: JSON.stringify(!env.isServer),
         __DEV__: JSON.stringify(!env.isProd),
       }),
+    ].filter(Boolean)
+
+    config.module.rules = [
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: '@svgr/webpack?-svgo,+titleProp,+ref![path]',
+          },
+        ],
+      },
+      ...config.module.rules,
     ]
 
     const {
@@ -52,8 +55,48 @@ export default {
 
     babelConfig.plugins.push(
       require.resolve('@babel/plugin-proposal-optional-chaining'),
-      require.resolve('@babel/plugin-proposal-nullish-coalescing-operator')
+      require.resolve('@babel/plugin-proposal-nullish-coalescing-operator'),
+      [
+        require.resolve('babel-plugin-dash'),
+        {
+          instances: {
+            styles: {'./src/styles': 'styles'},
+            mq: {'./src/styles': 'mq'},
+          },
+        },
+      ]
     )
+
+    if (env.isProd) {
+      babelConfig.plugins.push(
+        require.resolve('babel-plugin-annotate-pure-calls'),
+        require.resolve('babel-plugin-optimize-react')
+      )
+
+      if (!env.isServer) {
+        config.optimization = {
+          ...config.optimization,
+          splitChunks: {
+            chunks: 'async',
+            cacheGroups: {
+              commons: {
+                chunks: 'all',
+                minChunks: 2,
+                reuseExistingChunk: true,
+              },
+              vendor: {
+                test: /node_modules/,
+                chunks: 'initial',
+                name: 'vendor',
+                priority: 10,
+                enforce: true,
+                reuseExistingChunk: true,
+              },
+            },
+          },
+        }
+      }
+    }
 
     return config
   },

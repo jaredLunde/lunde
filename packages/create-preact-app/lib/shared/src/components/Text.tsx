@@ -2,29 +2,32 @@ import {h} from 'preact'
 import {forwardRef} from 'preact/compat'
 import clsx from 'clsx'
 import css from 'minify-css.macro'
-import {Variants} from '../types'
-import {styles, ds, variables} from '../styles'
+import {styles, font, variables} from '../styles'
 import type {LayoutAttributes} from '@dash-ui/react-layout'
+import type {Variants} from '../types'
 
 export const Text: React.FC<TextProps> = forwardRef<HTMLElement, TextProps>(
-  ({as = 'span', sx, className, ...props}, ref) =>
+  ({as = 'span', variant, className, ...props}, ref) =>
     h(
       as,
       Object.assign(props, {
         ref,
-        className: clsx(className, Array.isArray(sx) ? text(...sx) : text(sx)),
+        className: clsx(
+          className,
+          Array.isArray(variant) ? text(...variant) : text(variant)
+        ),
       })
     )
 )
 
 export const text = styles<
-  keyof typeof ds.font.styles | keyof typeof variables.font.color
+  keyof typeof font.styles | keyof typeof variables.color
 >({
-  ...ds.font.styles,
-  ...Object.keys(variables.font.color).reduce((prev, key) => {
-    prev[key] = ({font}) =>
+  ...font.styles,
+  ...Object.keys(variables.color).reduce((prev, key) => {
+    prev[key] = ({color}) =>
       css`
-        color: ${font.color[key]}!important;
+        color: ${color[key]}!important;
       `
     return prev
   }, {}),
@@ -32,6 +35,6 @@ export const text = styles<
 
 export interface TextProps extends LayoutAttributes {
   as?: any
-  sx?: Variants<typeof text.styles>
+  variant?: Variants<typeof text.styles>
   className?: string | string[]
 }

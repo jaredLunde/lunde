@@ -52,7 +52,10 @@ module.exports.dependencies = (variables, args) => {
     '@typescript-eslint/eslint-plugin': 'latest',
     '@typescript-eslint/parser': 'latest',
     'babel-eslint': 'latest',
+    'babel-plugin-annotate-pure-calls': 'latest',
     'babel-plugin-closure-elimination': 'latest',
+    'babel-plugin-dash': 'latest',
+    'babel-plugin-optimize-react': 'latest',
     clsx: 'latest',
     'code-split.macro': 'latest',
     'create-async-component': 'latest',
@@ -71,10 +74,10 @@ module.exports.dependencies = (variables, args) => {
     'preact-cli': 'rc',
     'preact-render-spy': 'latest',
     'preact-render-to-string': 'latest',
-    'preact-router': 'latest',
     prettier: 'latest',
     'ts-loader': 'latest',
     typescript: 'latest',
+    wouter: 'latest',
   }
 
   if (args.mdx) {

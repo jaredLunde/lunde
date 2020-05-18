@@ -3,23 +3,29 @@ import {forwardRef} from 'preact/compat'
 import css from 'minify-css.macro'
 import clsx from 'clsx'
 import AccessibleButton from '@accessible/button'
-import {styles, ds} from '../styles'
-import {Variants} from '../types'
+import {styles, mq, bg, color} from '../styles'
+import {Link} from './Link'
 import type {LayoutAttributes} from '@dash-ui/react-layout'
+import type {Variants} from '../types'
+import type {LinkProps} from './Link'
 
 export const Button: React.FC<ButtonProps> = forwardRef<
   HTMLElement,
   ButtonProps
->(({as = 'button', sx = 'primary', ...props}, ref) => (
+>(({as = 'button', variant = 'primary', ...props}, ref) => (
   <AccessibleButton>
     {h(
       as,
       Object.assign(props, {
         className: clsx(
           props.className,
-          Array.isArray(sx)
-            ? (sx && sx.indexOf('outline') > -1 ? buttonOutline : button)(...sx)
-            : (sx && sx === 'outline' ? buttonOutline : button)(sx)
+          Array.isArray(variant)
+            ? (variant && variant.indexOf('outline') > -1
+                ? buttonOutline
+                : button)(...variant)
+            : (variant && variant === 'outline' ? buttonOutline : button)(
+                variant
+              )
         ),
         ref,
       })
@@ -28,11 +34,10 @@ export const Button: React.FC<ButtonProps> = forwardRef<
 ))
 
 export const button = styles<
-  'default' | 'primary' | 'outline' | keyof typeof ds.bg.styles
+  'default' | 'primary' | 'outline' | keyof typeof bg.styles
 >({
-  default: ds.mq({
-    default: ({color, radius, font, gap}) => css`
-      margin: 0;
+  default: mq({
+    default: ({transition, radius, font, gap}) => css`
       text-decoration: none;
       -webkit-font-smoothing: inherit;
       -moz-osx-font-smoothing: inherit;
@@ -44,15 +49,17 @@ export const button = styles<
       vertical-align: middle;
       user-select: none;
       line-height: 1;
-      padding: ${10 / 16}rem ${24 / 16}rem;
-      border-radius: ${radius.sm};
+      padding: ${8 / 16}rem ${16 / 16}rem;
+      border-radius: ${radius.secondary};
       border: none;
-      ${ds.font.css('body')};
+      font-size: ${font.size.content};
+      line-height: ${font.leading.content};
+      letter-spacing: ${font.tracking.content};
       font-family: ${font.family.brand};
       font-weight: 700;
-      color: ${color.white};
+      color: white;
       transform-origin: center;
-      transition: all 100ms ease-out;
+      transition: all ${transition.duration.swift} ${transition.timing.move};
 
       &:active {
         opacity: 1;
@@ -64,7 +71,7 @@ export const button = styles<
     `,
     hover: css`
       &:hover {
-        transform: scale(1.05);
+        transform: scale(1.08);
         opacity: 0.75;
         &:active {
           opacity: 1;
@@ -72,14 +79,14 @@ export const button = styles<
       }
     `,
   }),
-  ...ds.bg.styles,
+  ...bg.styles,
 })
 
 export const buttonOutline = styles<
-  'default' | 'primary' | 'outline' | keyof typeof ds.color.styles
+  'default' | 'primary' | 'outline' | keyof typeof color.styles
 >({
-  default: ds.mq({
-    default: ({color, radius, font, gap}) => css`
+  default: mq({
+    default: ({radius, font, gap}) => css`
       margin: 0;
       text-decoration: none;
       -webkit-font-smoothing: inherit;
@@ -92,13 +99,15 @@ export const buttonOutline = styles<
       vertical-align: middle;
       user-select: none;
       line-height: 1;
-      padding: ${10 / 16}rem ${24 / 16}rem;
-      border-radius: ${radius.sm};
-      ${ds.font.css('body')};
+      padding: ${8 / 16}rem ${16 / 16}rem;
+      border-radius: ${radius.primary};
+      font-size: ${font.size.content};
+      line-height: ${font.leading.content};
+      letter-spacing: ${font.tracking.content};
       font-family: ${font.family.brand};
       font-weight: 700;
       border: 1px solid currentColor;
-      color: ${color.white};
+      color: white;
       transform-origin: center;
       transition: all 100ms ease-out;
       background-color: transparent;
@@ -118,11 +127,34 @@ export const buttonOutline = styles<
       }
     `,
   }),
-  ...ds.color.styles,
+  ...color.styles,
 })
 
 export interface ButtonProps extends LayoutAttributes {
   as?: any
-  sx?: Variants<typeof button.styles | typeof buttonOutline.styles>
+  variant?: Variants<typeof button.styles | typeof buttonOutline.styles>
+  className?: string | string[]
+}
+
+export const ButtonLink: React.FC<ButtonLinkProps> = ({
+  variant = 'primary',
+  ...props
+}) =>
+  h(
+    Link as any,
+    Object.assign(props, {
+      className: clsx(
+        props.className,
+        Array.isArray(variant)
+          ? (variant && variant.indexOf('outline') > -1
+              ? buttonOutline
+              : button)(...variant)
+          : (variant && variant === 'outline' ? buttonOutline : button)(variant)
+      ),
+    })
+  )
+
+export type ButtonLinkProps = Omit<LinkProps, 'className'> & {
+  variant?: Variants<typeof button.styles | typeof buttonOutline.styles>
   className?: string | string[]
 }

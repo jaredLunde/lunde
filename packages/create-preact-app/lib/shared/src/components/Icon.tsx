@@ -2,16 +2,19 @@ import {h} from 'preact'
 import {forwardRef, memo} from 'preact/compat'
 import css from 'minify-css.macro'
 import clsx from 'clsx'
-import {Variants} from '../types'
-import {styles, ds, AppVariables} from '../styles'
+import {styles, color, AppVariables} from '../styles'
 import type {LayoutAttributes} from '@dash-ui/react-layout'
+import type {Variants} from '../types'
 
 export const Icon: React.FC<IconProps> = memo(
   forwardRef<SVGElement, IconProps>(
-    ({render, color, sx, className, size = 'md', style, ...props}, ref) => {
+    (
+      {render, color, variant, className, size = 'md', style, ...props},
+      ref
+    ) => {
       props.className = clsx(
         className,
-        Array.isArray(sx) ? icon(color, ...sx) : icon(color, sx)
+        Array.isArray(variant) ? icon(color, ...variant) : icon(color, variant)
       )
       props.ref = ref
       const sizeArr: string[] = String(sizes[size] || size).split('x')
@@ -32,7 +35,7 @@ export const Icon: React.FC<IconProps> = memo(
             ? sizeArr[1]
             : Number(sizeArr[1]),
       }
-      console.log('Render', render)
+
       props.role = props.hasOwnProperty('role') ? props.role : 'img'
       props['data-icon'] = true
       return h(render, props)
@@ -47,7 +50,7 @@ export const icon = styles<keyof AppVariables['color'] | 'default'>({
     color: currentColor;
     line-height: 1;
   `,
-  ...ds.color.styles,
+  ...color.styles,
 })
 
 const sizes = {

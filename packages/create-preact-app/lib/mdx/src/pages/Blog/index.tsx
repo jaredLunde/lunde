@@ -1,9 +1,9 @@
 import {h} from 'preact'
 import createAsyncComponent from 'create-async-component'
-import css from 'minify-css.macro'
 import codeSplit from 'code-split.macro'
-import {Link} from 'preact-router'
+import css from 'minify-css.macro'
 import {styles} from '../../styles'
+import {Link} from '../../components/Link'
 
 const posts = {
   'hello-world': createAsyncComponent(
@@ -11,7 +11,7 @@ const posts = {
   ),
 }
 
-export default () => {
+export const Blog: React.FC = () => {
   return (
     <div className={blog()}>
       <div className={blogHeader()}>

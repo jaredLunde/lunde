@@ -1,5 +1,5 @@
 import {h} from 'preact'
-import {Route} from 'preact-router'
+import {Route} from 'wouter'
 import codeSplit from 'code-split.macro'
 import asyncComponent from 'create-async-component'
 

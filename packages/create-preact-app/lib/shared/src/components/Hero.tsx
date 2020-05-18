@@ -1,14 +1,14 @@
 import {h} from 'preact'
 import {forwardRef, useEffect, useState} from 'preact/compat'
+import {useWindowHeight} from '@react-hook/window-size'
 import clsx from 'clsx'
 import css from 'minify-css.macro'
-import {useWindowHeight} from '@react-hook/window-size'
-import {styles, ds} from '../styles'
-import {Variants} from '../types'
+import {styles, mq, pad} from '../styles'
 import type {LayoutAttributes} from '@dash-ui/react-layout'
+import type {Variants} from '../types'
 
 export const hero = styles({
-  default: ds.mq({
+  default: mq({
     default: css`
       display: flex;
       flex-direction: column;
@@ -17,19 +17,19 @@ export const hero = styles({
       position: relative;
       width: 100%;
     `,
-    phone: ds.pad.css('lg'),
-    tablet: ds.pad.css('xl'),
+    phone: pad.css('lg'),
+    tablet: pad.css('xl'),
   }),
 })
 
 export interface HeroProps extends LayoutAttributes {
   as?: any
-  sx?: Variants<typeof hero.styles>
+  variant?: Variants<typeof hero.styles>
   className?: string | string[]
 }
 
 export const Hero: React.FC<HeroProps> = forwardRef<HTMLElement, HeroProps>(
-  ({as = 'div', sx, className, ...props}, ref) => {
+  ({as = 'div', variant, className, ...props}, ref) => {
     const height = useWindowHeight()
     const [mountStatus, setMountStatus] = useState<'unmounted' | 'mounted'>(
       'unmounted'
@@ -43,7 +43,10 @@ export const Hero: React.FC<HeroProps> = forwardRef<HTMLElement, HeroProps>(
       as,
       Object.assign(props, {
         ref,
-        className: clsx(className, Array.isArray(sx) ? hero(...sx) : hero(sx)),
+        className: clsx(
+          className,
+          Array.isArray(variant) ? hero(...variant) : hero(variant)
+        ),
         style: Object.assign(
           {minHeight: mountStatus === 'mounted' ? height : '100vh'},
           props.style

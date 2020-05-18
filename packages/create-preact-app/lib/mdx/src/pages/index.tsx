@@ -1,9 +1,9 @@
 import {h} from 'preact'
-import {Route} from 'preact-router'
+import {Route} from 'wouter'
 import codeSplit from 'code-split.macro'
 import asyncComponent from 'create-async-component'
 
-const Blog = asyncComponent(codeSplit('./Blog', __SERVER__))
+const Blog = asyncComponent(codeSplit('./Blog', __SERVER__), {property: 'Blog'})
 const Home = asyncComponent(codeSplit('./Home', __SERVER__), {property: 'Home'})
 
 export default [
