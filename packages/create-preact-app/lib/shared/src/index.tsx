@@ -1,8 +1,9 @@
 import {h} from 'preact'
 import {Provider as PrerenderProvider} from '@preact/prerender-data-provider'
 import {BodyUsingKeyboard} from '@accessible/using-keyboard'
-import {Router, Switch, Link} from 'wouter'
+import {Router, Switch} from 'wouter'
 import {DesignSystem} from './components'
+import {styles} from './styles'
 // Routes are automagically code split
 import {pages} from './pages'
 import type {Styles} from '@dash-ui/styles'

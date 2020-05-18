@@ -1,7 +1,7 @@
 import {createStyles} from '@dash-ui/styles'
 import reset from '@dash-ui/reset'
 import dashMq from '@dash-ui/mq'
-import spacing from '@dash-ui/spacing'
+import * as spacing from '@dash-ui/spacing'
 import css from 'minify-css.macro'
 
 //
@@ -239,49 +239,24 @@ styles.global(reset)
 // Creates global styles
 styles.global(
   ({color}) => css`
-    @font-face {
-      font-family: 'Jost';
-      font-weight: 400;
-      src: url(${require('./assets/fonts/Jost-400-Book.woff2')}) format('woff2'),
-        url(${require('./assets/fonts/Jost-400-Book.ttf')}) format('truetype');
-    }
-
-    @font-face {
-      font-family: 'Jost';
-      font-weight: 700;
-      font-style: normal;
-      src: url(${require('./assets/fonts/Jost-600-Semi.woff2')}) format('woff2'),
-        url(${require('./assets/fonts/Jost-600-Semi.ttf')}) format('truetype');
-    }
-
-    @font-face {
-      font-family: 'Jost';
-      font-weight: 700;
-      font-style: italic;
-      src: url(${require('./assets/fonts/Jost-600-SemiItalic.woff2')})
-          format('woff2'),
-        url(${require('./assets/fonts/Jost-600-SemiItalic.ttf')})
-          format('truetype');
-    }
-
     * {
       position: relative;
     }
 
     body {
-      ${ds.font.css('content')};
+      ${font.css('content')};
       color: ${color['text/primary']};
       font-weight: 400;
       background: ${color['intention/info']};
     }
 
     p {
-      ${ds.font.css('content')};
+      ${font.css('content')};
       margin-bottom: 0;
     }
 
     a {
-      ${ds.font.css('content')};
+      ${font.css('content')};
       color: ${color['link/primary']};
       font-weight: 700;
     }

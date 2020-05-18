@@ -5,4 +5,4 @@ import asyncComponent from 'create-async-component'
 
 const Home = asyncComponent(codeSplit('./Home', __SERVER__), {property: 'Home'})
 
-export default [<Route key='home' path='/' component={Home} />]
+export const pages = [<Route key='home' path='/' component={Home} />]
