@@ -8,7 +8,7 @@ module.exports = api => {
         modules: esm || module ? false : 'commonjs',
         targets: module
           ? {
-              browsers: '> 2%',
+              browsers: 'cover 80% in US',
             }
           : {
               node: esm ? '12' : '10',
