@@ -32,7 +32,7 @@ module.exports.devDependencies = (variables, args) => {
     '@testing-library/jest-dom': 'latest',
     '@testing-library/react': 'latest',
     '@testing-library/react-hooks': 'latest',
-    '@testing-library/userEvent': 'latest',
+    '@testing-library/user-event': 'latest',
     jest: 'latest',
     'babel-eslint': 'latest',
     'babel-plugin-annotate-pure-calls': 'latest',
