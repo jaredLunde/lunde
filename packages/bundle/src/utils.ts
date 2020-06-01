@@ -72,8 +72,7 @@ export const loadConfig = async (
       config,
       config,
       module.require,
-      // @ts-ignore
-      this,
+      global,
       configFile,
       path.dirname(configFile)
     )
