@@ -1,4 +1,4 @@
-# eslint-plugin-lunde
+# eslint-config-lunde
 
 > ESLint rules I'm using for my projects
 
