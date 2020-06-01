@@ -1,6 +1,9 @@
 import fs from 'fs'
 import path from 'path'
+import Module from 'module'
 import {spawn as spawn_} from 'child_process'
+import vm from 'vm'
+import {transformFileAsync} from '@babel/core'
 import chalk from 'chalk'
 import type {Chalk} from 'chalk'
 import findPkgJSON from 'find-package-json'
@@ -33,12 +36,49 @@ export const loadConfig = async (
   )
 ): Promise<LundleConfig | undefined> => {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const config = require(configFile)
+    // Allows ES6 lundle configs
+    const t = await transformFileAsync(configFile, {
+      presets: [
+        [
+          '@lunde/es',
+          {
+            env: {
+              modules: 'commonjs',
+              targets: {
+                node: 'current',
+              },
+            },
+            devExpression: false,
+            typescript: true,
+          },
+        ],
+      ],
+      plugins: [],
+    })
+    // Run this in a VM context for safer eval
+    const wrapper = vm.runInThisContext(
+      Module.wrap(t?.code || '"use strict"'),
+      {
+        filename: configFile,
+      }
+    )
+    // Call the wrapper with our custom exports
+    const config: LundleConfig = {}
+
+    wrapper.call(
+      config,
+      config,
+      require,
+      // @ts-ignore
+      this,
+      configFile,
+      path.dirname(configFile)
+    )
+
     return config
-    // eslint-disable-next-line no-empty
   } catch (err) {
-    console.log('Error', err)
+    console.error(err)
+    process.exit(1)
   }
 }
 

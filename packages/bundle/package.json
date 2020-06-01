@@ -15,7 +15,6 @@
   },
   "main": "dist/main/index.js",
   "source": "src/index.ts",
-  "unpkg": "dist/unpkg/lundle.js",
   "types": "types/index.d.ts",
   "files": [
     "/dist",
