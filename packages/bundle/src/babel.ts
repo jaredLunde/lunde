@@ -1,13 +1,13 @@
-import {transformFileAsync} from '@babel/core'
 import fs from 'fs'
 import path from 'path'
+import {transformFileAsync} from '@babel/core'
+import type {PluginItem} from '@babel/core'
 import chalk from 'chalk'
 import chokidar from 'chokidar'
 import rimraf from 'rimraf'
 import getIn from 'lodash.get'
 import minimatch from 'minimatch'
 import {getPkgJson, walk, cwd, log, success, error, loadConfig} from './utils'
-import type {PluginItem} from '@babel/core'
 
 export const babel = async (options: LundleBabelOptions = {}) => {
   const {

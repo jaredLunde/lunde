@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
-import chalk from 'chalk'
 import {spawn as spawn_} from 'child_process'
+import chalk from 'chalk'
 import type {Chalk} from 'chalk'
 import findPkgJSON from 'find-package-json'
 import type {LundleConfig} from './types'

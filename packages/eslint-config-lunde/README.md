@@ -1,5 +1,9 @@
 # eslint-config-lunde
 
+```sh
+npm i -D eslint-config-lunde
+```
+
 > ESLint rules I'm using for my projects
 
 - [x] Automatically detects TypeScript and adds appropriate parser/plugins

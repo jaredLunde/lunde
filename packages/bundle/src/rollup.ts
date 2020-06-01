@@ -1,6 +1,6 @@
+import path from 'path'
 import * as rollup_ from 'rollup'
 import getIn from 'lodash.get'
-import path from 'path'
 // @ts-ignore
 import babel from '@rollup/plugin-babel'
 import json from '@rollup/plugin-json'
@@ -9,14 +9,14 @@ import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import {terser} from 'rollup-plugin-terser'
 import {pascalCase} from 'change-case'
-import {getPkgJson, log, success, loadConfig} from './utils'
-import {babelConfig} from './babel'
 import type {
   RollupOptions,
   InputOptions,
   OutputOptions,
   RollupOutput,
 } from 'rollup'
+import {getPkgJson, log, success, loadConfig} from './utils'
+import {babelConfig} from './babel'
 
 // @ts-ignore
 global.document = global.document || {}

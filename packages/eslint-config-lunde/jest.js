@@ -23,10 +23,11 @@ try {
 
 module.exports = {
   plugins: [
-    'plugin:jest/recommended',
+    'jest',
     hasJestDom ? 'jest-dom' : null,
     hasTestingLibrary ? 'testing-library' : null,
   ].filter(Boolean),
+  extends: ['plugin:jest/recommended'],
   rules: {
     ...(hasJestDom
       ? {

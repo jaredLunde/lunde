@@ -110,6 +110,13 @@ module.exports = {
   },
   settings: {
     'import/ignore': ['node_modules', '.json$', '.(scss|less|css|styl)$'],
+    ...(!hasTypeScript
+      ? null
+      : {
+          'import/resolver': {
+            typescript: {}, // this loads <rootdir>/tsconfig.json to eslint
+          },
+        }),
   },
   env: {
     es6: true,
