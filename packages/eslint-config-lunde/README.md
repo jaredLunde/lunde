@@ -8,7 +8,7 @@
 
 ## Quick start
 
-```
+```json
 // package.json
 "eslintConfig": {
   "extends": ["lunde"]
