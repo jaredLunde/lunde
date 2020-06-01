@@ -1,0 +1,105 @@
+{
+  "name": "@lunde/bundle",
+  "version": "0.1.0",
+  "homepage": "https://github.com/jaredLunde/lunde/tree/master/packages/bundle#readme",
+  "repository": "github:jaredLunde/lunde",
+  "bugs": "https://github.com/jaredLunde/lunde/issues",
+  "author": "Jared Lunde <jared.lunde@gmail.com> (https://jaredLunde.com)",
+  "license": "MIT",
+  "description": "A command line tool for creating dist builds for TS/JS libraries using the \"exports\" property in package.json",
+  "keywords": [
+    "build"
+  ],
+  "bin": {
+    "lundle": "dist/main/bin"
+  },
+  "main": "dist/main/index.js",
+  "source": "src/index.ts",
+  "unpkg": "dist/unpkg/lundle.js",
+  "types": "types/index.d.ts",
+  "files": [
+    "/dist",
+    "/src",
+    "/types"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/main/index.js",
+      "source": "./src/index.ts",
+      "types": "./types/index.d.ts",
+      "default": "./dist/main/index.js"
+    },
+    "./package.json": "./package.json",
+    "./": "./"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "babel-node src/bin.ts -x \".ts\" --presets=\"@babel/env\",\"@babel/typescript\"",
+    "build-types": "tsc -p tsconfig.json -d --outDir types --emitDeclarationOnly",
+    "check-types": "tsc --noEmit -p tsconfig.json",
+    "format": "prettier --write \"**/*.{ts,js,md,yml,json,eslintrc,prettierrc}\"",
+    "lint": "eslint . --ext .ts",
+    "prepublishOnly": "npm run lint && npm run test && npm run build && npm run format",
+    "test": "jest",
+    "validate": "npm run check-types && npm run lint && npm run test -- --coverage"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run build-types && git add types && lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.{ts,js}": [
+      "eslint",
+      "prettier --write"
+    ],
+    "**/*.{md,yml,json}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@babel/node": "^7.10.1",
+    "@types/find-package-json": "^1.1.1",
+    "@types/jest": "latest",
+    "@types/lodash.get": "^4.4.6",
+    "@types/minimatch": "^3.0.3",
+    "@types/rimraf": "^3.0.0",
+    "husky": "latest",
+    "jest": "latest",
+    "lint-staged": "latest",
+    "ts-jest": "latest",
+    "typescript": "latest"
+  },
+  "dependencies": {
+    "@babel/preset-react": "^7.10.1",
+    "@lunde/babel-preset-es": "^1.0.1",
+    "@rollup/plugin-babel": "^5.0.2",
+    "@rollup/plugin-commonjs": "^12.0.0",
+    "@rollup/plugin-json": "^4.0.3",
+    "@rollup/plugin-node-resolve": "^8.0.0",
+    "@rollup/plugin-replace": "^2.3.2",
+    "@typescript-eslint/eslint-plugin": "^3.0.2",
+    "@typescript-eslint/parser": "^3.0.2",
+    "babel-plugin-annotate-pure-calls": "^0.4.0",
+    "babel-plugin-optimize-react": "^0.0.4",
+    "chalk": "^4.0.0",
+    "change-case": "^4.1.1",
+    "chokidar": "^3.4.0",
+    "eslint": "^7.1.0",
+    "eslint-import-resolver-jest": "^3.0.0",
+    "eslint-plugin-jest": "^23.13.2",
+    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-react-hooks": "^4.0.4",
+    "find-package-json": "^1.2.0",
+    "lodash.get": "^4.4.2",
+    "minimatch": "^3.0.4",
+    "ora": "^4.0.4",
+    "prettier": "^2.0.5",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.12.0",
+    "rollup-plugin-terser": "^6.1.0",
+    "yargs": "^15.3.1"
+  },
+  "peerDependencies": {}
+}
