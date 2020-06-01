@@ -29,7 +29,8 @@
   ],
   "prettier": {
     "semi": false,
-    "singleQuote": true
+    "singleQuote": true,
+    "bracketSpacing": false
   },
   "prettierIgnore": [
     "node_modules",
