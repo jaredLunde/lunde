@@ -1,3 +1,4 @@
+import jest from './jest.config.js'
 let DEBUGGED = false
 
 export const babel = (config) => {

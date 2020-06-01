@@ -64,17 +64,21 @@ export const loadConfig = async (
     )
     // Call the wrapper with our custom exports
     const config: LundleConfig = {}
+    // Adds config path to module paths for relative resolution
+    const origPaths = module.paths
+    module.paths = [path.dirname(configFile), ...module.paths]
 
     wrapper.call(
       config,
       config,
-      require,
+      module.require,
       // @ts-ignore
       this,
       configFile,
       path.dirname(configFile)
     )
-
+    // Resets module paths to originals
+    module.paths = origPaths
     return config
   } catch (err) {
     console.error(err)
