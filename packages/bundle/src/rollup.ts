@@ -1,6 +1,5 @@
 import path from 'path'
 import * as rollup_ from 'rollup'
-import getIn from 'lodash.get'
 // @ts-ignore
 import babel from '@rollup/plugin-babel'
 import json from '@rollup/plugin-json'
@@ -17,12 +16,9 @@ import type {
 } from 'rollup'
 import {getPkgJson, log, success, loadConfig} from './utils'
 import {babelConfig} from './babel'
-
-// @ts-ignore
-global.document = global.document || {}
+import type {LundleOutput} from './types'
 
 export const rollup = async (options: LundleRollupOptions = {}) => {
-  // log('[ʀᴏʟʟᴜᴘ]')
   const {
     output = {
       umd: ['unpkg', 'umd:main', 'umd'],
@@ -35,113 +31,166 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
   const configOverrides = (await loadConfig())?.rollup
   const {value: pkg, filename} = getPkgJson()
 
-  if (filename) {
-    const bundles: Promise<RollupOutput>[] = []
+  if (!filename || !pkg) {
+    console.error(
+      'Failed to find a package.json file near the working directory'
+    )
+    process.exit(1)
+  }
 
+  const root = path.dirname(filename)
+  const bundles: Promise<RollupOutput>[] = []
+  const outputs: LundleOutput<RollupOutputTypes>[] = []
+  const hasExportsField = !!pkg.exports
+
+  if (hasExportsField) {
     for (const outputType_ in output) {
       const outputType = outputType_ as RollupOutputTypes
-      const field = output[outputType] as string[]
-      let outFile: string | undefined
+      const outputFields = output[outputType] as string[]
 
-      for (const fieldName of field) {
-        outFile =
-          getIn(pkg, ['exports', '.', fieldName]) || getIn(pkg, fieldName)
-        if (outFile) break
+      // Package.json contains an export field so we'll search for
+      // our fields in those first
+      for (const exportPath in pkg.exports) {
+        const exports = pkg.exports[exportPath]
+        let file: string | undefined
+
+        for (const fieldName of outputFields) {
+          file = exports[fieldName]
+          if (file) break
+        }
+
+        // Skip empty fields
+        if (!file) continue
+
+        const srcFile = source || exports.source || pkg.source
+
+        if (!srcFile) {
+          console.error('[𝙧𝙤𝙡𝙡𝙪𝙥] could not find a source file for', outputType)
+          process.exit(1)
+        }
+
+        outputs.push({
+          type: outputType,
+          source: path.isAbsolute(srcFile) ? srcFile : path.join(root, srcFile),
+          file: path.isAbsolute(file) ? file : path.join(root, file),
+        })
+      }
+    }
+  }
+
+  if (!outputs.length) {
+    for (const outputType_ in output) {
+      const outputType = outputType_ as RollupOutputTypes
+      const outputFields = output[outputType] as string[]
+      // No exports field, search for singular field names in package.json
+      let file: string | undefined
+
+      for (const fieldName of outputFields) {
+        file = pkg[fieldName]
+        if (file) break
       }
 
-      // Skip empty fields
-      if (!field || !outFile) continue
-
-      const srcFile =
-        source || getIn(pkg, ['exports', '.', 'source']) || getIn(pkg, 'source')
+      // Bails if no file was found
+      if (!file) continue
+      const srcFile = source || pkg.source
 
       if (!srcFile) {
-        console.error('[ʀᴏʟʟᴜᴘ] could not find a source file')
+        console.error('[𝙧𝙤𝙡𝙡𝙪𝙥] could not find a source file for', outputType)
         process.exit(1)
       }
 
-      const isReact = react === void 0 ? !!srcFile.match(/\.(jsx|tsx)$/) : react
-      const inputOptions: InputOptions = {
-        input: srcFile,
-        plugins: [
-          json(),
-          resolve({
-            mainFields: ['source', 'browser', 'module', 'main'],
-            extensions: ['.mjs', '.js', '.ts', '.tsx'],
-          }),
-          babel({
-            exclude: ['**/test/**', '**/*.test.{js,jsx,ts,tsx}'],
-            extensions: ['.js', '.jsx', '.ts', '.tsx'],
-            babelHelpers: 'bundled',
-            ...babelConfig(outputType as RollupOutputTypes, {
-              react: isReact,
-              typescript: !!srcFile.match(/\.(ts|tsx)$/),
-            }),
-          }),
-          commonjs(),
-          replace({
-            'process.env.NODE_ENV': JSON.stringify(env),
-          }),
-          terser({
-            output: {comments: false},
-            compress: {
-              booleans_as_integers: true,
-              hoist_funs: true,
-              keep_fargs: false,
-              passes: 2,
-              unsafe_comps: true,
-              unsafe_math: true,
-              unsafe_undefined: true,
-            },
-          }),
-          // ...plugins,
-        ],
-        external: [],
-      }
+      outputs.push({
+        type: outputType,
+        source: path.isAbsolute(srcFile) ? srcFile : path.join(root, srcFile),
+        file: path.isAbsolute(file) ? file : path.join(root, file),
+      })
+    }
+  }
 
-      const outputOptions: OutputOptions = {
-        name: pascalCase(path.basename(outFile).split('.')[0]),
-        file: outFile,
-        format: outputType,
-        globals: isReact
-          ? {
-              react: 'React',
-              'react-dom': 'ReactDOM',
-            }
-          : {},
-      }
-
-      let finalConfig: RollupOptions = {
-        ...inputOptions,
-        output: [outputOptions],
-      }
-
-      if (typeof configOverrides === 'function') {
-        finalConfig = configOverrides(finalConfig, options)
-      }
-
-      if (watch) {
-        log('[ʀᴏʟʟᴜᴘ] watching for changes...')
-        rollup_.watch({
-          ...finalConfig,
-          watch: {
-            buildDelay: 500,
+  for (const output of outputs) {
+    const isReact =
+      react === void 0 ? !!output.source.match(/\.(jsx|tsx)$/) : react
+    const inputOptions: InputOptions = {
+      input: output.source,
+      plugins: [
+        json(),
+        resolve({
+          mainFields: ['source', 'browser', 'module', 'main'],
+          extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx'],
+        }),
+        babel({
+          exclude: ['**/test/**', '**/*.test.{js,jsx,ts,tsx}'],
+          extensions: ['.js', '.jsx', '.ts', '.tsx'],
+          babelHelpers: 'bundled',
+          ...babelConfig(output.type, {
+            react: isReact,
+            typescript: !!output.source.match(/\.tsx?$/),
+          }),
+        }),
+        commonjs(),
+        replace({
+          'process.env.NODE_ENV': JSON.stringify(env),
+        }),
+        terser({
+          output: {comments: false},
+          compress: {
+            booleans_as_integers: true,
+            hoist_funs: true,
+            keep_fargs: false,
+            passes: 2,
+            unsafe_comps: true,
+            unsafe_math: true,
+            unsafe_undefined: true,
           },
-        })
-      } else {
-        const output: OutputOptions[] = Array.isArray(finalConfig.output)
-          ? finalConfig.output
-          : [finalConfig.output as OutputOptions]
-        const {...input} = finalConfig
-        delete input.output
-        const bundle = await rollup_.rollup(input)
-        bundles.push(...output.map((out) => bundle.write(out)))
-      }
+        }),
+        // ...plugins,
+      ],
+      external: [],
     }
 
-    if (!bundles.length) return
+    const outputOptions: OutputOptions = {
+      name: pascalCase(path.basename(output.file).split('.')[0]),
+      file: output.file,
+      format: output.type,
+      globals: isReact
+        ? {
+            react: 'React',
+            'react-dom': 'ReactDOM',
+          }
+        : {},
+    }
+
+    let finalConfig: RollupOptions = {
+      ...inputOptions,
+      output: [outputOptions],
+    }
+
+    if (typeof configOverrides === 'function') {
+      finalConfig = configOverrides(finalConfig, options)
+    }
+
+    if (watch) {
+      log('[𝙧𝙤𝙡𝙡𝙪𝙥] watching for changes...')
+      rollup_.watch({
+        ...finalConfig,
+        watch: {
+          buildDelay: 500,
+        },
+      })
+    } else {
+      success('[𝙧𝙤𝙡𝙡𝙪𝙥] building', output.type)
+      const rollupOutputs: OutputOptions[] = Array.isArray(finalConfig.output)
+        ? finalConfig.output
+        : [finalConfig.output as OutputOptions]
+      const {...input} = finalConfig
+      delete input.output
+      const bundle = await rollup_.rollup(input)
+      bundles.push(...rollupOutputs.map((out) => bundle.write(out)))
+    }
+  }
+
+  if (bundles.length) {
     await Promise.all(bundles)
-    success('[ʀᴏʟʟᴜᴘ] built')
   }
 }
 

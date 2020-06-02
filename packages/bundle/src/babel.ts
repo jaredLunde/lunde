@@ -8,7 +8,7 @@ import rimraf from 'rimraf'
 import getIn from 'lodash.get'
 import minimatch from 'minimatch'
 import {getPkgJson, walk, cwd, log, success, error, loadConfig} from './utils'
-import type {ChokidarListener} from './types'
+import type {ChokidarListener, LundleOutput} from './types'
 
 export const babel = async (options: LundleBabelOptions = {}) => {
   const {
@@ -22,130 +22,189 @@ export const babel = async (options: LundleBabelOptions = {}) => {
     react,
   } = options
   const {value: pkg, filename} = getPkgJson()
-  const watchers: [string, ChokidarListener][] = []
 
-  if (filename) {
-    const root = path.dirname(filename)
-    const configOverrides = (await loadConfig())?.babel
-    const transforms: ReturnType<typeof transform>[] = []
+  if (!filename || !pkg) {
+    console.error(
+      'Failed to find a package.json file near the working directory'
+    )
+    process.exit(1)
+  }
 
-    for (const outputType in output) {
-      const field = output[outputType as BabelOutputTypes] as string[]
-      let outIndexFile: string | undefined
+  const root = path.dirname(filename)
+  const outputs: LundleOutput<BabelOutputTypes>[] = []
+  const hasExportsField = !!pkg.exports
 
-      for (const fieldName of field) {
-        outIndexFile =
-          getIn(pkg, ['exports', '.', fieldName]) || getIn(pkg, fieldName)
-        if (outIndexFile) break
-      }
+  if (hasExportsField) {
+    for (const outputType_ in output) {
+      const outputType = outputType_ as BabelOutputTypes
+      const outputFields = output[outputType] as string[]
 
-      // Skip empty fields
-      if (!field || !outIndexFile) continue
+      // Package.json contains an export field so we'll search for
+      // our fields in those first
+      for (const exportPath in pkg.exports) {
+        const exports = pkg.exports[exportPath]
+        let file: string | undefined
 
-      const srcFile =
-        getIn(pkg, ['exports', '.', 'source']) || getIn(pkg, 'source')
-      const outDir = path.join(root, path.dirname(outIndexFile))
-      const srcDir = path.join(
-        root,
-        source || srcFile ? path.dirname(srcFile) : 'src'
-      )
-      const srcFiles = (await walk(srcDir))
-        .filter(minimatch.filter('*.{js,ts,jsx,tsx}', {matchBase: true}))
-        .filter(minimatch.filter('!*.d.ts', {matchBase: true}))
-        .filter(minimatch.filter('!*.test.*', {matchBase: true}))
-        .filter(minimatch.filter('!**/test/**', {matchBase: true}))
-        .filter(
-          minimatch.filter('!**/__{fixtures,test,tests,mocks,snapshots}__/**', {
-            matchBase: true,
-          })
-        )
+        for (const fieldName of outputFields) {
+          file = exports[fieldName]
+          if (file) break
+        }
 
-      transforms.push(
-        transform(
-          {
-            srcFiles,
-            srcDir,
-            root,
-            outputType: outputType as BabelOutputTypes,
-            react,
-            outDir,
-            outIndexFile,
-            configOverrides,
-          },
-          options
-        )
-      )
+        // Skip empty fields
+        if (!file) continue
 
-      if (watch) {
-        watchers.push([
-          srcDir,
-          (event, file) => {
-            switch (event) {
-              case 'change':
-              case 'add':
-                transform(
-                  {
-                    srcFiles: [file],
-                    srcDir,
-                    root,
-                    outputType: outputType as BabelOutputTypes,
-                    react,
-                    outDir,
-                    outIndexFile: outIndexFile as string,
-                    deleteDirOnStart: false,
-                    configOverrides,
-                  },
-                  options
-                )
-                break
+        const srcFile = source || exports.source || pkg.source
 
-              case 'unlink':
-                rimraf(
-                  path.join(
-                    outDir,
-                    path.relative(
-                      srcDir,
-                      file.replace(
-                        new RegExp(`${path.extname(file)}$`),
-                        path.extname(outIndexFile as string)
-                      )
-                    )
-                  ),
-                  () => {
-                    error('[ʙᴀʙᴇʟ]', chalk.bold(outputType), 'deleted', file)
-                  }
-                )
-                break
-            }
-          },
-        ])
+        if (!srcFile) {
+          console.error('[𝙗𝙖𝙗𝙚𝙡] could not find a source file for', outputType)
+          process.exit(1)
+        }
+
+        outputs.push({
+          type: outputType,
+          source: path.isAbsolute(srcFile) ? srcFile : path.join(root, srcFile),
+          file: path.isAbsolute(file) ? file : path.join(root, file),
+        })
       }
     }
+  }
 
-    await Promise.all(transforms)
-    // Initializes the watcher
-    if (watch) {
-      console.log('')
-      log('[ʙᴀʙᴇʟ] watching for changes...')
+  if (!outputs.length) {
+    for (const outputType_ in outputs) {
+      const outputType = outputType_ as BabelOutputTypes
+      const outputFields = output[outputType] as string[]
 
-      const watcher = chokidar.watch(
-        Array.from(new Set(watchers.map(([srcDir]) => srcDir))),
-        {
-          cwd: cwd(),
-          depth: 99,
-          persistent: true,
-          awaitWriteFinish: true,
-          ignoreInitial: true,
-        }
-      )
+      // No exports field, search for singular field names in package.json
+      let file: string | undefined
 
-      watcher.on('all', (event, file) => {
-        if (!file.match(/\.[tj]sx?/)) return
-        watchers
-          .filter(([srcDir]) => !file.startsWith(srcDir))
-          .forEach(([, callback]) => callback(event, file))
+      for (const fieldName of outputFields) {
+        file = pkg[fieldName]
+        if (file) break
+      }
+
+      // Bails if no file was found
+      if (!file) continue
+      const srcFile = source || pkg.source
+
+      if (!srcFile) {
+        console.error('[𝙩𝙨𝙘] could not find a source file for', outputType)
+        process.exit(1)
+      }
+
+      outputs.push({
+        type: outputType,
+        source: path.isAbsolute(srcFile) ? srcFile : path.join(root, srcFile),
+        file: path.isAbsolute(file) ? file : path.join(root, file),
       })
     }
+  }
+
+  const watchers: [string, ChokidarListener][] = []
+  const configOverrides = (await loadConfig())?.babel
+  const transforms: ReturnType<typeof transform>[] = []
+
+  for (const output of outputs) {
+    const outDir = path.dirname(output.file)
+    const srcDir = path.dirname(output.source)
+
+    const srcFiles = (await walk(srcDir))
+      .filter(minimatch.filter('*.{js,ts,jsx,tsx}', {matchBase: true}))
+      .filter(minimatch.filter('!*.d.ts', {matchBase: true}))
+      .filter(minimatch.filter('!*.test.*', {matchBase: true}))
+      .filter(minimatch.filter('!**/test/**', {matchBase: true}))
+      .filter(
+        minimatch.filter('!**/__{fixtures,test,tests,mocks,snapshots}__/**', {
+          matchBase: true,
+        })
+      )
+
+    transforms.push(
+      transform(
+        {
+          srcFiles,
+          srcDir,
+          root,
+          outputType: output.type,
+          react,
+          outDir,
+          outIndexFile: output.file,
+          configOverrides,
+        },
+        options
+      )
+    )
+
+    if (watch) {
+      watchers.push([
+        srcDir,
+        (event, file) => {
+          switch (event) {
+            case 'change':
+            case 'add':
+              transform(
+                {
+                  srcFiles: [file],
+                  srcDir,
+                  root,
+                  outputType: output.type,
+                  react,
+                  outDir,
+                  outIndexFile: output.file,
+                  deleteDirOnStart: false,
+                  configOverrides,
+                },
+                options
+              )
+              break
+
+            case 'unlink':
+              rimraf(
+                path.join(
+                  outDir,
+                  path.relative(
+                    srcDir,
+                    file.replace(
+                      new RegExp(`${path.extname(file)}$`),
+                      path.extname(output.file)
+                    )
+                  )
+                ),
+                () => {
+                  error('[𝙗𝙖𝙗𝙚𝙡]', chalk.bold(output.type), 'deleted', file)
+                }
+              )
+              break
+          }
+        },
+      ])
+    }
+  }
+
+  if (transforms.length) {
+    await Promise.all(transforms)
+  }
+
+  // Initializes the watcher
+  if (watch) {
+    log('[𝙗𝙖𝙗𝙚𝙡] watching for changes...')
+
+    const watcher = chokidar.watch(
+      Array.from(new Set(watchers.map(([srcDir]) => srcDir))),
+      {
+        cwd: cwd(),
+        depth: 99,
+        persistent: true,
+        awaitWriteFinish: true,
+        ignoreInitial: true,
+      }
+    )
+
+    watcher.on('all', (event, file) => {
+      if (!file.match(/\.[tj]sx?/)) return
+      watchers
+        .filter(([srcDir]) => !file.startsWith(srcDir))
+        .forEach(([, callback]) => callback(event, file))
+    })
   }
 }
 
@@ -226,7 +285,7 @@ const transform = async (
 
   await Promise.all(writtenFiles)
   success(
-    `[ʙᴀʙᴇʟ] ${chalk.bold(outputType)} ` +
+    `[𝙗𝙖𝙗𝙚𝙡] ${chalk.bold(outputType)} ` +
       (writtenFiles.length > 1
         ? `compiled ${writtenFiles.length} files`
         : `compiled ${srcFiles[0]}`)

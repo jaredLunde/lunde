@@ -14,6 +14,12 @@ export interface LundleConfig {
   tsc?: (config: CompilerOptions, options: LundleTscOptions) => CompilerOptions
 }
 
+export interface LundleOutput<OutputTypes> {
+  type: OutputTypes
+  source: string
+  file: string
+}
+
 export type ChokidarListener = (
   eventName: 'add' | 'addDir' | 'change' | 'unlink' | 'unlinkDir',
   path: string,

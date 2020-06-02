@@ -29,6 +29,10 @@
       "types": "./types/index.d.ts",
       "default": "./dist/main/index.js"
     },
+    "./lundle.config.js": {
+      "unpkg": "./dist/umd/lundle.min.js",
+      "source": "./lundle.config.js"
+    },
     "./package.json": "./package.json",
     "./": "./"
   },
