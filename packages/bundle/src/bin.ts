@@ -1,5 +1,6 @@
 import {babel} from './babel'
 import {rollup} from './rollup'
+import {tsc} from './tsc'
 import {log, error} from './utils'
 
 export const bin = () => {
@@ -11,11 +12,13 @@ export const bin = () => {
     process.exit(1)
   })
 
-  rollup({watch: false}).catch((err) => {
+  rollup({watch: true}).catch((err) => {
     error('[ʙᴀʙᴇʟ] compilation error\n')
     console.error(err)
     process.exit(1)
   })
+
+  tsc({watch: true})
 }
 
 bin()

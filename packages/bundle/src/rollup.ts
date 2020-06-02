@@ -117,7 +117,7 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
       }
 
       if (typeof configOverrides === 'function') {
-        finalConfig = configOverrides(finalConfig)
+        finalConfig = configOverrides(finalConfig, options)
       }
 
       if (watch) {

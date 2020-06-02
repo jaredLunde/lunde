@@ -8,6 +8,7 @@ import rimraf from 'rimraf'
 import getIn from 'lodash.get'
 import minimatch from 'minimatch'
 import {getPkgJson, walk, cwd, log, success, error, loadConfig} from './utils'
+import type {ChokidarListener} from './types'
 
 export const babel = async (options: LundleBabelOptions = {}) => {
   const {
@@ -50,6 +51,7 @@ export const babel = async (options: LundleBabelOptions = {}) => {
       )
       const srcFiles = (await walk(srcDir))
         .filter(minimatch.filter('*.{js,ts,jsx,tsx}', {matchBase: true}))
+        .filter(minimatch.filter('!*.d.ts', {matchBase: true}))
         .filter(minimatch.filter('!*.test.*', {matchBase: true}))
         .filter(minimatch.filter('!**/test/**', {matchBase: true}))
         .filter(
@@ -59,16 +61,19 @@ export const babel = async (options: LundleBabelOptions = {}) => {
         )
 
       transforms.push(
-        transform({
-          srcFiles,
-          srcDir,
-          root,
-          outputType: outputType as BabelOutputTypes,
-          react,
-          outDir,
-          outIndexFile,
-          configOverrides,
-        })
+        transform(
+          {
+            srcFiles,
+            srcDir,
+            root,
+            outputType: outputType as BabelOutputTypes,
+            react,
+            outDir,
+            outIndexFile,
+            configOverrides,
+          },
+          options
+        )
       )
 
       if (watch) {
@@ -78,17 +83,20 @@ export const babel = async (options: LundleBabelOptions = {}) => {
             switch (event) {
               case 'change':
               case 'add':
-                transform({
-                  srcFiles: [file],
-                  srcDir,
-                  root,
-                  outputType: outputType as BabelOutputTypes,
-                  react,
-                  outDir,
-                  outIndexFile: outIndexFile as string,
-                  deleteDirOnStart: false,
-                  configOverrides,
-                })
+                transform(
+                  {
+                    srcFiles: [file],
+                    srcDir,
+                    root,
+                    outputType: outputType as BabelOutputTypes,
+                    react,
+                    outDir,
+                    outIndexFile: outIndexFile as string,
+                    deleteDirOnStart: false,
+                    configOverrides,
+                  },
+                  options
+                )
                 break
 
               case 'unlink':
@@ -141,7 +149,10 @@ export const babel = async (options: LundleBabelOptions = {}) => {
   }
 }
 
-const transform = async (options: TransformOptions) => {
+const transform = async (
+  options: TransformOptions,
+  babelOptions: LundleBabelOptions
+) => {
   const {
     srcFiles,
     srcDir,
@@ -170,7 +181,7 @@ const transform = async (options: TransformOptions) => {
         root,
         envName: outputType,
         ...(configOverrides
-          ? configOverrides(finalBabelConfig)
+          ? configOverrides(finalBabelConfig, babelOptions)
           : finalBabelConfig),
       })
     )
@@ -297,11 +308,8 @@ interface TransformOptions {
   outDir: string
   outIndexFile: string
   deleteDirOnStart?: boolean
-  configOverrides?: (config: BabelConfig) => BabelConfig
+  configOverrides?: (
+    config: BabelConfig,
+    options: LundleBabelOptions
+  ) => BabelConfig
 }
-
-type ChokidarListener = (
-  eventName: 'add' | 'addDir' | 'change' | 'unlink' | 'unlinkDir',
-  path: string,
-  stats?: fs.Stats
-) => void
