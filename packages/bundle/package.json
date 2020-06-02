@@ -60,7 +60,10 @@
   "eslintConfig": {
     "extends": [
       "lunde"
-    ]
+    ],
+    "rules": {
+      "prefer-const": "off"
+    }
   },
   "eslintIgnore": [
     "node_modules",

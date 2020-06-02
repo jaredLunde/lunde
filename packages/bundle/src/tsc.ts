@@ -5,8 +5,7 @@ import chalk from 'chalk'
 import chokidar from 'chokidar'
 import rimraf from 'rimraf'
 import getIn from 'lodash.get'
-import minimatch from 'minimatch'
-import {getPkgJson, walk, cwd, log, success, error, loadConfig} from './utils'
+import {getPkgJson, cwd, log, success, error, loadConfig} from './utils'
 import type {ChokidarListener} from './types'
 
 export const tsc = async (options: LundleTscOptions = {}) => {
@@ -67,45 +66,41 @@ export const tsc = async (options: LundleTscOptions = {}) => {
   }
 }
 
-const compile = (
+const compile = async (
   fileNames: string[],
   compilerOptions: ts.CompilerOptions & {outDir: string},
   options: CompileOptions = {}
-): void => {
+) => {
   const {deleteDirOnStart = true} = options
   // Create a Program with an in-memory emit
-  const createdFiles: Record<string, string> = {}
   const host = ts.createCompilerHost(compilerOptions)
   deleteDirOnStart && rimraf.sync(compilerOptions.outDir)
-  host.writeFile = (fileName: string, contents: string) =>
-    (createdFiles[fileName] = contents)
+  const writtenDirs = new Set<string>()
+  const writtenFiles: ReturnType<typeof fs.promises.writeFile>[] = []
 
+  host.writeFile = async (filename: string, contents: string) => {
+    const dirname = path.dirname(filename)
+
+    if (!writtenDirs.has(dirname)) {
+      await fs.promises.mkdir(dirname, {recursive: true})
+      writtenDirs.add(dirname)
+    }
+
+    const promise = fs.promises.writeFile(filename, contents)
+    writtenFiles.push(promise)
+    return promise
+  }
   // Prepare and emit the d.ts files
   const program = ts.createProgram(fileNames, compilerOptions, host)
   program.emit()
 
   // Loop through all the input files
-  fileNames.forEach((file) => {
-    console.log('### JavaScript\n')
-    console.log(host.readFile(file))
-
-    console.log('### Type Definition\n')
-    const dts = file.replace('.js', '.d.ts')
-    console.log(createdFiles)
-  })
+  return Promise.all(writtenFiles)
 }
 
 export interface CompileOptions {
   deleteDirOnStart?: boolean
 }
-/*
-// Run the compiler
-compile(process.argv.slice(2), {
-  allowJs: true,
-  declaration: true,
-  emitDeclarationOnly: true,
-})
-*/
 
 export interface LundleTscOptions {
   configFile?: string

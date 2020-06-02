@@ -139,6 +139,7 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
       }
     }
 
+    if (!bundles.length) return
     await Promise.all(bundles)
     success('[ʀᴏʟʟᴜᴘ] built')
   }
