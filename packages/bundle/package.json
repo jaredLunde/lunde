@@ -29,17 +29,14 @@
       "types": "./types/index.d.ts",
       "default": "./dist/main/index.js"
     },
-    "./lundle.config.js": {
-      "unpkg": "./dist/umd/lundle.min.js",
-      "source": "./lundle.config.js"
-    },
     "./package.json": "./package.json",
     "./": "./"
   },
   "sideEffects": false,
   "scripts": {
-    "build": "babel-node src/bin.ts -x \".ts\" --presets=\"@babel/env\",\"@babel/typescript\"",
-    "build-types": "tsc -p tsconfig.json -d --outDir types --emitDeclarationOnly",
+    "build": "FORCE_COLOR=1 node dist/main/bin",
+    "build-types": "",
+    "dev": "babel-node src/bin.ts -x \".ts\" --presets=\"@babel/env\",\"@babel/typescript\"  build",
     "check-types": "tsc --noEmit -p tsconfig.json",
     "format": "prettier --write \"**/*.{ts,js,md,yml,json,eslintrc,prettierrc}\"",
     "lint": "eslint . --ext .ts",
@@ -108,7 +105,6 @@
     "change-case": "^4.1.1",
     "chokidar": "^3.4.0",
     "find-package-json": "^1.2.0",
-    "lodash.get": "^4.4.2",
     "minimatch": "^3.0.4",
     "ora": "^4.0.4",
     "prettier": "^2.0.5",

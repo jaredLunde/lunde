@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import ts from 'typescript'
 import chokidar from 'chokidar'
+import chalk from 'chalk'
 import rimraf from 'rimraf'
 import {getPkgJson, cwd, log, success, loadConfig} from './utils'
 import type {ChokidarListener, LundleOutput} from './types'
@@ -13,6 +14,7 @@ export const tsc = async (options: LundleTscOptions = {}) => {
       types: ['types', 'typings'],
     },
     watch,
+    checkOnly,
     source,
   } = options
   configFile = path.isAbsolute(configFile)
@@ -37,7 +39,7 @@ export const tsc = async (options: LundleTscOptions = {}) => {
   )
   // Bails if there was an error reading the config file
   if (tsConfigError) {
-    console.error(tsConfigError)
+    console.error(diagnosticToWarning(ts, null, tsConfigError))
     process.exit(1)
   }
 
@@ -115,9 +117,12 @@ export const tsc = async (options: LundleTscOptions = {}) => {
     const outDir = path.join(root, path.dirname(output.file))
 
     compile([output.source], {
-      ...(configOverrides ? configOverrides(tsConfig, options) : tsConfig),
+      ...(configOverrides ? configOverrides(tsConfig, options) : tsConfig)
+        .compilerOptions,
+      deleteDirOnStart: !watch,
+      emitDeclarationOnly: !checkOnly,
       declaration: true,
-      emitDeclarationOnly: true,
+      noEmit: checkOnly,
       outDir,
     })
 
@@ -131,9 +136,12 @@ export const tsc = async (options: LundleTscOptions = {}) => {
               compile([output.source], {
                 ...(configOverrides
                   ? configOverrides(tsConfig, options)
-                  : tsConfig),
+                  : tsConfig
+                ).compilerOptions,
+                deleteDirOnStart: false,
+                emitDeclarationOnly: !checkOnly,
                 declaration: true,
-                emitDeclarationOnly: true,
+                noEmit: checkOnly,
                 outDir,
               })
               log(`[𝙩𝙨𝙘] compiled`, output.type)
@@ -176,6 +184,7 @@ const compile = async (
   options: CompileOptions = {}
 ) => {
   const {deleteDirOnStart = true} = options
+  console.log('Compiler options', compilerOptions)
   // Create a Program with an in-memory emit
   const host = ts.createCompilerHost(compilerOptions)
   deleteDirOnStart && rimraf.sync(compilerOptions.outDir)
@@ -193,7 +202,66 @@ const compile = async (
   }
   // Prepare and emit the d.ts files
   const program = ts.createProgram(fileNames, compilerOptions, host)
-  program.emit()
+  const emitResult = program.emit()
+  const diagnostics = ts.getPreEmitDiagnostics(program)
+  emitResult.diagnostics
+    .concat(diagnostics)
+    .map((diagnostic) =>
+      console.error(diagnosticToWarning(ts, host, diagnostic))
+    )
+}
+
+// Credit to Rollup.js
+// https://github.com/rollup/plugins/blob/master/packages/typescript/src/diagnostics/toWarning.ts
+function diagnosticToWarning(
+  ts: typeof import('typescript'),
+  host: import('typescript').FormatDiagnosticsHost | null,
+  diagnostic: import('typescript').Diagnostic
+) {
+  const flattenedMessage = ts.flattenDiagnosticMessageText(
+    diagnostic.messageText,
+    '\n'
+  )
+
+  if (diagnostic.file) {
+    // Add information about the file location
+    const {line, character} = diagnostic.file.getLineAndCharacterOfPosition(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      diagnostic.start!
+    )
+    const code = `${chalk.red('error')} ${chalk.gray(
+      `TS${diagnostic.code}`
+    )}: ${flattenedMessage}`
+
+    let message = `\n${chalk.cyan(
+      path.relative(cwd(), diagnostic.file.fileName)
+    )}:${chalk.yellow(line)}:${chalk.yellow(character)} - ${code}`
+
+    if (host) {
+      // Extract a code frame from Typescript
+      const formatted = ts.formatDiagnosticsWithColorAndContext(
+        [diagnostic],
+        host
+      )
+      // Typescript only exposes this formatter as a string prefixed with the flattened message.
+      // We need to remove it here since Rollup treats the properties as separate parts.
+      let frame = formatted.slice(
+        formatted.indexOf(flattenedMessage) + flattenedMessage.length
+      )
+      const newLine = host.getNewLine()
+      if (frame.startsWith(newLine)) {
+        frame = frame.slice(frame.indexOf(newLine) + newLine.length)
+      }
+
+      message += frame
+    }
+
+    return message
+  } else {
+    return `${chalk.red('error')} ${chalk.gray(
+      'TS' + diagnostic.code
+    )}: ${flattenedMessage}`
+  }
 }
 
 export interface CompileOptions {
@@ -207,7 +275,7 @@ export interface LundleTscOptions {
   }
   source?: string
   watch?: boolean
-  react?: boolean
+  checkOnly?: boolean
 }
 
 export type TscOutputTypes = 'types'

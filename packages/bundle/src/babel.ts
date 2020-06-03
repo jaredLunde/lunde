@@ -5,8 +5,8 @@ import type {PluginItem} from '@babel/core'
 import chalk from 'chalk'
 import chokidar from 'chokidar'
 import rimraf from 'rimraf'
-import getIn from 'lodash.get'
 import minimatch from 'minimatch'
+import type {ModuleFormat} from 'rollup'
 import {getPkgJson, walk, cwd, log, success, error, loadConfig} from './utils'
 import type {ChokidarListener, LundleOutput} from './types'
 
@@ -296,9 +296,9 @@ export const babelConfig = (
   type: BabeConfigTypes,
   options: BabelConfigOptions = {}
 ): BabelConfig => {
-  const esm = type === 'esm'
-  const module = type === 'module'
-  const umd = type === 'umd'
+  const esm = ['es', 'esm'].includes(type)
+  const module = ['module', 'systemjs', 'system'].includes(type)
+  const umd = ['umd', 'amd', 'iife'].includes(type)
 
   const presetEnv = [
     '@lunde/es',
@@ -355,7 +355,7 @@ export type BabelConfig = {
   plugins: PluginItem[] | null
 }
 
-export type BabelOutputTypes = 'esm' | 'module' | 'cjs'
+export type BabelOutputTypes = ModuleFormat
 export type BabeConfigTypes = BabelOutputTypes | 'umd'
 
 interface TransformOptions {

@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import Module from 'module'
 import {spawn as spawn_} from 'child_process'
-import vm from 'vm'
+import * as vm from 'vm'
 import {transformFileAsync} from '@babel/core'
 import chalk from 'chalk'
 import type {Chalk} from 'chalk'
@@ -30,11 +30,12 @@ export const spawn = (cmd: string, argv: string[]) => {
 }
 
 export const loadConfig = async (
-  configFile = path.join(
-    path.dirname(getPkgJson()?.filename || '.'),
-    'lundle.config.js'
-  )
+  configFile?: string
 ): Promise<LundleConfig | undefined> => {
+  configFile =
+    configFile ||
+    path.join(path.dirname(getPkgJson()?.filename || '.'), 'lundle.config.js')
+
   try {
     // Allows ES6 lundle configs
     const t = await transformFileAsync(configFile, {

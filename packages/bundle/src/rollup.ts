@@ -13,6 +13,7 @@ import type {
   InputOptions,
   OutputOptions,
   RollupOutput,
+  ModuleFormat,
 } from 'rollup'
 import {getPkgJson, log, success, loadConfig} from './utils'
 import {babelConfig} from './babel'
@@ -196,7 +197,8 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
 
 export interface LundleRollupOptions {
   output?: {
-    [type in RollupOutputTypes]?: string[]
+    // string[]
+    [type in RollupOutputTypes]?: number[]
   }
   source?: string
   watch?: boolean
@@ -204,4 +206,4 @@ export interface LundleRollupOptions {
   env?: 'production' | 'development' | 'test'
 }
 
-export type RollupOutputTypes = Extract<OutputOptions['format'], 'string'>
+export type RollupOutputTypes = ModuleFormat
