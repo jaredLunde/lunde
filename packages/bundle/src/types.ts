@@ -22,6 +22,6 @@ export interface LundleOutput<OutputTypes> {
 
 export type ChokidarListener = (
   eventName: 'add' | 'addDir' | 'change' | 'unlink' | 'unlinkDir',
-  path: number,
+  path: string,
   stats?: Stats
 ) => void

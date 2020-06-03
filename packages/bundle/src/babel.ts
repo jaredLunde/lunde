@@ -11,12 +11,14 @@ import {getPkgJson, walk, cwd, log, success, error, loadConfig} from './utils'
 import type {ChokidarListener, LundleOutput} from './types'
 
 export const babel = async (options: LundleBabelOptions = {}) => {
-  const {
+  let {
     output = {
       cjs: ['main', 'default'],
       module: ['module', 'browser'],
       esm: ['import'],
     },
+    format,
+    exportName,
     source,
     watch,
     react,
@@ -34,6 +36,19 @@ export const babel = async (options: LundleBabelOptions = {}) => {
   const outputs: LundleOutput<BabelOutputTypes>[] = []
   const hasExportsField = !!pkg.exports
 
+  if (format) {
+    const formats = format.split(',').map((s) => s.trim())
+    output = formats.reduce((current, format) => {
+      // @ts-ignore
+      if (output[format]) current[format] = output[format]
+      return current
+    }, {})
+  }
+
+  const exportNames = exportName
+    ? exportName.split(',').map((s) => s.trim())
+    : []
+
   if (hasExportsField) {
     for (const outputType_ in output) {
       const outputType = outputType_ as BabelOutputTypes
@@ -42,6 +57,8 @@ export const babel = async (options: LundleBabelOptions = {}) => {
       // Package.json contains an export field so we'll search for
       // our fields in those first
       for (const exportPath in pkg.exports) {
+        if (exportNames.length > 0 && !exportNames.includes(exportPath))
+          continue
         const exports = pkg.exports[exportPath]
         let file: string | undefined
 
@@ -69,7 +86,7 @@ export const babel = async (options: LundleBabelOptions = {}) => {
     }
   }
 
-  if (!outputs.length) {
+  if (!outputs.length && !exportNames.length) {
     for (const outputType_ in outputs) {
       const outputType = outputType_ as BabelOutputTypes
       const outputFields = output[outputType] as string[]
@@ -98,6 +115,8 @@ export const babel = async (options: LundleBabelOptions = {}) => {
       })
     }
   }
+
+  if (!outputs.length) return
 
   const watchers: [string, ChokidarListener][] = []
   const configOverrides = (await loadConfig())?.babel
@@ -340,6 +359,8 @@ export interface LundleBabelOptions {
   output?: {
     [type in BabelOutputTypes]?: string[]
   }
+  format?: BabelOutputTypes
+  exportName?: string
   source?: string
   watch?: boolean
   react?: boolean

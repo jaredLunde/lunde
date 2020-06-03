@@ -4,6 +4,8 @@ export interface LundleRollupOptions {
   output?: {
     [type in RollupOutputTypes]?: string[]
   }
+  format?: RollupOutputTypes
+  exportName?: string
   source?: string
   watch?: boolean
   react?: boolean

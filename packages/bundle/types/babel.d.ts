@@ -9,6 +9,8 @@ export interface LundleBabelOptions {
   output?: {
     [type in BabelOutputTypes]?: string[]
   }
+  format?: BabelOutputTypes
+  exportName?: string
   source?: string
   watch?: boolean
   react?: boolean

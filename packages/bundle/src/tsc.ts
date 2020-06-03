@@ -2,8 +2,8 @@ import path from 'path'
 import ts from 'typescript'
 import chalk from 'chalk'
 import rimraf from 'rimraf'
-import {getPkgJson, cwd, flag, success} from './utils'
-import type {ChokidarListener, LundleOutput} from './types'
+import {getPkgJson, cwd, flag} from './utils'
+import type {LundleOutput} from './types'
 
 export const tsc = async (options: LundleTscOptions = {}) => {
   let {
@@ -11,6 +11,8 @@ export const tsc = async (options: LundleTscOptions = {}) => {
     output = {
       types: ['types', 'typings'],
     },
+    format,
+    exportName,
     watch,
     checkOnly,
     source,
@@ -31,6 +33,19 @@ export const tsc = async (options: LundleTscOptions = {}) => {
   const outputs: LundleOutput<TscOutputTypes>[] = []
   const hasExportsField = !!pkg.exports
 
+  if (format) {
+    const formats = format.split(',').map((s) => s.trim())
+    output = formats.reduce((current, format) => {
+      // @ts-ignore
+      if (output[format]) current[format] = output[format]
+      return current
+    }, {})
+  }
+
+  const exportNames = exportName
+    ? exportName.split(',').map((s) => s.trim())
+    : []
+
   if (hasExportsField) {
     for (const outputType_ in output) {
       const outputType = outputType_ as TscOutputTypes
@@ -38,6 +53,8 @@ export const tsc = async (options: LundleTscOptions = {}) => {
       // Package.json contains an export field so we'll search for
       // our fields in those first
       for (const exportPath in pkg.exports) {
+        if (exportNames.length > 0 && !exportNames.includes(exportPath))
+          continue
         const exports = pkg.exports[exportPath]
         let file: string | undefined
 
@@ -66,7 +83,7 @@ export const tsc = async (options: LundleTscOptions = {}) => {
     }
   }
 
-  if (!outputs.length) {
+  if (!outputs.length && !exportNames.length) {
     for (const outputType_ in output) {
       const outputType = outputType_ as TscOutputTypes
       const outputFields = output[outputType] as string[]
@@ -96,6 +113,8 @@ export const tsc = async (options: LundleTscOptions = {}) => {
     }
   }
 
+  if (!outputs.length) return
+
   for (const output of outputs) {
     const outDir = path.join(root, path.dirname(output.file))
 
@@ -116,7 +135,6 @@ export const tsc = async (options: LundleTscOptions = {}) => {
 
     if (!watch) {
       program.close()
-      success(`[𝙩𝙨𝙘] compiled`, output.type)
     }
   }
 }
@@ -216,7 +234,7 @@ function diagnosticToWarning(
     return message + '\n'
   } else {
     return diagnostic.category == 3
-      ? `${flag('✎')} [𝙩𝙨𝙘] ${flattenedMessage}`
+      ? `${flag('✎')} [𝙩𝙨𝙘] ${flattenedMessage.replace(' in watch mode', '')}`
       : `${category(diagnostic)} ${chalk.gray(
           'TS' + diagnostic.code
         )}: ${flattenedMessage}`
@@ -235,12 +253,7 @@ const category = (diagnostic: ts.Diagnostic) => {
 }
 
 const DIAGNOSTIC_CATEGORY = ['warning', 'error', 'suggestion', '']
-const DIAGNOSTIC_COLOR: ['yellow', 'red', 'blue', 'gray'] = [
-  'yellow',
-  'red',
-  'blue',
-  'gray',
-]
+const DIAGNOSTIC_COLOR = ['yellow', 'red', 'blue', 'gray'] as const
 export interface CompileOptions {
   checkOnly?: boolean
   configFile?: string
@@ -251,6 +264,8 @@ export interface LundleTscOptions {
   output?: {
     [type in TscOutputTypes]?: string[]
   }
+  format?: TscOutputTypes
+  exportName?: string
   source?: string
   watch?: boolean
   checkOnly?: boolean

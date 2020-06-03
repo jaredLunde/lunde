@@ -9,7 +9,7 @@ export const bin = async () => {
   yargs.scriptName('lundle')
 
   yargs.command(
-    'build [-i|--input] [-e|--export] [-f|--format] [-c|--config] [-w|--watch] [--react] [--cwd]',
+    'build [-i|--input] [-e|--export] [-f|--format] [-c|--config] [-w|--watch] [--tsconfig] [--react] [--cwd]',
     'Builds dist files for the project based upon the "exports" field in package.json',
     (yargs) => {
       yargs.option('input', {
@@ -53,6 +53,11 @@ export const bin = async () => {
         string: true,
       })
 
+      yargs.option('tsconfig', {
+        describe: 'A relative path to a tsconfig.json file..',
+        string: true,
+      })
+
       yargs.option('cwd', {
         describe: 'Changes the current working directory used during the build',
         string: true,
@@ -61,7 +66,7 @@ export const bin = async () => {
   )
 
   yargs.command(
-    'check-types [-i|--input] [-e|--export] [-c|--config] [-w|--watch] [--cwd]',
+    'check-types [-i|--input] [-e|--export] [-c|--config] [-w|--watch] [--tsconfig] [--cwd]',
     'Checks type definitions for the project',
     (yargs) => {
       yargs.option('input', {
@@ -91,6 +96,11 @@ export const bin = async () => {
         string: true,
       })
 
+      yargs.option('tsconfig', {
+        describe: 'A relative path to a tsconfig.json file..',
+        string: true,
+      })
+
       yargs.option('cwd', {
         describe: 'Changes the current working directory used during the build',
         string: true,
@@ -98,35 +108,81 @@ export const bin = async () => {
     }
   )
 
-  const args = yargs.argv
+  const args = yargs.argv as
+    | {
+        _: ['build']
+        $0: 'lundle'
+        input: string
+        export: string
+        format: any
+        react: boolean
+        watch: boolean
+        config: string
+        tsconfig: string
+        cwd: string
+        cmd: 'build'
+      }
+    | {
+        _: ['check-types']
+        $0: 'lundle'
+        input: string
+        export: string
+        format: any
+        watch: boolean
+        config: string
+        tsconfig: string
+        cwd: string
+        cmd: 'check-types'
+      }
 
   // the command is the first argument
   const [cmd] = args._
-  console.log(args)
-
+  // Weirdness for typescript
+  args.cmd = cmd
   // routes the cmd
-  switch (cmd) {
+  switch (args.cmd) {
     case 'build':
-      babel({watch: !!args.watch}).catch((err) => {
+      babel({
+        format: args.format,
+        exportName: args.export,
+        react: args.react,
+        watch: !!args.watch,
+      }).catch((err) => {
         error('[𝙗𝙖𝙗𝙚𝙡] compilation error\n')
         console.error(err)
         process.exit(1)
       })
 
-      rollup({watch: !!args.watch}).catch((err) => {
+      rollup({
+        format: args.format,
+        exportName: args.export,
+        react: args.react,
+        watch: !!args.watch,
+      }).catch((err) => {
         error('[𝙧𝙤𝙡𝙡𝙪𝙥] compilation error\n')
         console.error(err)
         process.exit(1)
       })
 
-      tsc({watch: !!args.watch}).catch((err) => {
+      tsc({
+        configFile: args.tsconfig,
+        format: args.format,
+        exportName: args.export,
+        watch: !!args.watch,
+      }).catch((err) => {
         error('[𝙩𝙨𝙘] compilation error\n')
         console.error(err)
         process.exit(1)
       })
       break
     case 'check-types':
-      await tsc({watch: true, checkOnly: true}).catch((err) => {
+      await tsc({
+        configFile: args.tsconfig,
+        format: args.format,
+        exportName: args.export,
+        watch: true,
+        checkOnly: true,
+      }).catch((err) => {
         error('[𝙩𝙨𝙘] compilation error\n')
         console.error(err)
         process.exit(1)

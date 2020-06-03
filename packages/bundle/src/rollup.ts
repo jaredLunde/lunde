@@ -20,13 +20,14 @@ import {babelConfig} from './babel'
 import type {LundleOutput} from './types'
 
 export const rollup = async (options: LundleRollupOptions = {}) => {
-  const {
+  let {
     output = {
       umd: ['unpkg', 'umd:main', 'umd'],
     },
+    format,
+    exportName,
     source,
     react,
-    env = 'production',
     watch,
   } = options
   const configOverrides = (await loadConfig())?.rollup
@@ -44,6 +45,19 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
   const outputs: LundleOutput<RollupOutputTypes>[] = []
   const hasExportsField = !!pkg.exports
 
+  if (format) {
+    const formats = format.split(',').map((s) => s.trim())
+    output = formats.reduce((current, format) => {
+      // @ts-ignore
+      if (output[format]) current[format] = output[format]
+      return current
+    }, {})
+  }
+
+  const exportNames = exportName
+    ? exportName.split(',').map((s) => s.trim())
+    : []
+
   if (hasExportsField) {
     for (const outputType_ in output) {
       const outputType = outputType_ as RollupOutputTypes
@@ -52,6 +66,8 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
       // Package.json contains an export field so we'll search for
       // our fields in those first
       for (const exportPath in pkg.exports) {
+        if (exportNames.length > 0 && !exportNames.includes(exportPath))
+          continue
         const exports = pkg.exports[exportPath]
         let file: string | undefined
 
@@ -79,7 +95,7 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
     }
   }
 
-  if (!outputs.length) {
+  if (!outputs.length && !exportNames.length) {
     for (const outputType_ in output) {
       const outputType = outputType_ as RollupOutputTypes
       const outputFields = output[outputType] as string[]
@@ -130,7 +146,7 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
         }),
         commonjs(),
         replace({
-          'process.env.NODE_ENV': JSON.stringify(env),
+          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         }),
         terser({
           output: {comments: false},
@@ -148,6 +164,8 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
       ],
       external: [],
     }
+
+    if (!outputs.length) return
 
     const outputOptions: OutputOptions = {
       name: pascalCase(path.basename(output.file).split('.')[0]),
@@ -200,6 +218,8 @@ export interface LundleRollupOptions {
     // string[]
     [type in RollupOutputTypes]?: string[]
   }
+  format?: RollupOutputTypes
+  exportName?: string
   source?: string
   watch?: boolean
   react?: boolean

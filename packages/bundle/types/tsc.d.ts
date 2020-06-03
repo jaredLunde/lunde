@@ -8,6 +8,8 @@ export interface LundleTscOptions {
   output?: {
     [type in TscOutputTypes]?: string[]
   }
+  format?: TscOutputTypes
+  exportName?: string
   source?: string
   watch?: boolean
   checkOnly?: boolean
