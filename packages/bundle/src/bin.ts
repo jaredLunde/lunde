@@ -180,7 +180,7 @@ export const bin = async () => {
         configFile: args.tsconfig,
         format: args.format,
         exportName: args.export,
-        watch: true,
+        watch: args.watch,
         checkOnly: true,
       }).catch((err) => {
         error('[𝙩𝙨𝙘] compilation error\n')

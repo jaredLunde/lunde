@@ -35,7 +35,6 @@
   "sideEffects": false,
   "scripts": {
     "build": "FORCE_COLOR=1 node dist/main/bin build",
-    "build-types": "npm run build -- -f types",
     "dev": "babel-node src/bin.ts -x \".ts\" --presets=\"@babel/env\",\"@babel/typescript\"",
     "check-types": "FORCE_COLOR=1 node dist/main/bin check-types",
     "format": "prettier --write \"**/*.{ts,js,md,yml,json,eslintrc,prettierrc}\"",
@@ -46,7 +45,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run build-types && git add types && lint-staged"
+      "pre-commit": "npm run build -- -f types && git add types && lint-staged"
     }
   },
   "lint-staged": {

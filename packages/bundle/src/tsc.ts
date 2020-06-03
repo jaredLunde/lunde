@@ -130,6 +130,7 @@ export const tsc = async (options: LundleTscOptions = {}) => {
       {
         checkOnly,
         configFile,
+        watching: watch,
       }
     )
 
@@ -144,7 +145,11 @@ const compile = (
   compilerOptions: ts.CompilerOptions & {outDir: string},
   options: CompileOptions
 ) => {
-  const {checkOnly = false, configFile = 'tsconfig.json'} = options
+  const {
+    watching = false,
+    checkOnly = false,
+    configFile = 'tsconfig.json',
+  } = options
   !checkOnly && rimraf.sync(compilerOptions.outDir)
   const configPath = ts.findConfigFile(cwd(), ts.sys.fileExists, configFile)
 
@@ -177,8 +182,14 @@ const compile = (
     compilerOptions,
     ts.sys,
     createProgram,
-    (diagnostic) => console.error(diagnosticToWarning(ts, null, diagnostic)),
-    (diagnostic) => console.log(diagnosticToWarning(ts, null, diagnostic))
+    (diagnostic) => {
+      console.error(diagnosticToWarning(ts, null, diagnostic))
+    },
+    (diagnostic, newLine, options, errorCount) => {
+      console.log(diagnosticToWarning(ts, null, diagnostic))
+      // Only exits outside of watch mode
+      if (errorCount && !watching) process.exit(1)
+    }
   )
 
   // `createWatchProgram` creates an initial program, watches files, and updates
@@ -257,6 +268,7 @@ const DIAGNOSTIC_COLOR = ['yellow', 'red', 'blue', 'gray'] as const
 export interface CompileOptions {
   checkOnly?: boolean
   configFile?: string
+  watching?: boolean
 }
 
 export interface LundleTscOptions {

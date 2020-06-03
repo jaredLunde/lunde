@@ -2,6 +2,7 @@ export declare const tsc: (options?: LundleTscOptions) => Promise<void>
 export interface CompileOptions {
   checkOnly?: boolean
   configFile?: string
+  watching?: boolean
 }
 export interface LundleTscOptions {
   configFile?: string
