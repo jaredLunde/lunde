@@ -198,7 +198,7 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
 export interface LundleRollupOptions {
   output?: {
     // string[]
-    [type in RollupOutputTypes]?: number[]
+    [type in RollupOutputTypes]?: string[]
   }
   source?: string
   watch?: boolean

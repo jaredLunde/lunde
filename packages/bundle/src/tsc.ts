@@ -1,10 +1,8 @@
-import fs from 'fs'
 import path from 'path'
 import ts from 'typescript'
-import chokidar from 'chokidar'
 import chalk from 'chalk'
 import rimraf from 'rimraf'
-import {getPkgJson, cwd, log, success, loadConfig} from './utils'
+import {getPkgJson, cwd, flag, success} from './utils'
 import type {ChokidarListener, LundleOutput} from './types'
 
 export const tsc = async (options: LundleTscOptions = {}) => {
@@ -21,25 +19,11 @@ export const tsc = async (options: LundleTscOptions = {}) => {
     ? configFile
     : path.join(cwd(), configFile)
   const {value: pkg, filename} = getPkgJson()
-  const watchers: [string, ChokidarListener][] = []
 
   if (!filename || !pkg) {
     console.error(
       'Failed to find a package.json file near the working directory'
     )
-    process.exit(1)
-  }
-
-  const configOverrides = (await loadConfig())?.tsc
-  const {config: tsConfig, error: tsConfigError} = ts.readConfigFile(
-    configFile,
-    () => {
-      return fs.readFileSync(configFile, 'utf8')
-    }
-  )
-  // Bails if there was an error reading the config file
-  if (tsConfigError) {
-    console.error(diagnosticToWarning(ts, null, tsConfigError))
     process.exit(1)
   }
 
@@ -113,102 +97,75 @@ export const tsc = async (options: LundleTscOptions = {}) => {
   }
 
   for (const output of outputs) {
-    const srcDir = path.dirname(output.source)
     const outDir = path.join(root, path.dirname(output.file))
 
-    compile([output.source], {
-      ...(configOverrides ? configOverrides(tsConfig, options) : tsConfig)
-        .compilerOptions,
-      deleteDirOnStart: !watch,
-      emitDeclarationOnly: !checkOnly,
-      declaration: true,
-      noEmit: checkOnly,
-      outDir,
-    })
-
-    if (watch) {
-      watchers.push([
-        srcDir,
-        (event) => {
-          switch (event) {
-            case 'change':
-            case 'add':
-              compile([output.source], {
-                ...(configOverrides
-                  ? configOverrides(tsConfig, options)
-                  : tsConfig
-                ).compilerOptions,
-                deleteDirOnStart: false,
-                emitDeclarationOnly: !checkOnly,
-                declaration: true,
-                noEmit: checkOnly,
-                outDir,
-              })
-              log(`[𝙩𝙨𝙘] compiled`, output.type)
-              break
-          }
-        },
-      ])
-    }
-
-    success(`[𝙩𝙨𝙘] compiled`, output.type)
-  }
-
-  // Initializes the watcher
-  if (watch) {
-    log('[𝙩𝙨𝙘] watching for changes...')
-
-    const watcher = chokidar.watch(
-      Array.from(new Set(watchers.map(([srcDir]) => srcDir))),
+    const program = compile(
+      [output.source],
       {
-        cwd: cwd(),
-        depth: 99,
-        persistent: true,
-        awaitWriteFinish: true,
-        ignoreInitial: true,
+        deleteDirOnStart: !watch,
+        emitDeclarationOnly: !checkOnly,
+        declaration: true,
+        noEmit: checkOnly,
+        outDir,
+      },
+      {
+        checkOnly,
+        configFile,
       }
     )
 
-    watcher.on('all', (event, file) => {
-      if (!file.match(/\.[tj]sx?/)) return
-      watchers
-        .filter(([srcDir]) => !file.startsWith(srcDir))
-        .forEach(([, callback]) => callback(event, file))
-    })
+    if (!watch) {
+      program.close()
+      success(`[𝙩𝙨𝙘] compiled`, output.type)
+    }
   }
 }
 
-const compile = async (
+const compile = (
   fileNames: string[],
   compilerOptions: ts.CompilerOptions & {outDir: string},
-  options: CompileOptions = {}
+  options: CompileOptions
 ) => {
-  const {deleteDirOnStart = true} = options
-  console.log('Compiler options', compilerOptions)
-  // Create a Program with an in-memory emit
-  const host = ts.createCompilerHost(compilerOptions)
-  deleteDirOnStart && rimraf.sync(compilerOptions.outDir)
-  const writtenDirs = new Set<string>()
+  const {checkOnly = false, configFile = 'tsconfig.json'} = options
+  !checkOnly && rimraf.sync(compilerOptions.outDir)
+  const configPath = ts.findConfigFile(cwd(), ts.sys.fileExists, configFile)
 
-  host.writeFile = async (filename: string, contents: string) => {
-    const dirname = path.dirname(filename)
-
-    if (!writtenDirs.has(dirname)) {
-      await fs.promises.mkdir(dirname, {recursive: true})
-      writtenDirs.add(dirname)
-    }
-
-    return fs.promises.writeFile(filename, contents)
+  if (!configPath) {
+    throw new Error("Could not find a valid 'tsconfig.json'.")
   }
-  // Prepare and emit the d.ts files
-  const program = ts.createProgram(fileNames, compilerOptions, host)
-  const emitResult = program.emit()
-  const diagnostics = ts.getPreEmitDiagnostics(program)
-  emitResult.diagnostics
-    .concat(diagnostics)
-    .map((diagnostic) =>
-      console.error(diagnosticToWarning(ts, host, diagnostic))
-    )
+
+  // TypeScript can use several different program creation "strategies":
+  //  * ts.createEmitAndSemanticDiagnosticsBuilderProgram,
+  //  * ts.createSemanticDiagnosticsBuilderProgram
+  //  * ts.createAbstractBuilder
+  // The first two produce "builder programs". These use an incremental strategy
+  // to only re-check and emit files whose contents may have changed, or whose
+  // dependencies may have changes which may impact change the result of prior
+  // type-check and emit.
+  // The last uses an ordinary program which does a full type check after every
+  // change.
+  // Between `createEmitAndSemanticDiagnosticsBuilderProgram` and
+  // `createSemanticDiagnosticsBuilderProgram`, the only difference is emit.
+  // For pure type-checking scenarios, or when another tool/process handles emit,
+  // using `createSemanticDiagnosticsBuilderProgram` may be more desirable.
+  const createProgram = checkOnly
+    ? ts.createSemanticDiagnosticsBuilderProgram
+    : ts.createSemanticDiagnosticsBuilderProgram
+
+  // Note that there is another overload for `createWatchCompilerHost` that takes
+  // a set of root files.
+  const host = ts.createWatchCompilerHost(
+    configPath,
+    compilerOptions,
+    ts.sys,
+    createProgram,
+    (diagnostic) => console.error(diagnosticToWarning(ts, null, diagnostic)),
+    (diagnostic) => console.log(diagnosticToWarning(ts, null, diagnostic))
+  )
+
+  // `createWatchProgram` creates an initial program, watches files, and updates
+  // the program over time.
+  return ts.createWatchProgram(host)
 }
 
 // Credit to Rollup.js
@@ -229,11 +186,11 @@ function diagnosticToWarning(
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       diagnostic.start!
     )
-    const code = `${chalk.red('error')} ${chalk.gray(
+    const code = `${category(diagnostic)} ${chalk.gray(
       `TS${diagnostic.code}`
     )}: ${flattenedMessage}`
 
-    let message = `\n${chalk.cyan(
+    let message = `${chalk.cyan(
       path.relative(cwd(), diagnostic.file.fileName)
     )}:${chalk.yellow(line)}:${chalk.yellow(character)} - ${code}`
 
@@ -256,16 +213,37 @@ function diagnosticToWarning(
       message += frame
     }
 
-    return message
+    return message + '\n'
   } else {
-    return `${chalk.red('error')} ${chalk.gray(
-      'TS' + diagnostic.code
-    )}: ${flattenedMessage}`
+    return diagnostic.category == 3
+      ? `${flag('✎')} [𝙩𝙨𝙘] ${flattenedMessage}`
+      : `${category(diagnostic)} ${chalk.gray(
+          'TS' + diagnostic.code
+        )}: ${flattenedMessage}`
   }
 }
 
+const category = (diagnostic: ts.Diagnostic) => {
+  /*
+  Warning = 0,
+  Error = 1,
+  Suggestion = 2,
+  Message = 3
+  */
+  const {category} = diagnostic
+  return chalk[DIAGNOSTIC_COLOR[category]](DIAGNOSTIC_CATEGORY[category])
+}
+
+const DIAGNOSTIC_CATEGORY = ['warning', 'error', 'suggestion', '']
+const DIAGNOSTIC_COLOR: ['yellow', 'red', 'blue', 'gray'] = [
+  'yellow',
+  'red',
+  'blue',
+  'gray',
+]
 export interface CompileOptions {
-  deleteDirOnStart?: boolean
+  checkOnly?: boolean
+  configFile?: string
 }
 
 export interface LundleTscOptions {

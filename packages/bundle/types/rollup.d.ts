@@ -2,7 +2,7 @@ import type {ModuleFormat} from 'rollup'
 export declare const rollup: (options?: LundleRollupOptions) => Promise<void>
 export interface LundleRollupOptions {
   output?: {
-    [type in RollupOutputTypes]?: number[]
+    [type in RollupOutputTypes]?: string[]
   }
   source?: string
   watch?: boolean

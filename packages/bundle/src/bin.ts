@@ -126,7 +126,7 @@ export const bin = async () => {
       })
       break
     case 'check-types':
-      await tsc({watch: true}).catch((err) => {
+      await tsc({watch: true, checkOnly: true}).catch((err) => {
         error('[𝙩𝙨𝙘] compilation error\n')
         console.error(err)
         process.exit(1)

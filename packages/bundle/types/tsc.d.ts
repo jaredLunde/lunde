@@ -1,6 +1,7 @@
 export declare const tsc: (options?: LundleTscOptions) => Promise<void>
 export interface CompileOptions {
-  deleteDirOnStart?: boolean
+  checkOnly?: boolean
+  configFile?: string
 }
 export interface LundleTscOptions {
   configFile?: string
