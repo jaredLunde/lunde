@@ -1,5 +1,4 @@
 import path from 'path'
-import ts from 'typescript'
 import chalk from 'chalk'
 import rimraf from 'rimraf'
 import {getPkgJson, cwd, flag} from './utils'
@@ -119,6 +118,11 @@ export const tsc = async (options: LundleTscOptions = {}) => {
     const outDir = path.join(root, path.dirname(output.file))
 
     const program = compile(
+      // TypeScript is provided like this so that we don't need it as
+      // a hard dependency. Projects w/o TypeScript should still be able
+      // to use this script.
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      require('typescript'),
       [output.source],
       {
         deleteDirOnStart: !watch,
@@ -141,8 +145,9 @@ export const tsc = async (options: LundleTscOptions = {}) => {
 }
 
 const compile = (
+  ts: typeof import('typescript'),
   fileNames: string[],
-  compilerOptions: ts.CompilerOptions & {outDir: string},
+  compilerOptions: import('typescript').CompilerOptions & {outDir: string},
   options: CompileOptions
 ) => {
   const {
@@ -252,7 +257,7 @@ function diagnosticToWarning(
   }
 }
 
-const category = (diagnostic: ts.Diagnostic) => {
+const category = (diagnostic: import('typescript').Diagnostic) => {
   /*
   Warning = 0,
   Error = 1,

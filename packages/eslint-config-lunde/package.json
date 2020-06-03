@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-lunde",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "ESLint rules I'm using for my projects",
   "main": "index.js",
   "repository": "github:jaredLunde/lunde",
@@ -47,6 +47,7 @@
     "@typescript-eslint/eslint-plugin": "^3.0.2",
     "@typescript-eslint/parser": "^3.0.2",
     "babel-eslint": "^10.1.0",
+    "eslint-config-prettier": "^6.11.0",
     "eslint-import-resolver-jest": "^3.0.0",
     "eslint-import-resolver-typescript": "^2.0.0",
     "eslint-plugin-import": "^2.20.2",

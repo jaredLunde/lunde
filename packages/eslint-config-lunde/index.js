@@ -29,6 +29,7 @@ module.exports = {
   plugins: ['import', hasTypeScript && '@typescript-eslint'].filter(Boolean),
   extends: [
     'eslint:recommended',
+    'prettier',
     hasTypeScript && 'plugin:@typescript-eslint/recommended',
     hasReact && 'lunde/react',
     hasJest && 'lunde/jest',

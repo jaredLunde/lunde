@@ -28,22 +28,16 @@ module.exports.dependencies = {}
 module.exports.devDependencies = (variables, args) => {
   let deps = {
     '@babel/preset-react': 'latest',
-    '@lunde/babel-preset-es': 'latest',
     '@testing-library/jest-dom': 'latest',
     '@testing-library/react': 'latest',
     '@testing-library/react-hooks': 'latest',
     '@testing-library/user-event': 'latest',
     jest: 'latest',
-    'babel-eslint': 'latest',
-    'babel-plugin-annotate-pure-calls': 'latest',
-    'babel-plugin-optimize-react': 'latest',
     eslint: 'latest',
-    'eslint-import-resolver-jest': 'latest',
-    'eslint-plugin-react': 'latest',
-    'eslint-plugin-react-hooks': 'latest',
-    'eslint-plugin-jest': 'latest',
+    'eslint-config-lunde': 'latest',
     husky: 'latest',
     'lint-staged': 'latest',
+    lundle: 'latest',
     prettier: 'latest',
     react: 'latest',
     'react-dom': 'latest',
@@ -51,14 +45,11 @@ module.exports.devDependencies = (variables, args) => {
   }
 
   if (!args.js) {
-    delete deps['babel-eslint']
     deps = {
       ...deps,
       '@types/jest': 'latest',
       '@types/react': 'latest',
       '@types/react-dom': 'latest',
-      '@typescript-eslint/eslint-plugin': 'latest',
-      '@typescript-eslint/parser': 'latest',
       'ts-jest': 'latest',
       typescript: 'latest',
     }
@@ -141,17 +132,8 @@ module.exports.editPackageJson = async function editPackageJson(
     },
     sideEffects: false,
     scripts: {
-      build:
-        'npm run build-esm && npm run build-main && npm run build-module && npm run build-types',
-      'build-esm':
-        'npm run compile -- -d dist/esm --env-name esm --out-file-extension .mjs',
-      'build-main': 'npm run compile -- -d dist/main --env-name main',
-      'build-module': 'npm run compile -- -d dist/module --env-name module',
-      'build-types':
-        'tsc -p tsconfig.json -d --outDir types --emitDeclarationOnly',
-      'check-types': 'tsc --noEmit -p tsconfig.json',
-      compile:
-        'babel src -x .ts,.tsx --ignore "**/*.test.ts","**/*.test.tsx" --delete-dir-on-start',
+      build: 'lundle build',
+      'check-types': 'lundle check-types',
       format:
         'prettier --write "**/*.{ts,tsx,js,jsx,md,yml,json,eslintrc,prettierrc}"',
       lint: 'eslint . --ext .ts,.tsx',
@@ -170,6 +152,16 @@ module.exports.editPackageJson = async function editPackageJson(
       '**/*.{ts,tsx,js,jsx}': ['eslint', 'prettier --write'],
       '**/*.{md,yml,json,eslintrc,prettierrc}': ['prettier --write'],
     },
+    eslintConfig: {
+      extends: ['lunde'],
+    },
+    eslintIgnore: ['node_modules', 'coverage', 'dist', 'test', '*.config.js'],
+    prettier: {
+      semi: false,
+      singleQuote: true,
+      jsxSingleQuote: true,
+      bracketSpacing: false,
+    },
     ...packageJson,
   }
 
@@ -181,10 +173,6 @@ module.exports.editPackageJson = async function editPackageJson(
     delete pkg.exports['.'].types
     pkg.source = 'src/index.js'
     pkg.exports['.'].source = './src/index.js'
-    pkg.scripts.compile =
-      'babel src -x .js,.jsx --ignore "**/*.test.js","**/*.test.jsx" --delete-dir-on-start'
-    pkg.scripts.build =
-      'npm run build-esm && npm run build-main && npm run build-module'
     pkg.scripts.lint = 'eslint .'
     pkg.scripts.format =
       'prettier --write "**/*.{js,jsx,md,yml,json,eslintrc,prettierrc}"'
