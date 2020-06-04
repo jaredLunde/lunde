@@ -8,6 +8,7 @@ export interface LundleRollupOptions {
   }
   format?: RollupOutputTypes
   exportName?: string
+  umdCase?: 'pascal' | 'camel'
   source?: string
   watch?: boolean
   react?: boolean

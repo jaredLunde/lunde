@@ -11,7 +11,7 @@ import sourcemaps from 'rollup-plugin-sourcemaps'
 import gzipSize from 'gzip-size'
 import brotliSize from 'brotli-size'
 import prettyBytes from 'pretty-bytes'
-import {pascalCase} from 'change-case'
+import {pascalCase, camelCase} from 'change-case'
 import chalk from 'chalk'
 import type {
   RollupOptions,
@@ -35,6 +35,7 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
     },
     format,
     exportName,
+    umdCase = 'pascal',
     source,
     react,
     watch,
@@ -154,11 +155,11 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
         sourcemaps(),
         resolve({
           mainFields: ['source', 'browser', 'module', 'main'],
-          extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx'],
+          extensions: jsExtensions,
         }),
         babel({
           exclude: ['**/test/**', '**/*.test.{js,jsx,ts,tsx}'],
-          extensions: ['.js', '.jsx', '.mjs', '.es', '.es6', '.ts', '.tsx'],
+          extensions: jsExtensions,
           babelHelpers: 'bundled',
           ...babelConfig(output.type, {
             react: isReact,
@@ -212,7 +213,9 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
     if (!outputs.length) return
 
     const outputOptions: OutputOptions = {
-      name: pascalCase(path.basename(output.file).split('.')[0]),
+      name: (umdCase !== 'pascal' ? camelCase : pascalCase)(
+        path.basename(output.file).split('.')[0]
+      ),
       file: output.file,
       format: output.type,
       sourcemap: true,
@@ -263,6 +266,17 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
   }
 }
 
+const jsExtensions = [
+  '.js',
+  '.jsx',
+  '.mjs',
+  '.cjs',
+  '.es',
+  '.es6',
+  '.ts',
+  '.tsx',
+]
+
 // Credit: https://github.com/developit/microbundle/blob/master/src/index.js
 const formatSize = (
   size: number,
@@ -310,6 +324,7 @@ export interface LundleRollupOptions {
   }
   format?: RollupOutputTypes
   exportName?: string
+  umdCase?: 'pascal' | 'camel'
   source?: string
   watch?: boolean
   react?: boolean

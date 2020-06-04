@@ -9,7 +9,7 @@ export const bin = async () => {
   yargs.scriptName('lundle')
 
   yargs.command(
-    'build [-i|--input] [-e|--export] [-f|--format] [-c|--config] [-w|--watch] [--tsconfig] [--react] [--cwd]',
+    'build [-i|--input] [-e|--export] [-f|--format] [-c|--config] [-w|--watch] [--tsconfig] [--umd-case] [--react] [--cwd]',
     'Builds dist files for the project based upon the "exports" field in package.json',
     (yargs) => {
       yargs.option('input', {
@@ -44,6 +44,12 @@ export const bin = async () => {
           'Forces Babel to transpile with @babel/preset-react enabled. ' +
           'This happens automatically for files with "tsx" and "jsx" extensions.',
         boolean: true,
+      })
+
+      yargs.option('umd-case', {
+        describe: 'The case of the UMD name, either "pascal" or "camel"',
+        default: 'pascal',
+        string: true,
       })
 
       yargs.option('config', {
@@ -118,6 +124,7 @@ export const bin = async () => {
         react: boolean
         watch: boolean
         config: string
+        umdCase: 'pascal' | 'camel'
         tsconfig: string
         cwd: string
         cmd: 'build'
@@ -172,6 +179,7 @@ export const bin = async () => {
           config,
           format: args.format,
           exportName: args.export,
+          umdCase: args.umdCase,
           react: args.react,
           watch: !!args.watch,
         }).catch((err) => {
