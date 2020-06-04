@@ -7,6 +7,7 @@ import replace from '@rollup/plugin-replace'
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import {terser} from 'rollup-plugin-terser'
+import sourcemaps from 'rollup-plugin-sourcemaps'
 import {pascalCase} from 'change-case'
 import type {
   RollupOptions,
@@ -131,6 +132,7 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
       input: output.source,
       plugins: [
         json(),
+        sourcemaps(),
         resolve({
           mainFields: ['source', 'browser', 'module', 'main'],
           extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx'],
@@ -146,7 +148,7 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
         }),
         commonjs(),
         replace({
-          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+          'process.env.NODE_ENV': JSON.stringify('production'),
         }),
         terser({
           output: {comments: false},
@@ -171,6 +173,7 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
       name: pascalCase(path.basename(output.file).split('.')[0]),
       file: output.file,
       format: output.type,
+      sourcemap: true,
       globals: isReact
         ? {
             react: 'React',

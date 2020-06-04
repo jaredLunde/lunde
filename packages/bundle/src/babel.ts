@@ -339,8 +339,8 @@ export const babelConfig = (
             },
       },
       devExpression: options.typescript === false,
-      restSpread: !umd,
-      objectAssign: !umd,
+      restSpread: umd,
+      objectAssign: umd,
       typescript: options.typescript === void 0 || !!options.typescript,
     },
   ]

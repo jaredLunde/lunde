@@ -1,6 +1,6 @@
 {
   "name": "lundle",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "homepage": "https://github.com/jaredLunde/lunde/tree/master/packages/bundle#readme",
   "repository": "github:jaredLunde/lunde",
   "bugs": "https://github.com/jaredLunde/lunde/issues",
@@ -131,6 +131,7 @@
     "ora": "^4.0.4",
     "rimraf": "^3.0.2",
     "rollup": "^2.12.0",
+    "rollup-plugin-sourcemaps": "^0.6.2",
     "rollup-plugin-terser": "^6.1.0",
     "yargs": "^15.3.1"
   },
