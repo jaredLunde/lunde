@@ -7,7 +7,7 @@ module.exports = {
       jsx: true,
     },
   },
-  plugins: ['react', 'jsx-a11y'],
+  plugins: ['react', 'react-hooks', 'jsx-a11y'],
   extends: ['plugin:react/recommended'],
   settings: {
     react: {
