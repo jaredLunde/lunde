@@ -126,7 +126,7 @@ module.exports.editPackageJson = async function editPackageJson(
     },
     husky: {
       hooks: {
-        'pre-commit': 'lunde build -f types && git add types && lint-staged',
+        'pre-commit': 'lundle build -f types && git add types && lint-staged',
       },
     },
     'lint-staged': {
