@@ -27,7 +27,6 @@ module.exports.dependencies = {}
 // package.json dev dependencies
 module.exports.devDependencies = (variables, args) => {
   let deps = {
-    '@babel/preset-react': 'latest',
     '@testing-library/jest-dom': 'latest',
     '@testing-library/react': 'latest',
     '@testing-library/react-hooks': 'latest',
@@ -133,8 +132,9 @@ module.exports.editPackageJson = async function editPackageJson(
     scripts: {
       build: 'lundle build',
       'check-types': 'lundle check-types',
+      dev: 'lundle build -f module,cjs -w',
       format:
-        'prettier --write "{,!(node_modules|dist|coverage)/**/}*.{ts,tsx,js,jsx,md,yml,json,eslintrc,prettierrc}"',
+        'prettier --write "{,!(node_modules|dist|coverage)/**/}*.{ts,tsx,js,jsx,md,yml,json}"',
       lint: 'eslint . --ext .ts,.tsx',
       prepublishOnly:
         'npm run lint && npm run test && npm run build && npm run format',
@@ -143,12 +143,16 @@ module.exports.editPackageJson = async function editPackageJson(
     },
     husky: {
       hooks: {
-        'pre-commit': 'lundle build -f types && git add types && lint-staged',
+        'pre-commit': 'lint-staged',
       },
     },
     'lint-staged': {
-      '**/*.{ts,tsx,js,jsx}': ['eslint', 'prettier --write'],
-      '**/*.{md,yml,json,eslintrc,prettierrc}': ['prettier --write'],
+      '**/*.{ts,tsx,js,jsx}': [
+        'lundle build -f types',
+        'eslint',
+        'prettier --write',
+      ],
+      '**/*.{md,yml,json}': ['prettier --write'],
     },
     eslintConfig: {
       extends: ['lunde'],
@@ -183,10 +187,9 @@ module.exports.editPackageJson = async function editPackageJson(
     pkg.exports['.'].source = './src/index.js'
     pkg.scripts.lint = 'eslint .'
     pkg.scripts.validate = 'npm run lint && npm run test -- --coverage'
-    pkg.husky.hooks['pre-commit'] = 'lint-staged'
     pkg['lint-staged'] = {
       '**/*.{js,jsx}': ['eslint', 'prettier --write'],
-      '**/*.{md,yml,json,eslintrc,prettierrc}': ['prettier --write'],
+      '**/*.{md,yml,json}': ['prettier --write'],
     }
     pkg.jest = {
       moduleDirectories: ['node_modules', 'src', 'test'],

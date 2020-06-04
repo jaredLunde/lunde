@@ -13,7 +13,7 @@ import type {ChokidarListener, LundleOutput} from './types'
 export const babel = async (options: LundleBabelOptions = {}) => {
   let {
     output = {
-      cjs: ['main', 'default'],
+      cjs: ['main', 'require', 'default'],
       module: ['module', 'browser'],
       esm: ['import'],
     },

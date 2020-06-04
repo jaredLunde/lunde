@@ -116,8 +116,9 @@ module.exports.editPackageJson = async function editPackageJson(
     scripts: {
       build: 'lundle build',
       'check-types': 'lundle check-types',
+      dev: 'lundle build -f module,cjs -w',
       format:
-        'prettier --write "{,!(node_modules|dist|coverage)/**/}*.{js,ts,md,yml,json,eslintrc,prettierrc}"',
+        'prettier --write "{,!(node_modules|dist|coverage)/**/}*.{ts,js,md,yml,json}"',
       lint: 'eslint . --ext .ts',
       prepublishOnly:
         'npm run lint && npm run test && npm run build && npm run format',
@@ -126,12 +127,12 @@ module.exports.editPackageJson = async function editPackageJson(
     },
     husky: {
       hooks: {
-        'pre-commit': 'lundle build -f types && git add types && lint-staged',
+        'pre-commit': 'lint-staged',
       },
     },
     'lint-staged': {
-      '**/*.{ts,js}': ['eslint', 'prettier --write'],
-      '**/*.{md,yml,json,eslintrc,prettierrc}': ['prettier --write'],
+      '**/*.{ts,js}': ['lundle build -f types', 'eslint', 'prettier --write'],
+      '**/*.{md,yml,json}': ['prettier --write'],
     },
     eslintConfig: {
       extends: ['lunde'],
@@ -166,10 +167,7 @@ module.exports.editPackageJson = async function editPackageJson(
     pkg.scripts.build =
       'npm run build-esm && npm run build-main && npm run build-module'
     pkg.scripts.lint = 'eslint .'
-    pkg.scripts.format =
-      'prettier --write "**/*.{js,md,yml,json,eslintrc,prettierrc}"'
     pkg.scripts.validate = 'npm run lint && npm run test -- --coverage'
-    pkg.husky.hooks['pre-commit'] = 'lint-staged'
     pkg['lint-staged'] = {
       '**/*.js': ['eslint', 'prettier --write'],
       '**/*.{md,yml,json,eslintrc,prettierrc}': ['prettier --write'],

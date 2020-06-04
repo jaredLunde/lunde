@@ -162,7 +162,7 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
         }),
         // ...plugins,
       ],
-      external: [],
+      external: isReact ? ['react'] : [],
     }
 
     if (!outputs.length) return
