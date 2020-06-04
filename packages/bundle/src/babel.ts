@@ -318,6 +318,7 @@ export const babelConfig = (
   const esm = ['es', 'esm'].includes(type)
   const module = ['module', 'systemjs', 'system'].includes(type)
   const umd = ['umd', 'amd', 'iife'].includes(type)
+  const test = process.env.NODE_ENV === 'test' || ['test'].includes(type)
 
   const presetEnv = [
     '@lunde/es',
@@ -334,13 +335,13 @@ export const babelConfig = (
                 '> 0.5%, ie >= 11, safari >= 9, firefox >= 43, ios >= 8',
             }
           : {
-              node: esm ? '12' : '10',
+              node: test ? 'current' : esm ? '12' : '10',
             },
       },
       devExpression: options.typescript === false,
       restSpread: !umd,
       objectAssign: !umd,
-      typescript: options.typescript === void 0 || options.typescript,
+      typescript: options.typescript === void 0 || !!options.typescript,
     },
   ]
 

@@ -14,7 +14,7 @@ module.exports.prompts = (
   return [
     {
       type: 'string',
-      name: 'DESCRIPTION',
+      name: 'description',
       message: 'Description:',
       filter: trim,
     },
@@ -27,14 +27,11 @@ module.exports.dependencies = {}
 // package.json dev dependencies
 module.exports.devDependencies = (variables, args) => {
   let deps = {
-    '@lunde/babel-preset-es': 'latest',
-    jest: 'latest',
-    'babel-eslint': 'latest',
+    'babel-jest': 'latest',
     'babel-plugin-annotate-pure-calls': 'latest',
     eslint: 'latest',
-    'eslint-import-resolver-jest': 'latest',
-    'eslint-plugin-jest': 'latest',
     husky: 'latest',
+    jest: 'latest',
     'lint-staged': 'latest',
     prettier: 'latest',
   }
@@ -44,9 +41,6 @@ module.exports.devDependencies = (variables, args) => {
     deps = {
       ...deps,
       '@types/jest': 'latest',
-      '@typescript-eslint/eslint-plugin': 'latest',
-      '@typescript-eslint/parser': 'latest',
-      'ts-jest': 'latest',
       typescript: 'latest',
     }
   }
@@ -99,7 +93,7 @@ module.exports.editPackageJson = async function editPackageJson(
     ...variables.pages,
     author: packageJson.author,
     license: packageJson.license,
-    description: variables.DESCRIPTION || '',
+    description: variables.description || '',
     keywords: [variables.PKG_NAME.replace(/-/g, ' ')],
     main: 'dist/main/index.js',
     module: 'dist/module/index.js',
@@ -120,33 +114,29 @@ module.exports.editPackageJson = async function editPackageJson(
     },
     sideEffects: false,
     scripts: {
-      build:
-        'npm run build-esm && npm run build-main && npm run build-module && npm run build-types',
-      'build-esm':
-        'npm run compile -- -d dist/esm --env-name esm --out-file-extension .mjs',
-      'build-main': 'npm run compile -- -d dist/main --env-name main',
-      'build-module': 'npm run compile -- -d dist/module --env-name module',
-      'build-types':
-        'tsc -p tsconfig.json -d --outDir types --emitDeclarationOnly',
-      'check-types': 'tsc --noEmit -p tsconfig.json',
-      compile: 'babel src -x .ts --ignore "**/*.test.ts" --delete-dir-on-start',
-      format: 'prettier --write "**/*.{ts,js,md,yml,json,eslintrc,prettierrc}"',
+      build: 'lundle build',
+      'check-types': 'lundle check-types',
+      format:
+        'prettier --write "{,!(node_modules|dist|coverage)/**/}*.{js,ts,md,yml,json,eslintrc,prettierrc}"',
       lint: 'eslint . --ext .ts',
       prepublishOnly:
         'npm run lint && npm run test && npm run build && npm run format',
       test: 'jest',
-      validate:
-        'npm run check-types && npm run lint && npm run test -- --coverage',
+      validate: 'lundle check-types && npm run lint && jest --coverage',
     },
     husky: {
       hooks: {
-        'pre-commit': 'npm run build-types && git add types && lint-staged',
+        'pre-commit': 'lunde build -f types && git add types && lint-staged',
       },
     },
     'lint-staged': {
       '**/*.{ts,js}': ['eslint', 'prettier --write'],
-      '**/*.{md,yml,json}': ['prettier --write'],
+      '**/*.{md,yml,json,eslintrc,prettierrc}': ['prettier --write'],
     },
+    eslintConfig: {
+      extends: ['lunde'],
+    },
+    eslintIgnore: ['node_modules', 'coverage', 'dist', 'test', '*.config.js'],
     ...packageJson,
   }
 
@@ -158,8 +148,6 @@ module.exports.editPackageJson = async function editPackageJson(
     delete pkg.exports['.'].types
     pkg.source = 'src/index.js'
     pkg.exports['.'].source = './src/index.js'
-    pkg.scripts.compile =
-      'babel src -x .js --ignore "**/*.test.js" --delete-dir-on-start'
     pkg.scripts.build =
       'npm run build-esm && npm run build-main && npm run build-module'
     pkg.scripts.lint = 'eslint .'

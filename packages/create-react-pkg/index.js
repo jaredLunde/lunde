@@ -32,6 +32,7 @@ module.exports.devDependencies = (variables, args) => {
     '@testing-library/react': 'latest',
     '@testing-library/react-hooks': 'latest',
     '@testing-library/user-event': 'latest',
+    'babel-jest': 'latest',
     jest: 'latest',
     eslint: 'latest',
     'eslint-config-lunde': 'latest',
@@ -50,7 +51,6 @@ module.exports.devDependencies = (variables, args) => {
       '@types/jest': 'latest',
       '@types/react': 'latest',
       '@types/react-dom': 'latest',
-      'ts-jest': 'latest',
       typescript: 'latest',
     }
   }
@@ -62,7 +62,6 @@ module.exports.devDependencies = (variables, args) => {
 module.exports.peerDependencies = {
   react: '>=16.8',
   'react-dom': '>=16.8',
-  'prop-types': '>=15.6',
 }
 
 module.exports.include = (variables, args) => {
@@ -107,7 +106,7 @@ module.exports.editPackageJson = async function editPackageJson(
     ...variables.pages,
     author: packageJson.author,
     license: packageJson.license,
-    description: variables.DESCRIPTION || '',
+    description: variables.description || '',
     keywords: [
       'react',
       'react component',
@@ -135,17 +134,16 @@ module.exports.editPackageJson = async function editPackageJson(
       build: 'lundle build',
       'check-types': 'lundle check-types',
       format:
-        'prettier --write "**/*.{ts,tsx,js,jsx,md,yml,json,eslintrc,prettierrc}"',
+        'prettier --write "{,!(node_modules|dist|coverage)/**/}*.{js,jsx,ts,tsx,md,yml,json,eslintrc,prettierrc}"',
       lint: 'eslint . --ext .ts,.tsx',
       prepublishOnly:
         'npm run lint && npm run test && npm run build && npm run format',
       test: 'jest',
-      validate:
-        'npm run check-types && npm run lint && npm run test -- --coverage',
+      validate: 'lundle check-types && npm run lint && jest --coverage',
     },
     husky: {
       hooks: {
-        'pre-commit': 'npm run build-types && git add types && lint-staged',
+        'pre-commit': 'lunde build -f types && git add types && lint-staged',
       },
     },
     'lint-staged': {
@@ -174,8 +172,6 @@ module.exports.editPackageJson = async function editPackageJson(
     pkg.source = 'src/index.js'
     pkg.exports['.'].source = './src/index.js'
     pkg.scripts.lint = 'eslint .'
-    pkg.scripts.format =
-      'prettier --write "**/*.{js,jsx,md,yml,json,eslintrc,prettierrc}"'
     pkg.scripts.validate = 'npm run lint && npm run test -- --coverage'
     pkg.husky.hooks['pre-commit'] = 'lint-staged'
     pkg['lint-staged'] = {

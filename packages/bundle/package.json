@@ -37,11 +37,11 @@
     "build": "FORCE_COLOR=1 node dist/main/bin build",
     "dev": "babel-node src/bin.ts -x \".ts\" --presets=\"@babel/env\",\"@babel/typescript\"",
     "check-types": "FORCE_COLOR=1 node dist/main/bin check-types",
-    "format": "prettier --write \"**/*.{ts,js,md,yml,json,eslintrc,prettierrc}\"",
+    "format": "prettier --write \"{,!(node_modules|dist|coverage)/**/}*.{ts,js,md,yml,json,eslintrc,prettierrc}\"",
     "lint": "eslint . --ext .ts",
-    "prepublishOnly": "npm run lint && npm run test && npm run build && npm run format",
+    "prepublishOnly": "npm run lint && npm run build && jest && npm run format",
     "test": "jest",
-    "validate": "npm run check-types && npm run lint && npm run test -- --coverage"
+    "validate": "npm run build && npm run lint && jest --coverage"
   },
   "husky": {
     "hooks": {
@@ -80,12 +80,12 @@
     "@types/rimraf": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^3.0.2",
     "@typescript-eslint/parser": "^3.0.2",
+    "babel-jest": "^26.0.1",
     "eslint": "^7.1.0",
     "eslint-config-lunde": "^0.1.2",
     "husky": "latest",
     "jest": "latest",
     "lint-staged": "latest",
-    "ts-jest": "latest",
     "typescript": "latest"
   },
   "dependencies": {
