@@ -2,7 +2,7 @@ import path from 'path'
 import chalk from 'chalk'
 import rimraf from 'rimraf'
 import {getPkgJson, cwd, flag} from './utils'
-import type {LundleOutput} from './types'
+import type {LundleOutput, LundleConfig} from './types'
 
 export const tsc = async (options: LundleTscOptions = {}) => {
   let {
@@ -277,6 +277,7 @@ export interface CompileOptions {
 }
 
 export interface LundleTscOptions {
+  config?: LundleConfig
   configFile?: string
   output?: {
     [type in TscOutputTypes]?: string[]

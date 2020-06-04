@@ -3,7 +3,7 @@ import yargs from 'yargs'
 import {babel} from './babel'
 import {rollup} from './rollup'
 import {tsc} from './tsc'
-import {error} from './utils'
+import {loadConfig, error} from './utils'
 
 export const bin = async () => {
   yargs.scriptName('lundle')
@@ -139,32 +139,12 @@ export const bin = async () => {
   const [cmd] = args._
   // Weirdness for typescript
   args.cmd = cmd
+  const config = await loadConfig()
   // routes the cmd
   switch (args.cmd) {
     case 'build':
-      babel({
-        format: args.format,
-        exportName: args.export,
-        react: args.react,
-        watch: !!args.watch,
-      }).catch((err) => {
-        error('[𝙗𝙖𝙗𝙚𝙡] compilation error\n')
-        console.error(err)
-        process.exit(1)
-      })
-
-      rollup({
-        format: args.format,
-        exportName: args.export,
-        react: args.react,
-        watch: !!args.watch,
-      }).catch((err) => {
-        error('[𝙧𝙤𝙡𝙡𝙪𝙥] compilation error\n')
-        console.error(err)
-        process.exit(1)
-      })
-
-      tsc({
+      await tsc({
+        config,
         configFile: args.tsconfig,
         format: args.format,
         exportName: args.export,
@@ -174,9 +154,36 @@ export const bin = async () => {
         console.error(err)
         process.exit(1)
       })
+
+      await Promise.all([
+        babel({
+          config,
+          format: args.format,
+          exportName: args.export,
+          react: args.react,
+          watch: !!args.watch,
+        }).catch((err) => {
+          error('[𝙗𝙖𝙗𝙚𝙡] compilation error\n')
+          console.error(err)
+          process.exit(1)
+        }),
+
+        rollup({
+          config,
+          format: args.format,
+          exportName: args.export,
+          react: args.react,
+          watch: !!args.watch,
+        }).catch((err) => {
+          error('[𝙧𝙤𝙡𝙡𝙪𝙥] compilation error\n')
+          console.error(err)
+          process.exit(1)
+        }),
+      ])
       break
     case 'check-types':
       await tsc({
+        config,
         configFile: args.tsconfig,
         format: args.format,
         exportName: args.export,

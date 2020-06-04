@@ -7,15 +7,15 @@ import chokidar from 'chokidar'
 import rimraf from 'rimraf'
 import minimatch from 'minimatch'
 import type {ModuleFormat} from 'rollup'
-import {getPkgJson, walk, cwd, log, success, error, loadConfig} from './utils'
-import type {ChokidarListener, LundleOutput} from './types'
+import {getPkgJson, walk, cwd, log, success, error} from './utils'
+import type {ChokidarListener, LundleOutput, LundleConfig} from './types'
 
 export const babel = async (options: LundleBabelOptions = {}) => {
   let {
+    config,
     output = {
       cjs: ['main', 'require', 'default'],
       module: ['module', 'browser'],
-      esm: ['import'],
     },
     format,
     exportName,
@@ -119,38 +119,43 @@ export const babel = async (options: LundleBabelOptions = {}) => {
   if (!outputs.length) return
 
   const watchers: [string, ChokidarListener][] = []
-  const configOverrides = (await loadConfig())?.babel
+  const configOverrides = config?.babel
   const transforms: ReturnType<typeof transform>[] = []
 
   for (const output of outputs) {
     const outDir = path.dirname(output.file)
     const srcDir = path.dirname(output.source)
 
-    const srcFiles = (await walk(srcDir))
-      .filter(minimatch.filter('*.{js,ts,jsx,tsx}', {matchBase: true}))
-      .filter(minimatch.filter('!*.d.ts', {matchBase: true}))
-      .filter(minimatch.filter('!*.test.*', {matchBase: true}))
-      .filter(minimatch.filter('!**/test/**', {matchBase: true}))
-      .filter(
-        minimatch.filter('!**/__{fixtures,test,tests,mocks,snapshots}__/**', {
-          matchBase: true,
-        })
-      )
-
     transforms.push(
-      transform(
-        {
-          srcFiles,
-          srcDir,
-          root,
-          outputType: output.type,
-          react,
-          outDir,
-          outIndexFile: output.file,
-          configOverrides,
-        },
-        options
-      )
+      walk(srcDir).then((srcFiles) => {
+        srcFiles = srcFiles
+          .filter(minimatch.filter('*.{js,ts,jsx,tsx}', {matchBase: true}))
+          .filter(minimatch.filter('!*.d.ts', {matchBase: true}))
+          .filter(minimatch.filter('!*.test.*', {matchBase: true}))
+          .filter(minimatch.filter('!**/test/**', {matchBase: true}))
+          .filter(
+            minimatch.filter(
+              '!**/__{fixtures,test,tests,mocks,snapshots}__/**',
+              {
+                matchBase: true,
+              }
+            )
+          )
+
+        return transform(
+          {
+            srcFiles,
+            srcDir,
+            root,
+            outputType: output.type,
+            react,
+            outDir,
+            outIndexFile: output.file,
+            configOverrides,
+          },
+          options
+        )
+      })
     )
 
     if (watch) {
@@ -259,7 +264,10 @@ const transform = async (
         root,
         envName: outputType,
         ...(configOverrides
-          ? configOverrides(finalBabelConfig, babelOptions)
+          ? configOverrides(finalBabelConfig, {
+              ...babelOptions,
+              type: outputType,
+            })
           : finalBabelConfig),
       })
     )
@@ -334,8 +342,19 @@ export const babelConfig = (
               browsers:
                 '> 0.5%, ie >= 11, safari >= 9, firefox >= 43, ios >= 8',
             }
+          : esm
+          ? {
+              node: '12',
+              browsers: [
+                'Chrome >= 61',
+                'Safari >= 10.1',
+                'iOS >= 10.3',
+                'Firefox >= 60',
+                'Edge >= 16',
+              ],
+            }
           : {
-              node: test ? 'current' : esm ? '12' : '10',
+              node: test ? 'current' : '10',
             },
       },
       devExpression: options.typescript === false,
@@ -360,6 +379,7 @@ export const babelConfig = (
 }
 
 export interface LundleBabelOptions {
+  config?: LundleConfig
   output?: {
     [type in BabelOutputTypes]?: string[]
   }
@@ -396,6 +416,6 @@ interface TransformOptions {
   deleteDirOnStart?: boolean
   configOverrides?: (
     config: BabelConfig,
-    options: LundleBabelOptions
+    options: LundleBabelOptions & {type: BabelOutputTypes}
   ) => BabelConfig
 }

@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import Module from 'module'
 import {spawn as spawn_} from 'child_process'
-import * as vm from 'vm'
+import {runInThisContext} from 'vm'
 import {transformFileAsync} from '@babel/core'
 import chalk from 'chalk'
 import type {Chalk} from 'chalk'
@@ -60,12 +60,9 @@ export const loadConfig = async (
       plugins: [],
     })
     // Run this in a VM context for safer eval
-    const wrapper = vm.runInThisContext(
-      Module.wrap(t?.code || '"use strict"'),
-      {
-        filename: configFile,
-      }
-    )
+    const wrapper = runInThisContext(Module.wrap(t?.code || '"use strict"'), {
+      filename: configFile,
+    })
     // Call the wrapper with our custom exports
     const config: LundleConfig = {}
     // Adds config path to module paths for relative resolution

@@ -8,22 +8,30 @@ import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import {terser} from 'rollup-plugin-terser'
 import sourcemaps from 'rollup-plugin-sourcemaps'
+import gzipSize from 'gzip-size'
+import brotliSize from 'brotli-size'
+import prettyBytes from 'pretty-bytes'
 import {pascalCase} from 'change-case'
+import chalk from 'chalk'
 import type {
   RollupOptions,
   InputOptions,
   OutputOptions,
-  RollupOutput,
   ModuleFormat,
 } from 'rollup'
-import {getPkgJson, log, success, loadConfig} from './utils'
+import {getPkgJson, log, success} from './utils'
 import {babelConfig} from './babel'
-import type {LundleOutput} from './types'
+import type {LundleOutput, LundleConfig} from './types'
+
+const isBareModuleId = (id: string) =>
+  !id.startsWith('.') && !id.includes(path.join(process.cwd(), 'modules'))
 
 export const rollup = async (options: LundleRollupOptions = {}) => {
   let {
+    config,
     output = {
       umd: ['unpkg', 'umd:main', 'umd'],
+      esm: ['import'],
     },
     format,
     exportName,
@@ -31,7 +39,8 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
     react,
     watch,
   } = options
-  const configOverrides = (await loadConfig())?.rollup
+  let sizeInfo: Promise<string>[] = []
+  const configOverrides = config?.rollup
   const {value: pkg, filename} = getPkgJson()
 
   if (!filename || !pkg) {
@@ -42,7 +51,7 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
   }
 
   const root = path.dirname(filename)
-  const bundles: Promise<RollupOutput>[] = []
+  const bundles: Promise<any>[] = []
   const outputs: LundleOutput<RollupOutputTypes>[] = []
   const hasExportsField = !!pkg.exports
 
@@ -128,8 +137,18 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
   for (const output of outputs) {
     const isReact =
       react === void 0 ? !!output.source.match(/\.(jsx|tsx)$/) : react
+    const globals: Record<string, string> = isReact
+      ? {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+        }
+      : {}
+
     const inputOptions: InputOptions = {
       input: output.source,
+      treeshake: {
+        propertyReadSideEffects: false,
+      },
       plugins: [
         json(),
         sourcemaps(),
@@ -139,14 +158,18 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
         }),
         babel({
           exclude: ['**/test/**', '**/*.test.{js,jsx,ts,tsx}'],
-          extensions: ['.js', '.jsx', '.ts', '.tsx'],
+          extensions: ['.js', '.jsx', '.mjs', '.es', '.es6', '.ts', '.tsx'],
           babelHelpers: 'bundled',
           ...babelConfig(output.type, {
             react: isReact,
             typescript: !!output.source.match(/\.tsx?$/),
           }),
+          sourceMaps: true,
+          rootMode: 'upward',
         }),
-        commonjs(),
+        commonjs({
+          include: /\/node_modules\//,
+        }),
         replace({
           'process.env.NODE_ENV': JSON.stringify('production'),
         }),
@@ -162,9 +185,28 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
             unsafe_undefined: true,
           },
         }),
+        // Credit: https://github.com/developit/microbundle/blob/master/src/index.js
+        {
+          writeBundle(options, bundle) {
+            sizeInfo.push(
+              Promise.all(
+                Object.values(bundle).map((chunk) => {
+                  if (chunk.type !== 'chunk') return
+                  if (chunk.code) {
+                    return getSizeInfo(chunk.code, chunk.fileName, false)
+                  }
+                })
+              ).then(
+                (results) =>
+                  `  ${chalk.bold(output.type)}\n` +
+                  results.filter(Boolean).join('\n')
+              )
+            )
+          },
+        },
         // ...plugins,
       ],
-      external: isReact ? ['react'] : [],
+      external: output.type === 'esm' ? isBareModuleId : Object.keys(globals),
     }
 
     if (!outputs.length) return
@@ -174,12 +216,7 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
       file: output.file,
       format: output.type,
       sourcemap: true,
-      globals: isReact
-        ? {
-            react: 'React',
-            'react-dom': 'ReactDOM',
-          }
-        : {},
+      globals,
     }
 
     let finalConfig: RollupOptions = {
@@ -188,7 +225,10 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
     }
 
     if (typeof configOverrides === 'function') {
-      finalConfig = configOverrides(finalConfig, options)
+      finalConfig = configOverrides(finalConfig, {
+        ...options,
+        type: output.type,
+      })
     }
 
     if (watch) {
@@ -200,23 +240,70 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
         },
       })
     } else {
-      success('[rollup] building', output.type)
+      success(`[rollup] ${chalk.bold(output.type)} building`)
       const rollupOutputs: OutputOptions[] = Array.isArray(finalConfig.output)
         ? finalConfig.output
         : [finalConfig.output as OutputOptions]
       const {...input} = finalConfig
       delete input.output
-      const bundle = await rollup_.rollup(input)
-      bundles.push(...rollupOutputs.map((out) => bundle.write(out)))
+      bundles.push(
+        rollup_
+          .rollup(input)
+          .then((bundle) =>
+            Promise.all(rollupOutputs.map((out) => bundle.write(out)))
+          )
+      )
     }
   }
 
   if (bundles.length) {
     await Promise.all(bundles)
+    const sizes = await Promise.all(sizeInfo)
+    success(`[rollup] bundle size\n${sizes.join('\n')}`)
   }
 }
 
+// Credit: https://github.com/developit/microbundle/blob/master/src/index.js
+const formatSize = (
+  size: number,
+  filename: string,
+  type: 'br' | 'gz',
+  raw: boolean
+) => {
+  const pretty = raw ? `${size} B` : prettyBytes(size)
+  const color =
+    size < 5000 ? chalk.green : size > 40000 ? chalk.red : chalk.yellow
+  return `${' '.repeat(10 - pretty.length)}${color(pretty)}: ${chalk.white(
+    path.basename(filename)
+  )}.${type}`
+}
+
+const getSizeInfo = async (code: string, filename: string, raw: boolean) => {
+  const gzip = formatSize(
+    await gzipSize(code),
+    filename,
+    'gz',
+    raw || code.length < 5000
+  )
+  let brotli
+  //wrap brotliSize in try/catch in case brotli is unavailable due to
+  //lower node version
+  try {
+    brotli = formatSize(
+      await brotliSize(code),
+      filename,
+      'br',
+      raw || code.length < 5000
+    )
+  } catch (e) {
+    return gzip
+  }
+
+  return gzip + '\n' + brotli
+}
+
 export interface LundleRollupOptions {
+  config?: LundleConfig
   output?: {
     // string[]
     [type in RollupOutputTypes]?: string[]
