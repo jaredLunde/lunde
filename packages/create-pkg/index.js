@@ -30,9 +30,11 @@ module.exports.devDependencies = (variables, args) => {
     'babel-jest': 'latest',
     'babel-plugin-annotate-pure-calls': 'latest',
     eslint: 'latest',
+    'eslint-config-lunde': 'latest',
     husky: 'latest',
     jest: 'latest',
     'lint-staged': 'latest',
+    lundle: 'latest',
     prettier: 'latest',
   }
 
