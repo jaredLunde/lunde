@@ -36,6 +36,9 @@ export const loadConfig = async (
     configFile ||
     path.join(path.dirname(getPkgJson()?.filename || '.'), 'lundle.config.js')
 
+  // Bails if there is no lundle config
+  if (!fs.existsSync(configFile)) return
+
   try {
     // Allows ES6 lundle configs
     const t = await transformFileAsync(configFile, {
