@@ -154,6 +154,16 @@ module.exports.editPackageJson = async function editPackageJson(
       extends: ['lunde'],
     },
     eslintIgnore: ['node_modules', 'coverage', 'dist', 'test', '*.config.js'],
+    jest: {
+      moduleDirectories: ['node_modules', 'src', 'test'],
+      testMatch: ['<rootDir>/src/**/?(*.)test.{ts,tsx}'],
+      collectCoverageFrom: ['**/src/**/*.{ts,tsx}'],
+      setupFilesAfterEnv: ['./test/setup.js'],
+      snapshotResolver: './test/resolve-snapshot.js',
+      globals: {
+        __DEV__: true,
+      },
+    },
     prettier: {
       semi: false,
       singleQuote: true,
@@ -177,6 +187,16 @@ module.exports.editPackageJson = async function editPackageJson(
     pkg['lint-staged'] = {
       '**/*.{js,jsx}': ['eslint', 'prettier --write'],
       '**/*.{md,yml,json,eslintrc,prettierrc}': ['prettier --write'],
+    }
+    pkg.jest = {
+      moduleDirectories: ['node_modules', 'src', 'test'],
+      testMatch: ['<rootDir>/src/**/?(*.)test.{js,jsx}'],
+      collectCoverageFrom: ['**/src/**/*.{js,jsx}'],
+      setupFilesAfterEnv: ['./test/setup.js'],
+      snapshotResolver: './test/resolve-snapshot.js',
+      globals: {
+        __DEV__: true,
+      },
     }
   }
 

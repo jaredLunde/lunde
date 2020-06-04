@@ -1,6 +1,6 @@
 {
   "name": "lundle",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "homepage": "https://github.com/jaredLunde/lunde/tree/master/packages/bundle#readme",
   "repository": "github:jaredLunde/lunde",
   "bugs": "https://github.com/jaredLunde/lunde/issues",
@@ -72,6 +72,29 @@
     "test",
     "*.config.js"
   ],
+  "jest": {
+    "moduleDirectories": [
+      "node_modules",
+      "src",
+      "test"
+    ],
+    "setupFilesAfterEnv": [
+      "./test/setup.js"
+    ],
+    "snapshotResolver": "./test/resolve-snapshot.js",
+    "collectCoverageFrom": [
+      "**/src/**/*.ts"
+    ],
+    "globals": {
+      "__DEV__": true
+    }
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true,
+    "bracketSpacing": false
+  },
   "devDependencies": {
     "@babel/node": "^7.10.1",
     "@types/find-package-json": "^1.1.1",
@@ -86,6 +109,7 @@
     "husky": "latest",
     "jest": "latest",
     "lint-staged": "latest",
+    "prettier": "^2.0.5",
     "typescript": "latest"
   },
   "dependencies": {
@@ -105,7 +129,6 @@
     "find-package-json": "^1.2.0",
     "minimatch": "^3.0.4",
     "ora": "^4.0.4",
-    "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
     "rollup": "^2.12.0",
     "rollup-plugin-terser": "^6.1.0",
