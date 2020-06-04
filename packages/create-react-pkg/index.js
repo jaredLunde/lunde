@@ -134,7 +134,7 @@ module.exports.editPackageJson = async function editPackageJson(
       build: 'lundle build',
       'check-types': 'lundle check-types',
       format:
-        'prettier --write "{,!(node_modules|dist|coverage)/**/}*.{js,jsx,ts,tsx,md,yml,json,eslintrc,prettierrc}"',
+        'prettier --write "{,!(node_modules|dist|coverage)/**/}*.{ts,tsx,js,jsx,md,yml,json,eslintrc,prettierrc}"',
       lint: 'eslint . --ext .ts,.tsx',
       prepublishOnly:
         'npm run lint && npm run test && npm run build && npm run format',
