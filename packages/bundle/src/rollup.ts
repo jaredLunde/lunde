@@ -82,7 +82,7 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
         const srcFile = source || exports.source || pkg.source
 
         if (!srcFile) {
-          console.error('[𝙧𝙤𝙡𝙡𝙪𝙥] could not find a source file for', outputType)
+          console.error('[rollup] could not find a source file for', outputType)
           process.exit(1)
         }
 
@@ -112,7 +112,7 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
       const srcFile = source || pkg.source
 
       if (!srcFile) {
-        console.error('[𝙧𝙤𝙡𝙡𝙪𝙥] could not find a source file for', outputType)
+        console.error('[rollup] could not find a source file for', outputType)
         process.exit(1)
       }
 
@@ -189,7 +189,7 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
     }
 
     if (watch) {
-      log('[𝙧𝙤𝙡𝙡𝙪𝙥] watching for changes...')
+      log('[rollup] watching for changes...')
       rollup_.watch({
         ...finalConfig,
         watch: {
@@ -197,7 +197,7 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
         },
       })
     } else {
-      success('[𝙧𝙤𝙡𝙡𝙪𝙥] building', output.type)
+      success('[rollup] building', output.type)
       const rollupOutputs: OutputOptions[] = Array.isArray(finalConfig.output)
         ? finalConfig.output
         : [finalConfig.output as OutputOptions]

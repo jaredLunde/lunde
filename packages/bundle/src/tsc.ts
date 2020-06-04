@@ -68,7 +68,7 @@ export const tsc = async (options: LundleTscOptions = {}) => {
         const srcFile = source || exports.source || pkg.source
 
         if (!srcFile) {
-          console.error('[𝙩𝙨𝙘] could not find a source file for', outputType)
+          console.error('[tsc] could not find a source file for', outputType)
           process.exit(1)
         }
 
@@ -99,7 +99,7 @@ export const tsc = async (options: LundleTscOptions = {}) => {
       const srcFile = source || pkg.source
 
       if (!srcFile) {
-        console.error('[𝙩𝙨𝙘] could not find a source file for', outputType)
+        console.error('[tsc] could not find a source file for', outputType)
         process.exit(1)
       }
 
@@ -250,7 +250,7 @@ function diagnosticToWarning(
     return message + '\n'
   } else {
     return diagnostic.category == 3
-      ? `${flag('✎')} [𝙩𝙨𝙘] ${flattenedMessage.replace(' in watch mode', '')}`
+      ? `${flag('✎')} [tsc] ${flattenedMessage.replace(' in watch mode', '')}`
       : `${category(diagnostic)} ${chalk.gray(
           'TS' + diagnostic.code
         )}: ${flattenedMessage}`

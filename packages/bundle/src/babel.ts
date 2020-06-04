@@ -73,7 +73,7 @@ export const babel = async (options: LundleBabelOptions = {}) => {
         const srcFile = source || exports.source || pkg.source
 
         if (!srcFile) {
-          console.error('[𝙗𝙖𝙗𝙚𝙡] could not find a source file for', outputType)
+          console.error('[babel] could not find a source file for', outputType)
           process.exit(1)
         }
 
@@ -189,7 +189,7 @@ export const babel = async (options: LundleBabelOptions = {}) => {
                   )
                 ),
                 () => {
-                  error('[𝙗𝙖𝙗𝙚𝙡]', chalk.bold(output.type), 'deleted', file)
+                  error('[babel]', chalk.bold(output.type), 'deleted', file)
                 }
               )
               break
@@ -205,7 +205,7 @@ export const babel = async (options: LundleBabelOptions = {}) => {
 
   // Initializes the watcher
   if (watch) {
-    log('[𝙗𝙖𝙗𝙚𝙡] watching for changes...')
+    log('[babel] watching for changes...')
 
     const watcher = chokidar.watch(
       Array.from(new Set(watchers.map(([srcDir]) => srcDir))),
@@ -304,7 +304,7 @@ const transform = async (
 
   await Promise.all(writtenFiles)
   success(
-    `[𝙗𝙖𝙗𝙚𝙡] ${chalk.bold(outputType)} ` +
+    `[babel] ${chalk.bold(outputType)} ` +
       (writtenFiles.length > 1
         ? `compiled ${writtenFiles.length} files`
         : `compiled ${srcFiles[0]}`)
@@ -349,10 +349,13 @@ export const babelConfig = (
     presets: [
       options.react && ['@babel/preset-react', {useSpread: !umd}],
       presetEnv,
+      ...(options.presets || []),
     ].filter(Boolean),
-    plugins: [options.react && 'optimize-react', 'annotate-pure-calls'].filter(
-      Boolean
-    ),
+    plugins: [
+      options.react && 'optimize-react',
+      'annotate-pure-calls',
+      ...(options.plugins || []),
+    ].filter(Boolean),
   } as BabelConfig
 }
 
@@ -370,6 +373,8 @@ export interface LundleBabelOptions {
 export interface BabelConfigOptions {
   typescript?: boolean
   react?: boolean
+  presets?: PluginItem[]
+  plugins?: PluginItem[]
 }
 
 export type BabelConfig = {

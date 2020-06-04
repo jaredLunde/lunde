@@ -3,10 +3,9 @@ import yargs from 'yargs'
 import {babel} from './babel'
 import {rollup} from './rollup'
 import {tsc} from './tsc'
-import {log, error} from './utils'
+import {error} from './utils'
 
 export const bin = async () => {
-  log('== ʟᴜɴᴅʟᴇ ==')
   yargs.scriptName('lundle')
 
   yargs.command(

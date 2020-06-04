@@ -18,6 +18,8 @@ export interface LundleBabelOptions {
 export interface BabelConfigOptions {
   typescript?: boolean
   react?: boolean
+  presets?: PluginItem[]
+  plugins?: PluginItem[]
 }
 export declare type BabelConfig = {
   presets: PluginItem[] | null
