@@ -113,12 +113,12 @@ module.exports.editPackageJson = async function editPackageJson(
     description: variables.description || '',
     keywords: [
       'react',
-      'react component',
+      args.hook ? 'react hook' : 'react component',
       variables.PKG_NAME.replace(/-/g, ' '),
     ],
     main: 'dist/main/index.js',
     module: 'dist/module/index.js',
-    unpkg: `dist/umd/${variables.PKG_NAME}.js`,
+    unpkg: `dist/umd/${args.hook ? 'use-' : ''}${variables.PKG_NAME}.js`,
     source: 'src/index.tsx',
     types: 'types/index.d.ts',
     files: ['/dist', '/src', '/types'],
@@ -127,7 +127,7 @@ module.exports.editPackageJson = async function editPackageJson(
         browser: './dist/module/index.js',
         import: './dist/esm/index.mjs',
         require: './dist/main/index.js',
-        umd: `./dist/umd/${variables.PKG_NAME}.js`,
+        umd: `./dist/umd/${args.hook ? 'use-' : ''}${variables.PKG_NAME}.js`,
         source: './src/index.tsx',
         types: './types/index.d.ts',
         default: './dist/main/index.js',
@@ -137,7 +137,7 @@ module.exports.editPackageJson = async function editPackageJson(
     },
     sideEffects: false,
     scripts: {
-      build: 'lundle build',
+      build: 'lundle build' + args.hook ? ' --umd-case camel' : '',
       'check-types': 'lundle check-types',
       dev: 'lundle build -f module,cjs -w',
       format:
