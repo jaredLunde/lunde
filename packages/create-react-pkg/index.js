@@ -58,10 +58,15 @@ module.exports.devDependencies = (variables, args) => {
 }
 
 // package.json peer dependencies
-module.exports.peerDependencies = {
-  react: '>=16.8',
-  'react-dom': '>=16.8',
-}
+module.exports.peerDependencies = (variables, args) =>
+  args.hook
+    ? {
+        react: '>=16.8',
+      }
+    : {
+        react: '>=16.8',
+        'react-dom': '>=16.8',
+      }
 
 module.exports.include = (variables, args) => {
   const include = ['**/shared/**']
@@ -113,6 +118,7 @@ module.exports.editPackageJson = async function editPackageJson(
     ],
     main: 'dist/main/index.js',
     module: 'dist/module/index.js',
+    unpkg: `dist/umd/${variables.PKG_NAME}.js`,
     source: 'src/index.tsx',
     types: 'types/index.d.ts',
     files: ['/dist', '/src', '/types'],
@@ -121,6 +127,7 @@ module.exports.editPackageJson = async function editPackageJson(
         browser: './dist/module/index.js',
         import: './dist/esm/index.mjs',
         require: './dist/main/index.js',
+        umd: `./dist/umd/${variables.PKG_NAME}.js`,
         source: './src/index.tsx',
         types: './types/index.d.ts',
         default: './dist/main/index.js',

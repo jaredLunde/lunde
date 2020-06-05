@@ -340,7 +340,7 @@ export const babelConfig = (
           : umd
           ? {
               browsers:
-                '> 0.5%, ie >= 11, safari >= 9, firefox >= 43, ios >= 8',
+                '> 0.5%, ie >= 11, safari >= 9, firefox >= 43, ios >= 8, not dead',
             }
           : esm
           ? {
