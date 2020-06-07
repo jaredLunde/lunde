@@ -5,7 +5,7 @@ import type {PluginItem} from '@babel/core'
 import chalk from 'chalk'
 import chokidar from 'chokidar'
 import rimraf from 'rimraf'
-import minimatch from 'minimatch'
+import micromatch from 'micromatch'
 import type {ModuleFormat} from 'rollup'
 import {getPkgJson, walk, cwd, log, success, error} from './utils'
 import type {ChokidarListener, LundleOutput, LundleConfig} from './types'
@@ -128,19 +128,15 @@ export const babel = async (options: LundleBabelOptions = {}) => {
 
     transforms.push(
       walk(srcDir).then((srcFiles) => {
-        srcFiles = srcFiles
-          .filter(minimatch.filter('*.{js,ts,jsx,tsx}', {matchBase: true}))
-          .filter(minimatch.filter('!*.d.ts', {matchBase: true}))
-          .filter(minimatch.filter('!*.test.*', {matchBase: true}))
-          .filter(minimatch.filter('!**/test/**', {matchBase: true}))
-          .filter(
-            minimatch.filter(
-              '!**/__{fixtures,test,tests,mocks,snapshots}__/**',
-              {
-                matchBase: true,
-              }
-            )
-          )
+        srcFiles = micromatch(srcFiles, '*.{js,ts,jsx,tsx}', {
+          basename: true,
+          ignore: [
+            '*.d.ts',
+            '*.test.*',
+            '**/test/**',
+            '**/__{fixtures,test,tests,mocks,snapshots}__/**',
+          ],
+        })
 
         return transform(
           {

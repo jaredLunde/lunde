@@ -1,7 +1,9 @@
+import fs from 'fs'
 import path from 'path'
 import chalk from 'chalk'
 import rimraf from 'rimraf'
-import {getPkgJson, cwd, flag} from './utils'
+import micromatch from 'micromatch'
+import {getPkgJson, walk, cwd, flag} from './utils'
 import type {LundleOutput, LundleConfig} from './types'
 
 export const tsc = async (options: LundleTscOptions = {}) => {
@@ -114,39 +116,46 @@ export const tsc = async (options: LundleTscOptions = {}) => {
 
   if (!outputs.length) return
 
+  const programs: ReturnType<typeof compile>[] = []
   for (const output of outputs) {
     const outDir = path.join(root, path.dirname(output.file))
 
-    const program = compile(
-      // TypeScript is provided like this so that we don't need it as
-      // a hard dependency. Projects w/o TypeScript should still be able
-      // to use this script.
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      require('typescript'),
-      [output.source],
-      {
-        deleteDirOnStart: !watch,
-        emitDeclarationOnly: !checkOnly,
-        declaration: true,
-        noEmit: checkOnly,
-        outDir,
-      },
-      {
-        checkOnly,
-        configFile,
-        watching: watch,
-      }
+    programs.push(
+      compile(
+        // TypeScript is provided like this so that we don't need it as
+        // a hard dependency. Projects w/o TypeScript should still be able
+        // to use this script.
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        require('typescript'),
+        output.source,
+        {
+          deleteDirOnStart: !watch,
+          emitDeclarationOnly: !checkOnly,
+          declaration: true,
+          noEmit: checkOnly,
+          outDir,
+        },
+        {
+          checkOnly,
+          configFile,
+          watching: watch,
+        }
+      )
     )
-
-    if (!watch) {
-      program.close()
-    }
   }
+
+  return Promise.all(programs).then((ps) =>
+    ps.forEach((program) => {
+      if (!watch) {
+        program.close()
+      }
+    })
+  )
 }
 
-const compile = (
+const compile = async (
   ts: typeof import('typescript'),
-  fileNames: string[],
+  sourceFile: string,
   compilerOptions: import('typescript').CompilerOptions & {outDir: string},
   options: CompileOptions
 ) => {
@@ -160,6 +169,17 @@ const compile = (
 
   if (!configPath) {
     throw new Error("Could not find a valid 'tsconfig.json'.")
+  }
+
+  const configFileText = await fs.promises.readFile(configPath, 'utf8')
+  const {config, error} = ts.parseConfigFileTextToJson(
+    configPath,
+    configFileText
+  )
+
+  if (error) {
+    console.error(error)
+    process.exit(1)
   }
 
   // TypeScript can use several different program creation "strategies":
@@ -179,12 +199,27 @@ const compile = (
   const createProgram = checkOnly
     ? ts.createSemanticDiagnosticsBuilderProgram
     : ts.createSemanticDiagnosticsBuilderProgram
+  const finalCompilerOptions = ts.convertCompilerOptionsFromJson(
+    config.compilerOptions,
+    cwd(),
+    configPath
+  )
+
+  const sourceFiles = await walk(path.dirname(sourceFile)).then((srcFiles) => {
+    return micromatch(
+      srcFiles.map((srcFile) => path.relative(cwd(), srcFile)),
+      extGlob(config?.include || []),
+      {
+        ignore: extGlob(config?.exclude),
+      }
+    )
+  })
 
   // Note that there is another overload for `createWatchCompilerHost` that takes
   // a set of root files.
   const host = ts.createWatchCompilerHost(
-    configPath,
-    compilerOptions,
+    sourceFiles,
+    Object.assign(finalCompilerOptions.options, compilerOptions),
     ts.sys,
     createProgram,
     (diagnostic) => {
@@ -200,6 +235,14 @@ const compile = (
   // `createWatchProgram` creates an initial program, watches files, and updates
   // the program over time.
   return ts.createWatchProgram(host)
+}
+
+function extGlob(arr: string[]) {
+  return arr.map((i: string) => {
+    return !i.includes('.') && !i.includes('*')
+      ? i.replace(/\/$/, '') + '/**/*'
+      : i
+  })
 }
 
 // Credit to Rollup.js

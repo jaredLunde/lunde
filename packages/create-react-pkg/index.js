@@ -137,7 +137,7 @@ module.exports.editPackageJson = async function editPackageJson(
     },
     sideEffects: false,
     scripts: {
-      build: 'lundle build' + args.hook ? ' --umd-case camel' : '',
+      build: 'lundle build' + (args.hook ? ' --umd-case camel' : ''),
       'check-types': 'lundle check-types',
       dev: 'lundle build -f module,cjs -w',
       format:
