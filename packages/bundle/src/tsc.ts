@@ -8,6 +8,7 @@ import type {LundleOutput, LundleConfig} from './types'
 
 export const tsc = async (options: LundleTscOptions = {}) => {
   let {
+    config,
     configFile = 'tsconfig.json',
     output = {
       types: ['types', 'typings'],
@@ -136,9 +137,11 @@ export const tsc = async (options: LundleTscOptions = {}) => {
           outDir,
         },
         {
+          config,
           checkOnly,
           configFile,
           watching: watch,
+          output,
         }
       )
     )
@@ -160,9 +163,11 @@ const compile = async (
   options: CompileOptions
 ) => {
   const {
+    config: lundleConfig,
     watching = false,
     checkOnly = false,
     configFile = 'tsconfig.json',
+    output,
   } = options
   // Don't delete the source directory on accident
   if (path.dirname(sourceFile) !== compilerOptions.outDir) {
@@ -170,10 +175,11 @@ const compile = async (
   }
 
   const configFileText = await fs.promises.readFile(configFile, 'utf8')
-  const {config, error} = ts.parseConfigFileTextToJson(
-    configFile,
-    configFileText
-  )
+  let {config, error} = ts.parseConfigFileTextToJson(configFile, configFileText)
+  config =
+    lundleConfig && typeof lundleConfig.tsc === 'function'
+      ? lundleConfig.tsc(config, output)
+      : config
 
   if (error) {
     console.error(error)
@@ -315,6 +321,8 @@ export interface CompileOptions {
   checkOnly?: boolean
   configFile?: string
   watching?: boolean
+  config?: LundleConfig
+  output: LundleOutput<TscOutputTypes>
 }
 
 export interface LundleTscOptions {

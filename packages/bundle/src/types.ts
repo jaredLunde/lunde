@@ -1,8 +1,7 @@
 import type {Stats} from 'fs'
 import type {RollupOptions} from 'rollup'
-import type {CompilerOptions} from 'typescript'
 import type {LundleRollupOptions, RollupOutputTypes} from './rollup'
-import type {LundleTscOptions} from './tsc'
+import type {TscOutputTypes} from './tsc'
 import type {BabelConfig, BabelOutputTypes, LundleBabelOptions} from './babel'
 
 export interface LundleConfig {
@@ -14,7 +13,7 @@ export interface LundleConfig {
     config: RollupOptions,
     options: LundleRollupOptions & {type: RollupOutputTypes}
   ) => RollupOptions
-  tsc?: (config: CompilerOptions, options: LundleTscOptions) => CompilerOptions
+  tsc?: (config: any, output: LundleOutput<TscOutputTypes>) => any
 }
 
 export interface LundleOutput<OutputTypes> {
