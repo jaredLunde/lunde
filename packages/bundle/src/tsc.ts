@@ -165,15 +165,9 @@ const compile = async (
     configFile = 'tsconfig.json',
   } = options
   !checkOnly && rimraf.sync(compilerOptions.outDir)
-  const configPath = ts.findConfigFile(cwd(), ts.sys.fileExists, configFile)
-
-  if (!configPath) {
-    throw new Error("Could not find a valid 'tsconfig.json'.")
-  }
-
-  const configFileText = await fs.promises.readFile(configPath, 'utf8')
+  const configFileText = await fs.promises.readFile(configFile, 'utf8')
   const {config, error} = ts.parseConfigFileTextToJson(
-    configPath,
+    configFile,
     configFileText
   )
 
@@ -202,7 +196,7 @@ const compile = async (
   const finalCompilerOptions = ts.convertCompilerOptionsFromJson(
     config.compilerOptions,
     cwd(),
-    configPath
+    configFile
   )
 
   const sourceFiles = await walk(path.dirname(sourceFile)).then((srcFiles) => {

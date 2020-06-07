@@ -150,15 +150,11 @@ module.exports.editPackageJson = async function editPackageJson(
     },
     husky: {
       hooks: {
-        'pre-commit': 'lint-staged',
+        'pre-commit': 'lundle check-types && lint-staged',
       },
     },
     'lint-staged': {
-      '**/*.{ts,tsx,js,jsx}': [
-        'lundle build -f types',
-        'eslint',
-        'prettier --write',
-      ],
+      '**/*.{ts,tsx,js,jsx}': ['eslint', 'prettier --write'],
       '**/*.{md,yml,json}': ['prettier --write'],
     },
     eslintConfig: {
