@@ -190,6 +190,7 @@ module.exports.editPackageJson = async function editPackageJson(
     pkg.exports['.'].source = './src/index.js'
     pkg.scripts.lint = 'eslint .'
     pkg.scripts.validate = 'npm run lint && npm run test -- --coverage'
+    pkg.husky.hooks['pre-commit'] = 'lint-staged'
     pkg['lint-staged'] = {
       '**/*.{js,jsx}': ['eslint', 'prettier --write'],
       '**/*.{md,yml,json}': ['prettier --write'],
