@@ -214,7 +214,7 @@ const compile = async (
       srcFiles.map((srcFile) => path.relative(cwd(), srcFile)),
       extGlob(config?.include || []),
       {
-        ignore: extGlob(config?.exclude),
+        ignore: extGlob(config?.exclude).concat('!(**/*.{ts,tsx})'),
       }
     )
   })
