@@ -164,7 +164,11 @@ const compile = async (
     checkOnly = false,
     configFile = 'tsconfig.json',
   } = options
-  !checkOnly && rimraf.sync(compilerOptions.outDir)
+  // Don't delete the source directory on accident
+  if (path.dirname(sourceFile) !== compilerOptions.outDir) {
+    !checkOnly && rimraf.sync(compilerOptions.outDir)
+  }
+
   const configFileText = await fs.promises.readFile(configFile, 'utf8')
   const {config, error} = ts.parseConfigFileTextToJson(
     configFile,
