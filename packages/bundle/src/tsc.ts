@@ -75,6 +75,9 @@ export const tsc = async (options: LundleTscOptions = {}) => {
           process.exit(1)
         }
 
+        // Don't try to add types to JS projects
+        if (!srcFile.match(/\.tsx?$/)) continue
+
         outputs.push({
           type: outputType,
           source: path.isAbsolute(srcFile) ? srcFile : path.join(root, srcFile),
@@ -105,6 +108,9 @@ export const tsc = async (options: LundleTscOptions = {}) => {
         console.error('[tsc] could not find a source file for', outputType)
         process.exit(1)
       }
+
+      // Don't try to add types to JS projects
+      if (!srcFile.match(/\.tsx?$/)) continue
 
       outputs.push({
         type: outputType,
