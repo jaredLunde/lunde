@@ -102,6 +102,15 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
           source: path.isAbsolute(srcFile) ? srcFile : path.join(root, srcFile),
           file: path.isAbsolute(file) ? file : path.join(root, file),
         })
+
+        outputs.push({
+          type: outputType,
+          source: path.isAbsolute(srcFile) ? srcFile : path.join(root, srcFile),
+          file: (path.isAbsolute(file) ? file : path.join(root, file)).replace(
+            /(\.[\w]+)$/,
+            '.dev$1'
+          ),
+        })
       }
     }
   }
@@ -131,6 +140,15 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
         type: outputType,
         source: path.isAbsolute(srcFile) ? srcFile : path.join(root, srcFile),
         file: path.isAbsolute(file) ? file : path.join(root, file),
+      })
+
+      outputs.push({
+        type: outputType,
+        source: path.isAbsolute(srcFile) ? srcFile : path.join(root, srcFile),
+        file: (path.isAbsolute(file) ? file : path.join(root, file)).replace(
+          /\.([\w]+)$/,
+          '.dev$1'
+        ),
       })
     }
   }
@@ -174,18 +192,19 @@ export const rollup = async (options: LundleRollupOptions = {}) => {
         replace({
           'process.env.NODE_ENV': JSON.stringify('production'),
         }),
-        terser({
-          output: {comments: false},
-          compress: {
-            booleans_as_integers: true,
-            hoist_funs: true,
-            keep_fargs: false,
-            passes: 2,
-            unsafe_comps: true,
-            unsafe_math: true,
-            unsafe_undefined: true,
-          },
-        }),
+        !/(\.dev\.[\w]+)/.test(output.file) &&
+          terser({
+            output: {comments: false},
+            compress: {
+              booleans_as_integers: true,
+              hoist_funs: true,
+              keep_fargs: false,
+              passes: 2,
+              unsafe_comps: true,
+              unsafe_math: true,
+              unsafe_undefined: true,
+            },
+          }),
         // Credit: https://github.com/developit/microbundle/blob/master/src/index.js
         {
           writeBundle(options, bundle) {
