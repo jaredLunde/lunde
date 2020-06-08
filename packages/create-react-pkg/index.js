@@ -121,7 +121,6 @@ module.exports.editPackageJson = async function editPackageJson(
     unpkg: `dist/umd/${args.hook ? 'use-' : ''}${variables.PKG_NAME}.js`,
     source: 'src/index.tsx',
     types: 'types/index.d.ts',
-    files: ['/dist', '/src', '/types'],
     exports: {
       '.': {
         browser: './dist/module/index.js',
@@ -135,6 +134,7 @@ module.exports.editPackageJson = async function editPackageJson(
       './package.json': './package.json',
       './': './',
     },
+    files: ['/dist', '/src', '/types'],
     sideEffects: false,
     scripts: {
       build: 'lundle build' + (args.hook ? ' --umd-case camel' : ''),
