@@ -101,7 +101,6 @@ module.exports.editPackageJson = async function editPackageJson(
     unpkg: `dist/umd/${variables.PKG_NAME}.js`,
     source: 'src/index.ts',
     types: 'types/index.d.ts',
-    files: ['/dist', '/src', '/types'],
     exports: {
       '.': {
         browser: './dist/module/index.js',
@@ -115,6 +114,7 @@ module.exports.editPackageJson = async function editPackageJson(
       './package.json': './package.json',
       './': './',
     },
+    files: ['/dist', '/src', '/types'],
     sideEffects: false,
     scripts: {
       build: 'lundle build',
