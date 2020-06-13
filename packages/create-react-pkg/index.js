@@ -27,11 +27,14 @@ module.exports.dependencies = {}
 // package.json dev dependencies
 module.exports.devDependencies = (variables, args) => {
   let deps = {
+    '@commitlint/cli': 'latest',
+    '@commitlint/config-conventional': 'latest',
     '@testing-library/jest-dom': 'latest',
     '@testing-library/react': 'latest',
     '@testing-library/react-hooks': 'latest',
     '@testing-library/user-event': 'latest',
     'babel-jest': 'latest',
+    'cli-confirm': 'latest',
     jest: 'latest',
     eslint: 'latest',
     'eslint-config-lunde': 'latest',
@@ -42,6 +45,7 @@ module.exports.devDependencies = (variables, args) => {
     react: 'latest',
     'react-dom': 'latest',
     'react-test-renderer': 'latest',
+    'standard-version': 'latest',
   }
 
   if (!args.js) {
@@ -143,8 +147,9 @@ module.exports.editPackageJson = async function editPackageJson(
       format:
         'prettier --write "{,!(node_modules|dist|coverage)/**/}*.{ts,tsx,js,jsx,md,yml,json}"',
       lint: 'eslint . --ext .ts,.tsx',
-      prepublishOnly:
-        'npm run lint && npm run test && npm run build && npm run format',
+      prepublishOnly: 'cli-confirm "Did you run \'yarn release\' first? (y/N)"',
+      prerelease: 'npm run validate && npm run build',
+      release: 'git add . && standard-version -a',
       test: 'jest',
       validate: 'lundle check-types && npm run lint && jest --coverage',
     },
@@ -156,6 +161,9 @@ module.exports.editPackageJson = async function editPackageJson(
     'lint-staged': {
       '**/*.{ts,tsx,js,jsx}': ['eslint', 'prettier --write'],
       '**/*.{md,yml,json}': ['prettier --write'],
+    },
+    commitlint: {
+      extends: ['@commitlint/config-conventional'],
     },
     eslintConfig: {
       extends: ['lunde'],

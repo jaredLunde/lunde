@@ -27,7 +27,10 @@ module.exports.dependencies = {}
 // package.json dev dependencies
 module.exports.devDependencies = (variables, args) => {
   let deps = {
+    '@commitlint/cli': 'latest',
+    '@commitlint/config-conventional': 'latest',
     'babel-jest': 'latest',
+    'cli-confirm': 'latest',
     eslint: 'latest',
     'eslint-config-lunde': 'latest',
     husky: 'latest',
@@ -35,6 +38,7 @@ module.exports.devDependencies = (variables, args) => {
     'lint-staged': 'latest',
     lundle: 'latest',
     prettier: 'latest',
+    'standard-version': 'latest',
   }
 
   if (!args.js) {
@@ -123,8 +127,9 @@ module.exports.editPackageJson = async function editPackageJson(
       format:
         'prettier --write "{,!(node_modules|dist|coverage)/**/}*.{ts,js,md,yml,json}"',
       lint: 'eslint . --ext .ts',
-      prepublishOnly:
-        'npm run lint && npm run test && npm run build && npm run format',
+      prepublishOnly: 'cli-confirm "Did you run \'yarn release\' first? (y/N)"',
+      prerelease: 'npm run validate && npm run build',
+      release: 'git add . && standard-version -a',
       test: 'jest',
       validate: 'lundle check-types && npm run lint && jest --coverage',
     },
@@ -136,6 +141,9 @@ module.exports.editPackageJson = async function editPackageJson(
     'lint-staged': {
       '**/*.{ts,js}': ['eslint', 'prettier --write'],
       '**/*.{md,yml,json}': ['prettier --write'],
+    },
+    commitlint: {
+      extends: ['@commitlint/config-conventional'],
     },
     eslintConfig: {
       extends: ['lunde'],

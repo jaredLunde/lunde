@@ -128,11 +128,10 @@ export const babel = async (options: LundleBabelOptions = {}) => {
 
     transforms.push(
       walk(srcDir).then((srcFiles) => {
-        srcFiles = micromatch(srcFiles, '*.{js,ts,jsx,tsx}', {
-          basename: true,
+        srcFiles = micromatch(srcFiles, '**/*.{js,ts,jsx,tsx}', {
           ignore: [
-            '*.d.ts',
-            '*.test.*',
+            '**/*.d.ts',
+            '**/*.test.*',
             '**/test/**',
             '**/__{fixtures,test,tests,mocks,snapshots}__/**',
           ],
