@@ -31,6 +31,7 @@ module.exports.devDependencies = (variables, args) => {
     '@commitlint/config-conventional': 'latest',
     'babel-jest': 'latest',
     'cli-confirm': 'latest',
+    'cz-conventional-changelog': 'latest',
     eslint: 'latest',
     'eslint-config-lunde': 'latest',
     husky: 'latest',
@@ -136,6 +137,7 @@ module.exports.editPackageJson = async function editPackageJson(
     husky: {
       hooks: {
         'pre-commit': 'lundle check-types && lint-staged',
+        'commit-msg': 'commitlint -E HUSKY_GIT_PARAMS',
       },
     },
     'lint-staged': {
@@ -145,10 +147,22 @@ module.exports.editPackageJson = async function editPackageJson(
     commitlint: {
       extends: ['@commitlint/config-conventional'],
     },
+    config: {
+      commitizen: {
+        path: './node_modules/cz-conventional-changelog',
+      },
+    },
     eslintConfig: {
       extends: ['lunde'],
     },
-    eslintIgnore: ['node_modules', 'coverage', 'dist', 'test', '*.config.js'],
+    eslintIgnore: [
+      'node_modules',
+      'coverage',
+      'dist',
+      '/types',
+      'test',
+      '*.config.js',
+    ],
     jest: {
       moduleDirectories: ['node_modules', 'src', 'test'],
       testMatch: ['<rootDir>/src/**/?(*.)test.ts'],
