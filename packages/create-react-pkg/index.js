@@ -159,7 +159,7 @@ module.exports.editPackageJson = async function editPackageJson(
       },
     },
     'lint-staged': {
-      '**/*.{ts,tsx,js,jsx}': ['eslint', 'prettier --write'],
+      '**/*.{ts,tsx,js,jsx}': ['eslint --fix', 'prettier --write'],
       '**/*.{md,yml,json}': ['prettier --write'],
     },
     commitlint: {
@@ -212,7 +212,7 @@ module.exports.editPackageJson = async function editPackageJson(
     pkg.scripts.validate = 'npm run lint && npm run test -- --coverage'
     pkg.husky.hooks['pre-commit'] = 'lint-staged'
     pkg['lint-staged'] = {
-      '**/*.{js,jsx}': ['eslint', 'prettier --write'],
+      '**/*.{js,jsx}': ['eslint --fix', 'prettier --write'],
       '**/*.{md,yml,json}': ['prettier --write'],
     }
     pkg.jest = {
