@@ -1,23 +1,52 @@
-# Thank you for contributing to <:packageName:>
+<hr/>
 
-## Before submitting
+# <:packageName:>
 
-Read the [CONTRIBUTING.md](../CONTRIBUTING.md) file and confirm that you're following
-all of the guidelines
+> <:description:>
 
-> ⚠️ Please do not create a Pull Request without creating an issue first.
-> **Any change needs to be discussed before proceeding.** Failure to do so may result
-> in the rejection of the pull request.
+```sh
+npm i <:packageName:>
+```
 
-## Please provide enough information so that others can review your pull request
+<p>
+  <a href="https://bundlephobia.com/result?p=<:packageName:>">
+    <img alt="Bundlephobia" src="https://img.shields.io/bundlephobia/minzip/<:packageName:>?style=for-the-badge&labelColor=24292e">
+  </a>
+  <a aria-label="Types" href="https://www.npmjs.com/package/<:packageName:>">
+    <img alt="Types" src="https://img.shields.io/npm/types/<:packageName:>?style=for-the-badge&labelColor=24292e">
+  </a>
+  <a aria-label="Code coverage report" href="https://codecov.io/gh/<:repo:>">
+    <img alt="Code coverage" src="https://img.shields.io/codecov/c/gh/<:repo:>?style=for-the-badge&labelColor=24292e">
+  </a>
+  <a aria-label="Build status" href="https://travis-ci.com/<:repo:>">
+    <img alt="Build status" src="https://img.shields.io/travis/com/<:repo:>?style=for-the-badge&labelColor=24292e">
+  </a>
+  <a aria-label="NPM version" href="https://www.npmjs.com/package/<:packageName:>">
+    <img alt="NPM Version" src="https://img.shields.io/npm/v/<:packageName:>?style=for-the-badge&labelColor=24292e">
+  </a>
+  <a aria-label="License" href="https://jaredlunde.mit-license.org/">
+    <img alt="MIT License" src="https://img.shields.io/npm/l/<:packageName:>?style=for-the-badge&labelColor=24292e">
+  </a>
+</p>
 
-- What does this implement/fix? Explain your changes.
-- Does this close any currently open issues?
+---
 
-## Testing
+## Quick start
 
-Confirm that your pull request contains tests and that all existing tests pass.
+```js
+import _ from '<:packageName:>'
+```
 
-## Closing issues
+## API
 
-Put closes #XXXX in your comment to auto-close the issue that your PR fixes (if such).
+### someFunction()
+
+#### Arguments
+
+| Name | Type | Default | Required? | Description |
+| ---- | ---- | ------- | --------- | ----------- |
+|      |      |         |           |             |
+
+## LICENSE
+
+MIT
