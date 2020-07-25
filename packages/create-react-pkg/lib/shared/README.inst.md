@@ -1,11 +1,14 @@
-<hr>
-<div align="center">
-  <h1 align="center">
-    <:packageName:>
-  </h1>
-</div>
+<hr/>
 
-<p align="center">
+# <:packageName:>
+
+> <:description:>
+
+```sh
+npm i <:packageName:>
+```
+
+<p>
   <a href="https://bundlephobia.com/result?p=<:packageName:>">
     <img alt="Bundlephobia" src="https://img.shields.io/bundlephobia/minzip/<:packageName:>?style=for-the-badge&labelColor=24292e">
   </a>
@@ -26,12 +29,9 @@
   </a>
 </p>
 
-<pre align="center">npm i <:packageName:></pre>
-<hr>
+---
 
-<:description:>
-
-## Quick Start
+## Quick start
 
 ```jsx harmony
 import _ from '<:packageName:>'
@@ -39,9 +39,11 @@ import _ from '<:packageName:>'
 
 ## API
 
-### Props
+### &lt;SomeComponent&gt;
 
-| Prop | Type | Default | Required? | Description |
+#### Props
+
+| Name | Type | Default | Required? | Description |
 | ---- | ---- | ------- | --------- | ----------- |
 |      |      |         |           |             |
 
