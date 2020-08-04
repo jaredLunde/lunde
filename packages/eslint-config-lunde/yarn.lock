@@ -632,6 +632,13 @@ eslint-plugin-react@^7.20.0:
     string.prototype.matchall "^4.0.2"
     xregexp "^4.3.0"
 
+eslint-plugin-sort-export-all@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-sort-export-all/-/eslint-plugin-sort-export-all-1.0.5.tgz#29fc2040639d671aed210d8df1f949ef08162513"
+  integrity sha512-FRnGaKqjvtAXfeW8+bgJE5r159zQFrxwY0UsmpnlHS32r48/UTDMSTQ0byhmGxuTAH5j0n+5lxOL2jI3Y/JpZQ==
+  dependencies:
+    natural-compare "^1.4.0"
+
 eslint-plugin-testing-library@^3.1.4:
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/eslint-plugin-testing-library/-/eslint-plugin-testing-library-3.1.4.tgz#0098ac987703538a5196172ffee7280a41f573a0"

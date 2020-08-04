@@ -26,7 +26,11 @@ module.exports = {
           experimentalObjectRestSpread: true,
         },
       },
-  plugins: ['import', hasTypeScript && '@typescript-eslint'].filter(Boolean),
+  plugins: [
+    'import',
+    hasTypeScript && '@typescript-eslint',
+    'sort-export-all',
+  ].filter(Boolean),
   extends: [
     'eslint:recommended',
     'prettier',
@@ -93,6 +97,7 @@ module.exports = {
     'import/no-named-export': 'off',
     'import/unambiguous': 'off', // not sure I understand this rule well enough right now...
     'import/no-relative-parent-imports': 'off',
+    'sort-export-all/sort-export-all': 'warn',
     ...(!hasTypeScript
       ? null
       : {
