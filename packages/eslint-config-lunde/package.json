@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-lunde",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "ESLint rules I'm using for my projects",
   "main": "index.js",
   "repository": "github:jaredLunde/lunde",
