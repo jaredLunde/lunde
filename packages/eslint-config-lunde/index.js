@@ -28,12 +28,14 @@ module.exports = {
       },
   plugins: [
     'import',
+    'jsdoc',
     hasTypeScript && '@typescript-eslint',
     'sort-export-all',
   ].filter(Boolean),
   extends: [
     'eslint:recommended',
     'prettier',
+    'plugin:jsdoc/recommended',
     hasTypeScript && 'plugin:@typescript-eslint/recommended',
     hasReact && 'lunde/react',
     hasJest && 'lunde/jest',
@@ -43,6 +45,7 @@ module.exports = {
     'no-prototype-builtins': 'off',
     'no-constant-condition': 'off',
     'no-undef': 'off',
+    'no-empty-pattern': 'off',
     // Import rules
     // Credit: Kent C. Dodds
     // https://github.com/kentcdodds/eslint-config-kentcdodds/tree/master/import
@@ -67,12 +70,32 @@ module.exports = {
     'import/order': [
       'warn',
       {
+        pathGroups: [
+          {
+            pattern: '@/**',
+            group: 'internal',
+          },
+        ],
         groups: [
           'builtin',
-          ['external', 'internal'],
-          'parent',
-          ['sibling', 'index'],
+          'external',
+          'internal',
+          ['parent', 'sibling', 'index'],
+          'object',
         ],
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true,
+        },
+      },
+    ],
+    'sort-imports': [
+      'warn',
+      {
+        ignoreCase: true,
+        ignoreDeclarationSort: true,
+        memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
+        allowSeparatedGroups: false,
       },
     ],
     'import/first': 'error',
@@ -98,6 +121,11 @@ module.exports = {
     'import/unambiguous': 'off', // not sure I understand this rule well enough right now...
     'import/no-relative-parent-imports': 'off',
     'sort-export-all/sort-export-all': 'warn',
+    'jsdoc/no-types': 'off',
+    'jsdoc/require-param-type': 'off',
+    'jsdoc/require-returns': 'off',
+    'jsdoc/require-jsdoc': 'off',
+    'jsdoc/require-hyphen-before-param-description': 'warn',
     ...(!hasTypeScript
       ? null
       : {
@@ -112,6 +140,14 @@ module.exports = {
           '@typescript-eslint/no-empty-interface': 'off',
           '@typescript-eslint/explicit-module-boundary-types': 'off',
           '@typescript-eslint/ban-ts-comment': 'off',
+          '@typescript-eslint/ban-types': 'off',
+          '@typescript-eslint/prefer-ts-expect-error': 'warn',
+          '@typescript-eslint/consistent-type-imports': [
+            'warn',
+            {
+              prefer: 'type-imports',
+            },
+          ],
         }),
   },
   settings: {
