@@ -1,6 +1,6 @@
 {
   "name": "@lunde/create-react-pkg",
-  "version": "1.6.4",
+  "version": "1.7.2",
   "main": "index.js",
   "author": "Jared Lunde <jared.lunde@gmail.com> (https://jaredLunde.com)",
   "license": "MIT",

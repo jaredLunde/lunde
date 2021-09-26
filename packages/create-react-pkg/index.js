@@ -94,6 +94,7 @@ module.exports.editPackageJson = async function editPackageJson(
   args
 ) {
   let pkg = {
+    ...packageJson,
     name: variables.packageName,
     version: packageJson.version,
     ...variables.pages,
@@ -208,7 +209,6 @@ module.exports.editPackageJson = async function editPackageJson(
         '@semantic-release/github',
       ],
     },
-    ...packageJson,
   }
 
   if (args.js) {
@@ -221,7 +221,6 @@ module.exports.editPackageJson = async function editPackageJson(
     pkg.exports['.'].source = './src/index.js'
     pkg.scripts.lint = 'eslint .'
     pkg.scripts.validate = 'pnpm run lint && pnpm run test -- --coverage'
-    pkg.husky.hooks['pre-commit'] = 'lint-staged'
     pkg['lint-staged'] = {
       '**/*.{js,jsx}': ['eslint --fix', 'prettier --write'],
       '**/*.{md,yml,json}': ['prettier --write'],
