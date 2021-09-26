@@ -1,24 +1,12 @@
-const {trim} = require('@inst-cli/template-utils')
+// const {trim} = require('@inst-cli/template-utils')
 const {getPackageName, getPackageRepoPages} = require('@lunde/inst-utils')
 
 module.exports = {}
 
 // creates template variables using Inquirer.js
 // see https://github.com/SBoudrias/Inquirer.js#objects for prompt object examples
-module.exports.prompts = (
-  {ROOT_NAME, ROOT_DIR, PKG_NAME, PKG_DIR} /*default template variables*/,
-  packageJson /*contents of the package.json file as a plain object*/,
-  args,
-  inquirer
-) => {
-  return [
-    {
-      type: 'string',
-      name: 'description',
-      message: 'Description:',
-      filter: trim,
-    },
-  ]
+module.exports.prompts = () => {
+  return []
 }
 
 // package.json dependencies
@@ -29,11 +17,14 @@ module.exports.devDependencies = (variables, args) => {
   let deps = {
     '@commitlint/cli': 'latest',
     '@commitlint/config-conventional': 'latest',
+    '@semantic-release/changelog': '^6.0.0',
+    '@semantic-release/git': '^10.0.0',
+    '@swc-node/core': '^1.6.0',
+    '@swc-node/jest': '^1.3.2',
     '@testing-library/jest-dom': 'latest',
     '@testing-library/react': 'latest',
     '@testing-library/react-hooks': 'latest',
     '@testing-library/user-event': 'latest',
-    'babel-jest': 'latest',
     'cli-confirm': 'latest',
     'cz-conventional-changelog': 'latest',
     jest: 'latest',
@@ -46,7 +37,6 @@ module.exports.devDependencies = (variables, args) => {
     react: 'latest',
     'react-dom': 'latest',
     'react-test-renderer': 'latest',
-    'standard-version': 'latest',
   }
 
   if (!args.js) {
@@ -146,15 +136,12 @@ module.exports.editPackageJson = async function editPackageJson(
       format:
         'prettier --write "{,!(node_modules|dist|coverage)/**/}*.{ts,tsx,js,jsx,md,yml,json}"',
       lint: 'eslint . --ext .ts,.tsx',
-      prepublishOnly: 'cli-confirm "Did you run \'yarn release\' first? (y/N)"',
-      prerelease: 'npm run validate && npm run build',
-      release: 'git add . && standard-version -a',
       test: 'jest',
-      validate: 'lundle check-types && npm run lint && jest --coverage',
+      validate: 'lundle check-types && pnpm run lint && jest --coverage',
     },
     husky: {
       hooks: {
-        'pre-commit': 'lundle check-types && lint-staged',
+        'pre-commit': 'lint-staged',
         'commit-msg': 'commitlint -E HUSKY_GIT_PARAMS',
       },
     },
@@ -182,6 +169,18 @@ module.exports.editPackageJson = async function editPackageJson(
       '*.config.js',
     ],
     jest: {
+      transform: {
+        '^.+\\.(t|j)sx?$': [
+          '@swc-node/jest',
+          {
+            react: {
+              runtime: 'automatic',
+              development: false,
+              useBuiltins: true,
+            },
+          },
+        ],
+      },
       moduleDirectories: ['node_modules', 'src', 'test'],
       testMatch: ['<rootDir>/src/**/?(*.)test.{ts,tsx}'],
       collectCoverageFrom: ['**/src/**/*.{ts,tsx}'],
@@ -191,11 +190,23 @@ module.exports.editPackageJson = async function editPackageJson(
         __DEV__: true,
       },
     },
-    prettier: {
-      semi: false,
-      singleQuote: true,
-      jsxSingleQuote: true,
-      bracketSpacing: false,
+    release: {
+      branches: ['main', 'next', 'alpha'],
+      plugins: [
+        '@semantic-release/commit-analyzer',
+        '@semantic-release/release-notes-generator',
+        '@semantic-release/changelog',
+        [
+          '@semantic-release/git',
+          {
+            assets: ['types', 'CHANGELOG.md', 'package.json'],
+            message:
+              'chore(release): ${nextRelease.version}\n\n${nextRelease.notes}',
+          },
+        ],
+        '@semantic-release/npm',
+        '@semantic-release/github',
+      ],
     },
     ...packageJson,
   }
@@ -209,7 +220,7 @@ module.exports.editPackageJson = async function editPackageJson(
     pkg.source = 'src/index.js'
     pkg.exports['.'].source = './src/index.js'
     pkg.scripts.lint = 'eslint .'
-    pkg.scripts.validate = 'npm run lint && npm run test -- --coverage'
+    pkg.scripts.validate = 'pnpm run lint && pnpm run test -- --coverage'
     pkg.husky.hooks['pre-commit'] = 'lint-staged'
     pkg['lint-staged'] = {
       '**/*.{js,jsx}': ['eslint --fix', 'prettier --write'],

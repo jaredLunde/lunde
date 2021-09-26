@@ -1,3 +1,5 @@
-// import React from 'react'
-const Component = (): string => 'Hello world'
+function Component() {
+  return 'Hello world'
+}
+
 export default Component

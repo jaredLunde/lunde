@@ -9,10 +9,10 @@
   dependencies:
     regenerator-runtime "^0.13.2"
 
-"@inst-cli/template-utils@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@inst-cli/template-utils/-/template-utils-1.0.0.tgz#2fffc61523dd55616d97a58ac530d640efa6b8fb"
-  integrity sha512-xc+nhkdjRTsX3tdLvR9EsTsAQ/C17E0DnCuPv5+8wmwvXZnh+E5G/kufoxGaDtIcVSXkO/6+9FaEmWpsJUCJQA==
+"@inst-cli/template-utils@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@inst-cli/template-utils/-/template-utils-1.0.7.tgz#805221561c1944b388a9981ebf8ad575d35af81c"
+  integrity sha512-2NVkQrE3jiBeQSNFvzjMYkRk8RJPqXmRZRof8hYyMThrzfOIEEL3sWHDMfqGaxtqgnS3sAALq8ZplzW7Y3YA+A==
   dependencies:
     chalk "^2.4.1"
     find-package-json "^1.1.0"
