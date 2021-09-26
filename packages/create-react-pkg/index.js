@@ -25,7 +25,6 @@ module.exports.devDependencies = (variables, args) => {
     '@testing-library/react': 'latest',
     '@testing-library/react-hooks': 'latest',
     '@testing-library/user-event': 'latest',
-    'cli-confirm': 'latest',
     'cz-conventional-changelog': 'latest',
     jest: 'latest',
     eslint: 'latest',

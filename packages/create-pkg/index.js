@@ -34,7 +34,6 @@ module.exports.devDependencies = (variables, args) => {
     '@semantic-release/git': '^10.0.0',
     '@swc-node/core': '^1.6.0',
     '@swc-node/jest': '^1.3.2',
-    'cli-confirm': 'latest',
     'cz-conventional-changelog': 'latest',
     eslint: 'latest',
     'eslint-config-lunde': 'latest',
