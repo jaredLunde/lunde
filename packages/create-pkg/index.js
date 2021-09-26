@@ -1,3 +1,4 @@
+const sortPackageJson = require('sort-package-json')
 const {trim} = require('@inst-cli/template-utils')
 const {getPackageName, getPackageRepoPages} = require('@lunde/inst-utils')
 
@@ -224,5 +225,5 @@ module.exports.editPackageJson = async function editPackageJson(
     }
   }
 
-  return pkg
+  return sortPackageJson(pkg)
 }
