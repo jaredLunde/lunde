@@ -178,6 +178,7 @@ module.exports.editPackageJson = async function editPackageJson(
       },
       moduleDirectories: ['node_modules', 'src', 'test'],
       testMatch: ['<rootDir>/src/**/?(*.)test.{ts,tsx}'],
+      testEnvironment: 'jsdom',
       collectCoverageFrom: ['**/src/**/*.{ts,tsx}'],
       setupFilesAfterEnv: ['./test/setup.ts'],
       snapshotResolver: './test/resolve-snapshot.js',
