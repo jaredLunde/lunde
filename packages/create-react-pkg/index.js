@@ -137,14 +137,9 @@ module.exports.editPackageJson = async function editPackageJson(
       format:
         'prettier --write "{,!(node_modules|dist|coverage)/**/}*.{ts,tsx,js,jsx,md,yml,json}"',
       lint: 'eslint . --ext .ts,.tsx',
+      prepare: 'husky install',
       test: 'jest',
       validate: 'lundle check-types && pnpm run lint && jest --coverage',
-    },
-    husky: {
-      hooks: {
-        'pre-commit': 'lint-staged',
-        'commit-msg': 'commitlint -E HUSKY_GIT_PARAMS',
-      },
     },
     'lint-staged': {
       '**/*.{ts,tsx,js,jsx}': ['eslint --fix', 'prettier --write'],
@@ -197,6 +192,7 @@ module.exports.editPackageJson = async function editPackageJson(
         '@semantic-release/commit-analyzer',
         '@semantic-release/release-notes-generator',
         '@semantic-release/changelog',
+        '@semantic-release/npm',
         [
           '@semantic-release/git',
           {
@@ -205,7 +201,6 @@ module.exports.editPackageJson = async function editPackageJson(
               'chore(release): ${nextRelease.version}\n\n${nextRelease.notes}',
           },
         ],
-        '@semantic-release/npm',
         '@semantic-release/github',
       ],
     },
