@@ -165,16 +165,7 @@ module.exports.editPackageJson = async function editPackageJson(
     ],
     jest: {
       transform: {
-        '^.+\\.(t|j)sx?$': [
-          '@swc-node/jest',
-          {
-            react: {
-              runtime: 'automatic',
-              development: false,
-              useBuiltins: true,
-            },
-          },
-        ],
+        '^.+\\.(t|j)s?$': ['@swc-node/jest'],
       },
       moduleDirectories: ['node_modules', 'src', 'test'],
       testMatch: ['<rootDir>/src/**/?(*.)test.ts'],
