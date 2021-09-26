@@ -18,8 +18,8 @@ npm i <:packageName:>
   <a aria-label="Code coverage report" href="https://codecov.io/gh/<:repo:>">
     <img alt="Code coverage" src="https://img.shields.io/codecov/c/gh/<:repo:>?style=for-the-badge&labelColor=24292e">
   </a>
-  <a aria-label="Build status" href="https://travis-ci.com/<:repo:>">
-    <img alt="Build status" src="https://img.shields.io/travis/com/<:repo:>?style=for-the-badge&labelColor=24292e">
+  <a aria-label="Build status" href="https://github.com/<:repo:>/actions/workflows/release.yml">
+    <img alt="Build status" src="https://img.shields.io/github/workflow/status/<:repo:>/release/main?style=for-the-badge&labelColor=24292e">
   </a>
   <a aria-label="NPM version" href="https://www.npmjs.com/package/<:packageName:>">
     <img alt="NPM Version" src="https://img.shields.io/npm/v/<:packageName:>?style=for-the-badge&labelColor=24292e">
