@@ -141,7 +141,10 @@ module.exports.editPackageJson = async function editPackageJson(
       validate: 'lundle check-types && pnpm run lint && jest --coverage',
     },
     'lint-staged': {
-      '**/*.{ts,tsx,js,jsx}': ['eslint --fix', 'prettier --write'],
+      '**/*.{ts,tsx,js,jsx}': [
+        'eslint --ext .ts,.tsx,.js,.jsx --fix',
+        'prettier --write',
+      ],
       '**/*.{md,yml,json}': ['prettier --write'],
     },
     commitlint: {
@@ -217,7 +220,7 @@ module.exports.editPackageJson = async function editPackageJson(
     pkg.scripts.lint = 'eslint .'
     pkg.scripts.validate = 'pnpm run lint && pnpm run test -- --coverage'
     pkg['lint-staged'] = {
-      '**/*.{js,jsx}': ['eslint --fix', 'prettier --write'],
+      '**/*.{js,jsx}': ['eslint --ext .js,.jsx --fix', 'prettier --write'],
       '**/*.{md,yml,json}': ['prettier --write'],
     }
     pkg.jest = {

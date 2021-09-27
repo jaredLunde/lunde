@@ -136,7 +136,7 @@ module.exports.editPackageJson = async function editPackageJson(
       validate: 'lundle check-types && pnpm run lint && jest --coverage',
     },
     'lint-staged': {
-      '**/*.{ts,js}': ['eslint --fix', 'prettier --write'],
+      '**/*.{ts,js}': ['eslint --ext .ts,.js --fix', 'prettier --write'],
       '**/*.{md,yml,json}': ['prettier --write'],
     },
     commitlint: {
