@@ -16,7 +16,7 @@ try {
 }
 
 module.exports = {
-  parser: hasTypeScript ? '@typescript-eslint/parser' : 'babel-eslint',
+  parser: hasTypeScript ? '@typescript-eslint/parser' : '@babel/eslint-parser',
   parserOptions: hasTypeScript
     ? {}
     : {
