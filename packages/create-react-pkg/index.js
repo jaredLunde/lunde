@@ -191,7 +191,17 @@ module.exports.editPackageJson = async function editPackageJson(
       },
     },
     release: {
-      branches: ['main', 'next', 'alpha'],
+      branches: [
+        'main',
+        {
+          name: 'next',
+          prerelease: true,
+        },
+        {
+          name: 'alpha',
+          prerelease: true,
+        },
+      ],
       plugins: [
         '@semantic-release/commit-analyzer',
         '@semantic-release/release-notes-generator',
