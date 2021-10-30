@@ -50,7 +50,6 @@ module.exports = {
     'func-name-matching': 'warn',
     'no-lonely-if': 'warn',
     'prefer-arrow-callback': 'warn',
-    'func-style': 'error',
     'no-return-await': 'warn',
     'no-console': 'off',
     'no-prototype-builtins': 'off',
