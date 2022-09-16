@@ -7,7 +7,7 @@
   "dependencies": {
     "@inst-cli/template-utils": "^1.0.1",
     "@lunde/inst-utils": "^1.0.2",
-    "aws-sdk": "^2.524.0",
+    "aws-sdk": "^2.814.0",
     "inquirer-confirm-validated": "^1.0.0"
   },
   "bin": {
